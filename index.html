@@ -1,0 +1,339 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <title>ProcureIT - Procurement and Inventory System</title>
+  </head>
+
+  <body>
+    <header>
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="50%" valign="top" bgcolor="#F1EAD2">
+            <section>
+              <h2>Log-In</h2>
+              <p>Please enter your credentials to access the system</p>
+              <form>
+                <fieldset>
+                  <legend>Account Log-In</legend>
+                  <br />
+                  <label>Username or E-Mail</label>
+                  <br />
+                  <input
+                    type="text"
+                    placeholder="Enter username or email"
+                    required
+                  />
+                  <br /><br />
+                  <label>Password</label>
+                  <br />
+                  <input
+                    type="password"
+                    placeholder="Enter password"
+                    required
+                  />
+                  <br /><br />
+                  <label>Department</label>
+                  <br />
+                  <select>
+                    <option>-- Select Department --</option>
+                    <option>IT</option>
+                    <option>Purchasing</option>
+                    <option>Accounting</option>
+                    <option>Administration</option>
+                  </select>
+                  <br /><br />
+                  <input type="checkbox" />
+                  <label>Remember Me</label>
+                  <br /><br />
+                  <button type="submit">Log-In</button>
+                </fieldset>
+              </form>
+              <p><a href="#">Forgot your password?</a></p>
+
+              <p>
+                Don't have an account?
+                <a href="#">Contact your administrator</a>
+              </p>
+            </section>
+          </td>
+
+          <td width="50%" bgcolor="#365194" valign="top">
+            <div style="text-align: center">
+              <img src="./resources/proc1.jpg" alt="ProcureIT" />
+            </div>
+          </td>
+        </tr>
+      </table>
+    </header>
+    <br />
+    <hr />
+    <br />
+
+    <section>
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <br />
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="13%" valign="top" bgcolor="#F1EAD2">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#requisition">Purchase Requisition</a></li>
+                <li><a href="#approvals">Approvals</a></li>
+                <li><a href="#purchase-order">Purchase Orders</a></li>
+                <li><a href="#delivery">Delivery Receipts</a></li>
+                <li><a href="#invoices">Invoice Processing</a></li>
+                <li><a href="#vendors">Vendor Sourcing &amp; Documents</a></li>
+                <li><a href="#inventory">Inventory &amp; Asset Tagging</a></li>
+                <li><a href="#reports">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+
+          <td width="50%" bgcolor="#365194" valign="top">
+            <h3>Dashboard Overview</h3>
+            <p>Summary of current procurement and inventory activity</p>
+
+            <article>
+              <h3>Pending Requisition</h3>
+              <p>5 Requests Pending for Approval</p>
+            </article>
+
+            <article>
+              <h3>Low Stock Items</h3>
+              <p>3 items below reorder level</p>
+            </article>
+
+            <article>
+              <h3>Purchase Orders Awaiting Delivery</h3>
+              <p>2 purchase orders in transit</p>
+            </article>
+
+            <article>
+              <h3>Invoices Pending Review</h3>
+              <p>1 invoice awaiting approval for payment</p>
+            </article>
+
+            <article>
+              <h3>Vendor Documents Expiring Soon</h3>
+              <p>2 contracts expiring this month</p>
+            </article>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <br />
+    <hr />
+    <br />
+
+    <section>
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <br />
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="13%" valign="top" bgcolor="#F1EAD2">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#requisition">Purchase Requisition</a></li>
+                <li><a href="#approvals">Approvals</a></li>
+                <li><a href="#purchase-order">Purchase Orders</a></li>
+                <li><a href="#delivery">Delivery Receipts</a></li>
+                <li><a href="#invoices">Invoice Processing</a></li>
+                <li><a href="#vendors">Vendor Sourcing &amp; Documents</a></li>
+                <li><a href="#inventory">Inventory &amp; Asset Tagging</a></li>
+                <li><a href="#reports">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+
+          <td width="50%" bgcolor="#365194" valign="top">
+            <h2>Purchase Requisition</h2>
+            <p>
+              Submit a new purchase request for approval. Multiple items may be
+              listed under a single requisition.
+            </p>
+            <fieldset>
+              <legend>Requisition Form</legend>
+              <label>Requisition ID</label>
+              <br />
+              <input type="text" placeholder="Auto-generated" />
+              <br /><br />
+              <label>Requested By</label>
+              <br />
+              <input type="text" placeholder="Employee name" />
+              <br /><br />
+              <label>Department</label>
+              <br />
+              <select>
+                <option>-- Select Department --</option>
+                <option>IT</option>
+                <option>Purchasing</option>
+                <option>Accounting</option>
+                <option>Administration</option>
+                <option>Sales / Marketing</option>
+                <option>Operations</option>
+                <option>Facilities</option>
+                <option>Engineering</option>
+                <option>Human Resources</option>
+                <option>Leadership</option>
+              </select>
+              <br /><br />
+              <label>Date Submitted</label>
+              <br />
+              <input type="date" />
+              <br /><br />
+            </fieldset>
+            <br />
+            <fieldset>
+              <legend>Requested Items (up to 10)</legend>
+              <table border="1">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item / Description</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td><input type="text" /></td>
+                    <td><input type="number" min="1" step="1" /></td>
+                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td><input type="text" /></td>
+                    <td><input type="number" min="1" step="1" /></td>
+                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td><input type="text" /></td>
+                    <td><input type="number" min="1" step="1" /></td>
+                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td><input type="text" /></td>
+                    <td><input type="number" min="1" step="1" /></td>
+                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td><input type="text" /></td>
+                    <td><input type="number" min="1" step="1" /></td>
+                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+            <br />
+            <fieldset>
+              <legend>Additional Details</legend>
+              <label>Reason for Request</label>
+              <br />
+              <textarea rows="4" cols="50"></textarea>
+              <br /><br />
+              <label>Attach Supporting Document</label>
+              <br />
+              <input type="file" />
+              <br /><br />
+              <button type="submit">Submit Requisition</button>
+            </fieldset>
+            <br />
+            <fieldset>
+              <legend>Submitted Requisitions</legend>
+              <table border="1">
+                <thead>
+                  <tr>
+                    <th>Requisition ID</th>
+                    <th>Requested By</th>
+                    <th>Department</th>
+                    <th>No. of Items</th>
+                    <th>Date Submitted</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>REQ-1001</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Administration</td>
+                    <td>1</td>
+                    <td>2026-08-15</td>
+                    <td>Pending Supervisor Approval</td>
+                    <td>
+                      <button type="button">View Requisition</button>
+                      <button type="button">Print</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>REQ-1002</td>
+                    <td>Maria Santos</td>
+                    <td>Sales / Marketing</td>
+                    <td>3</td>
+                    <td>2026-08-18</td>
+                    <td>Approved &mdash; Awaiting Purchase</td>
+                    <td>
+                      <button type="button">View Requisition</button>
+                      <button type="button">Print</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>REQ-1003</td>
+                    <td>Mark Reyes</td>
+                    <td>IT</td>
+                    <td>2</td>
+                    <td>2026-08-20</td>
+                    <td>Rejected</td>
+                    <td>
+                      <button type="button">View Requisition</button>
+                      <button type="button">Print</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          </td>
+        </tr>
+      </table>
+    </section>
+    <br />
+    <hr />
+    <br />
+  </body>
+</html>
