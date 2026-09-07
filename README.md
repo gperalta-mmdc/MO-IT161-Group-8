@@ -1,15 +1,15 @@
-Web Systems and Technology
-MO-IT161 - Group 8
-
-Members : 
-Gianross Peralta
-Marcelyn Madanlo
-Mark Anthony Goyon
-Daniel Cotoner
-
-Project - ProcureIT
-
-Description :
+Web Systems and Technology<br>
+MO-IT161 - Group 8<br>
+<br>
+Members :<br> 
+Gianross Peralta<br>
+Marcelyn Madanlo<br>
+Mark Anthony Goyon<br>
+Daniel Cotoner<br>
+<br>
+Project - ProcureIT<br>
+<br>
+Description :<br>
 A paperless procurement solution for a BPO's IT Department, it replaces forms and spreadsheets 
 with an end-to-end digital process for managing/tracking assets like laptops, desktops, headsets
 and IT equip,ent. Handles hardware requests, manager approvals, deployment, repairs, and device 
