@@ -1,17 +1,21 @@
 <!doctype html>
- 
+
 <html lang="en">
   <head>
     <title>ProcureIT - Approvals</title>
   </head>
- 
+
   <body>
-     <section>
+    <section>
       <h1>Company Name</h1>
       <p>
         Workplace Zero Paper Initiative<br />
         Procurement and Inventory Management System
       </p>
+      <button>Settings</button><br /><br />
+      <form action="index.html" method="get">
+        <button type="submit">Log Out</button>
+      </form>
       <br />
       <table
         width="100%"
@@ -21,31 +25,34 @@
         cellspacing="0"
       >
         <tr>
-          <td width="13%" valign="top" bgcolor="#F1EAD2">
+          <td width="13%" valign="top" bgcolor="#f8f9fa">
             <h3>Hello, [User]</h3>
             <nav>
               <ul>
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#requisition">Purchase Requisition</a></li>
-                <li><a href="#approvals">Approvals</a></li>
-                <li><a href="#purchase-order">Purchase Orders</a></li>
-                <li><a href="#delivery">Delivery Receipts</a></li>
-                <li><a href="#invoices">Invoice Processing</a></li>
-                <li><a href="#vendors">Vendor Sourcing &amp; Documents</a></li>
-                <li><a href="#inventory">Inventory &amp; Asset Tagging</a></li>
-                <li><a href="#reports">Reports</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="requisition.html">Purchase Requisition</a></li>
+                <li><a href="approvals.html">Approvals</a></li>
+                <li><a href="purchase-order.html">Purchase Orders</a></li>
+                <li><a href="delivery.html">Delivery Receipts</a></li>
+                <li><a href="invoices.html">Invoice Processing</a></li>
+                <li>
+                  <a href="vendors.html">Vendor Sourcing &amp; Documents</a>
+                </li>
+                <li>
+                  <a href="inventory.html">Inventory &amp; Asset Tagging</a>
+                </li>
+                <li><a href="reports.html">Reports</a></li>
               </ul>
             </nav>
           </td>
- 
-          <td width="50%" bgcolor="#365194" valign="top">
+
+          <td width="50%" bgcolor="#e1e2e4" valign="top">
             <h2>Approvals</h2>
             <p>
-              Review purchase requisitions submitted by other departments
-              and approve or reject them before they move forward to
-              purchasing.
+              Review purchase requisitions submitted by other departments and
+              approve or reject them before they move forward to purchasing.
             </p>
- 
+
             <fieldset>
               <legend>Requisitions Awaiting Your Decision</legend>
               <table border="1" cellpadding="10" cellspacing="0">
@@ -105,9 +112,9 @@
                 </tbody>
               </table>
             </fieldset>
- 
+
             <br />
- 
+
             <fieldset>
               <legend>Approval History</legend>
               <table border="1" cellpadding="10" cellspacing="0">
@@ -142,6 +149,9 @@
         </tr>
       </table>
     </section>
+    <footer>
+      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
+    </footer>
     <br />
     <hr />
     <br />
