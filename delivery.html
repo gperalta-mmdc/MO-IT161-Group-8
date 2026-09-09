@@ -1,0 +1,155 @@
+<!doctype html>
+ 
+<html lang="en">
+  <head>
+    <title>ProcureIT - Delivery Receipts</title>
+  </head>
+ 
+  <body>
+    <section>
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <br />
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="13%" valign="top" bgcolor="#F1EAD2">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#requisition">Purchase Requisition</a></li>
+                <li><a href="#approvals">Approvals</a></li>
+                <li><a href="#purchase-order">Purchase Orders</a></li>
+                <li><a href="#delivery">Delivery Receipts</a></li>
+                <li><a href="#invoices">Invoice Processing</a></li>
+                <li><a href="#vendors">Vendor Sourcing &amp; Documents</a></li>
+                <li><a href="#inventory">Inventory &amp; Asset Tagging</a></li>
+                <li><a href="#reports">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+ 
+          <td width="50%" bgcolor="#365194" valign="top">
+            <h2>Delivery Receipts</h2>
+            <p>
+              Record what actually arrived against a purchase order, so
+              inventory and accounting both have proof the delivery
+              happened.
+            </p>
+ 
+            <fieldset>
+              <legend>Purchase Orders Awaiting Delivery</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>PO Number</th>
+                    <th>Vendor</th>
+                    <th>Expected Delivery</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>PO-2041</td>
+                    <td>MMDC Office Supplies</td>
+                    <td>2026-09-10</td>
+                    <td>In Transit</td>
+                    <td><button type="button">Record Delivery</button></td>
+                  </tr>
+                  <tr>
+                    <td>PO-2042</td>
+                    <td>Hexagon IT Hardware</td>
+                    <td>2026-09-12</td>
+                    <td>In Transit</td>
+                    <td><button type="button">Record Delivery</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+ 
+            <br />
+ 
+            <fieldset>
+              <legend>New Delivery Receipt</legend>
+              <form>
+                <label>Purchase Order</label>
+                <br />
+                <select>
+                  <option>-- Select Purchase Order --</option>
+                  <option>PO-2041 &mdash; MMDC Office Supplies</option>
+                  <option>PO-2042 &mdash; Hexagon IT Hardware</option>
+                </select>
+                <br /><br />
+                <label>Date Received</label>
+                <br />
+                <input type="date" />
+                <br /><br />
+                <label>Received By</label>
+                <br />
+                <input type="text" placeholder="Employee name" />
+                <br /><br />
+                <label>Condition of Goods</label>
+                <br />
+                <select>
+                  <option>-- Select --</option>
+                  <option>Complete &amp; Good Condition</option>
+                  <option>Partial Delivery</option>
+                  <option>Damaged / Defective</option>
+                </select>
+                <br /><br />
+                <label>Remarks</label>
+                <br />
+                <textarea rows="4" cols="50"></textarea>
+                <br /><br />
+                <label>Attach Proof of Delivery (e.g. photo, waybill)</label>
+                <br />
+                <input type="file" />
+                <br /><br />
+                <button type="submit">Save Delivery Receipt</button>
+              </form>
+            </fieldset>
+ 
+            <br />
+ 
+            <fieldset>
+              <legend>Delivery Receipt Log</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>PO Number</th>
+                    <th>Vendor</th>
+                    <th>Date Received</th>
+                    <th>Condition</th>
+                    <th>Received By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>PO-2039</td>
+                    <td>Rock and Paper Co.</td>
+                    <td>2026-08-30</td>
+                    <td>Complete &amp; Good Condition</td>
+                    <td>Mario Lopez</td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          </td>
+        </tr>
+      </table>
+    </section>
+    <br />
+    <hr />
+    <br />
+  </body>
+</html>
