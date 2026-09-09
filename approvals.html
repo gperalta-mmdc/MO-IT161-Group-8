@@ -1,0 +1,149 @@
+<!doctype html>
+ 
+<html lang="en">
+  <head>
+    <title>ProcureIT - Approvals</title>
+  </head>
+ 
+  <body>
+     <section>
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <br />
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="13%" valign="top" bgcolor="#F1EAD2">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#requisition">Purchase Requisition</a></li>
+                <li><a href="#approvals">Approvals</a></li>
+                <li><a href="#purchase-order">Purchase Orders</a></li>
+                <li><a href="#delivery">Delivery Receipts</a></li>
+                <li><a href="#invoices">Invoice Processing</a></li>
+                <li><a href="#vendors">Vendor Sourcing &amp; Documents</a></li>
+                <li><a href="#inventory">Inventory &amp; Asset Tagging</a></li>
+                <li><a href="#reports">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+ 
+          <td width="50%" bgcolor="#365194" valign="top">
+            <h2>Approvals</h2>
+            <p>
+              Review purchase requisitions submitted by other departments
+              and approve or reject them before they move forward to
+              purchasing.
+            </p>
+ 
+            <fieldset>
+              <legend>Requisitions Awaiting Your Decision</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Requisition ID</th>
+                    <th>Requested By</th>
+                    <th>Department</th>
+                    <th>No. of Items</th>
+                    <th>Date Submitted</th>
+                    <th>Decision</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>REQ-1001</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Administration</td>
+                    <td>1</td>
+                    <td>2026-08-15</td>
+                    <td>
+                      <form>
+                        <label>Remarks</label>
+                        <br />
+                        <input type="text" placeholder="Optional remarks" />
+                        <br /><br />
+                        <button type="submit" name="decision" value="approve">
+                          Approve
+                        </button>
+                        <button type="submit" name="decision" value="reject">
+                          Reject
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>REQ-1002</td>
+                    <td>Maria Santos</td>
+                    <td>Sales/Marketing</td>
+                    <td>3</td>
+                    <td>2026-08-21</td>
+                    <td>
+                      <form>
+                        <label>Remarks</label>
+                        <br />
+                        <input type="text" placeholder="Optional remarks" />
+                        <br /><br />
+                        <button type="submit" name="decision" value="approve">
+                          Approve
+                        </button>
+                        <button type="submit" name="decision" value="reject">
+                          Reject
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+ 
+            <br />
+ 
+            <fieldset>
+              <legend>Approval History</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Requisition ID</th>
+                    <th>Department</th>
+                    <th>Decision</th>
+                    <th>Decided By</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>REQ-0998</td>
+                    <td>Facilities</td>
+                    <td>Approved</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-14</td>
+                  </tr>
+                  <tr>
+                    <td>REQ-0997</td>
+                    <td>Engineering</td>
+                    <td>Rejected</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-13</td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          </td>
+        </tr>
+      </table>
+    </section>
+    <br />
+    <hr />
+    <br />
+  </body>
+</html>
