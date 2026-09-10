@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Purchase Order Overview</title>
+</head>
+<body>
+    <section>
+        <h1>Company Name</h1>
+        <p>Workplace Zero Paper Initiative <br>
+            Procurement and Inventory Management System
+        </p>
+        <button>Settings</button><br /><br />
+        <form action="index.html" method="get">
+            <button type="submit">Log out</button>
+        </form>
+        <br>
+        <table
+        width="100"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+        >
+        <tr>
+            <td width="13%" valign="top" bgcolor="#F1EAD2">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#requisition">Purchase Requisition</a></li>
+                <li><a href="#approvals">Approvals</a></li>
+                <li><a href="#purchase-order">Purchase Orders</a></li>
+                <li><a href="#delivery">Delivery Receipts</a></li>
+                <li><a href="#invoices">Invoice Processing</a></li>
+                <li><a href="#vendors">Vendor Sourcing &amp; Documents</a></li>
+                <li><a href="#inventory">Inventory &amp; Asset </a></li>
+                <li><a href="#reports">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+
+          <td valign="top">
+                      <h1>Purchase Orders</h1>
+                      <form action="purchase-order-detail.html" method="get">
+                        <button type="submit">+ New Purchase Ordser</button>
+                      </form>
+                      <br>
+
+                      <table width:"100%" border="1" cellpadding="8" cellspacing="0">
+                        <tr bgcolor="lightblue" align="center">
+                            <th>PO #</th>
+                            <th>Vendor</th>
+                            <th>Date</th>
+                            <th>Requisitioner</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr bgcolor="lightgrey" align="center">
+                            <td>PO#02</td>
+                            <td>Lenovo</td>
+                            <td>9/20/2026</td>
+                            <td>Mario Pison</td>
+                            <td>Pending</td>
+                            <td>5,325.00</td>
+                            <td><a href="purchase-order-detail.html">View</a></td>
+
+                        </tr>
+                        <tr bgcolor="lightgrey" align="center">
+                            <td>PO#03</td>
+                            <td>Ugreen</td>
+                            <td>9/20/2026</td>
+                            <td>Mario Pison</td>
+                            <td>Pending</td>
+                            <td>5,325.00</td>
+                            <td><a href="purchase-order-detail.html">View</a></td>
+
+                        </tr>
+                        <tr bgcolor="lightgrey" align="center">
+                            <td>PO#04</td>
+                            <td>Logitech</td>
+                            <td>9/20/2026</td>
+                            <td>Mario Pison</td>
+                            <td>Pending</td>
+                            <td>5,325.00</td>
+                            <td><a href="purchase-order-detail.html">View</a></td>
+
+                        </tr>
+                        <tr bgcolor="lightgrey" align="center">
+                            <td>PO#05</td>
+                            <td>Jabra</td>
+                            <td>9/20/2026</td>
+                            <td>Mario Pison</td>
+                            <td>Pending</td>
+                            <td>5,325.00</td>
+                            <td><a href="purchase-order-detail.html">View</a></td>
+
+                        </tr>
+                      </table>
+
+          </td>
+          
+
+        </tr>
+    
+        </table>
+        
+
+        
+    </section>
+
+</body>
+</html>
