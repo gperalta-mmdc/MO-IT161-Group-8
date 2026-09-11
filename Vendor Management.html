@@ -1,0 +1,226 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <title>ProcureIT - Vendor Management</title>
+  </head>
+
+  <body>
+    <section>
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <button>Settings</button><br /><br />
+      <form action="index.html" method="get">
+        <button type="submit">Log Out</button>
+      </form>
+      <br />
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="13%" valign="top" bgcolor="#f8f9fa">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="requisition.html">Purchase Requisition</a></li>
+                <li><a href="approvals.html">Approvals</a></li>
+                <li><a href="purchase-order.html">Purchase Orders</a></li>
+                <li><a href="delivery.html">Delivery Receipts</a></li>
+                <li><a href="Invoice%20Processing.html">Invoice Processing</a></li>
+                <li>
+                  <a href="Vendor%20Management.html">Vendor Management</a>
+                </li>
+                <li>
+                  <a href="inventory.html">Inventory and Asset Tagging</a>
+                </li>
+                <li><a href="reports.html">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+
+          <td width="50%" bgcolor="#e1e2e4" valign="top">
+            <h2>Vendor Management</h2>
+            <p>
+              Maintain the directory of approved suppliers, their contact
+              details, and compliance documents used across requisitions and
+              purchase orders.
+            </p>
+
+            <fieldset>
+              <legend>Vendor Directory</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Vendor ID</th>
+                    <th>Vendor Name</th>
+                    <th>Category</th>
+                    <th>Contact Person</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>VEN-001</td>
+                    <td>Hewlett Packard</td>
+                    <td>IT Hardware</td>
+                    <td>Anna Reyes</td>
+                    <td>Active</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Edit</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>VEN-002</td>
+                    <td>Lenovo</td>
+                    <td>IT Hardware</td>
+                    <td>Carlo Diaz</td>
+                    <td>Active</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Edit</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>VEN-003</td>
+                    <td>Ugreen</td>
+                    <td>IT Peripherals</td>
+                    <td>Bea Lim</td>
+                    <td>Active</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Edit</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>VEN-004</td>
+                    <td>Hexagon IT Hardware</td>
+                    <td>IT Hardware</td>
+                    <td>Ramon Cruz</td>
+                    <td>Active</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Edit</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>VEN-005</td>
+                    <td>MMDC Office Supplies</td>
+                    <td>Office Supplies</td>
+                    <td>Liza Tan</td>
+                    <td>Inactive</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Edit</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+
+            <br />
+
+            <fieldset>
+              <legend>Add New Vendor</legend>
+              <form>
+                <label>Vendor Name</label>
+                <br />
+                <input type="text" placeholder="Company name" />
+                <br /><br />
+                <label>Category</label>
+                <br />
+                <select>
+                  <option>-- Select Category --</option>
+                  <option>IT Hardware</option>
+                  <option>IT Peripherals</option>
+                  <option>Office Supplies</option>
+                  <option>Repair &amp; Maintenance Services</option>
+                  <option>Other</option>
+                </select>
+                <br /><br />
+                <label>Contact Person</label>
+                <br />
+                <input type="text" placeholder="Full name" />
+                <br /><br />
+                <label>Email</label>
+                <br />
+                <input type="email" placeholder="name@vendor.com" />
+                <br /><br />
+                <label>Phone</label>
+                <br />
+                <input type="tel" placeholder="e.g. 0917 000 0000" />
+                <br /><br />
+                <label>Address</label>
+                <br />
+                <textarea rows="2" cols="50"></textarea>
+                <br /><br />
+                <label>Tax Identification Number (TIN)</label>
+                <br />
+                <input type="text" placeholder="000-000-000-000" />
+                <br /><br />
+                <label>Upload Business Permit / Accreditation Documents</label>
+                <br />
+                <input type="file" multiple />
+                <br /><br />
+                <label>Status</label>
+                <br />
+                <select>
+                  <option>Active</option>
+                  <option>Inactive</option>
+                  <option>Under Review</option>
+                </select>
+                <br /><br />
+                <button type="submit">Add Vendor</button>
+              </form>
+            </fieldset>
+
+            <br />
+
+            <fieldset>
+              <legend>Vendor Documents Expiring Soon</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Vendor</th>
+                    <th>Document</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Hexagon IT Hardware</td>
+                    <td>Service Agreement</td>
+                    <td>2026-09-25</td>
+                    <td>Expiring Soon</td>
+                    <td><button type="button">Request Renewal</button></td>
+                  </tr>
+                  <tr>
+                    <td>MMDC Office Supplies</td>
+                    <td>Business Permit</td>
+                    <td>2026-09-30</td>
+                    <td>Expiring Soon</td>
+                    <td><button type="button">Request Renewal</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          </td>
+        </tr>
+      </table>
+    </section>
+    <footer>
+      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
+    </footer>
+  </body>
+</html>
