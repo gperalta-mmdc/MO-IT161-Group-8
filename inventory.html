@@ -7,8 +7,17 @@
   </head>
   <body>
     <header>
-      <h1>Inventory and Asset Tagging</h1>
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <button>Settings</button><br /><br />
+      <form action="index.html" method="get">
+        <button type="submit">Log Out</button>
+      </form>
     </header>
+    <br />
     <!--Main navbar namin-->
     <table
       width="100%"
@@ -38,6 +47,7 @@
         <!--Main navbar namin-->
 
         <td width="50%" bgcolor="#e1e2e4" valign="top">
+          <h1>Inventory and Asset Tagging</h1>
           <!--Navbar ng inventory page-->
           <nav aria-label="Page sections">
             <ul>
@@ -68,17 +78,49 @@
                 </select>
               </div>
 
-              <table id="asset-table">
+              <table id="asset-table" , border="1" , cellpadding="20">
                 <thead>
                   <tr>
-                    <th>Tag</th>
-                    <th>Asset</th>
+                    <th>Asset ID</th>
+                    <th>Manufacturer</th>
+                    <th>Equipment</th>
+                    <th>Serial Number</th>
                     <th>Status</th>
-                    <th>Assigned</th>
-                    <th>Actions</th>
+                    <th>Deploy</th>
                   </tr>
                 </thead>
-                <tbody id="asset-table-body"></tbody>
+                <tbody id="asset-table-body">
+                  <tr>
+                    <td>10011</td>
+                    <td>Huawei</td>
+                    <td>Matepad D15</td>
+                    <td>5Qy348DO44</td>
+                    <td>
+                      <select>
+                        <option>New</option>
+                        <option>Refurbished</option>
+                        <option>For Repair</option>
+                        <option>For Disposal</option>
+                      </select>
+                    </td>
+                    <td><button>Assign to User</button></td>
+                  </tr>
+                  <tr>
+                    <td>10012</td>
+                    <td>Huawei</td>
+                    <td>Matepad D14</td>
+                    <td>7Rz558YL64</td>
+                    <td>
+                      <select>
+                        <option>New</option>
+                        <option>Refurbished</option>
+                        <option>For Repair</option>
+                        <option>For Disposal</option>
+                      </select>
+                    </td>
+                    <td><button>Assign to User</button></td>
+                  </tr>
+                </tbody>
               </table>
             </section>
 
@@ -86,7 +128,30 @@
               <header>
                 <h2>Assignments</h2>
               </header>
-
+              <table id="asset-table" , border="1" , cellpadding="20">
+                <thead>
+                  <tr>
+                    <td>Asset ID</td>
+                    <td>Manufacturer</td>
+                    <td>Equipment</td>
+                    <td>Serial Number</td>
+                    <td>Assigned To</td>
+                    <td>Department</td>
+                    <td>Action</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>10001</td>
+                    <td>Jabra</td>
+                    <td>Evolve-2 55</td>
+                    <td>Rt12qM6Tx</td>
+                    <td>Mark Johnson</td>
+                    <td>Operations</td>
+                    <td><button>Unassign Equipment</button></td>
+                  </tr>
+                </tbody>
+              </table>
               <div id="employee-list">
                 <!--Dito naman mga employee-->
               </div>
