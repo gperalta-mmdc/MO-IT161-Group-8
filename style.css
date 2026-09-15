@@ -3,7 +3,7 @@ style tags nyo sa 'selector' para uniform and code natin across
 all pages. Do not forget to link css inside <head> 
 <link rel="stylesheet" href="style.css" /> */
 
-/* Base Background and Layout */
+/* ----- Base Background and Layout ----- */
 body {
   margin: 0;
   padding: 0;
@@ -19,12 +19,18 @@ body {
   border: 1px solid #dddddd;
 }
 
-/* Header */
+.layout-table td {
+  border: 5px solid #dddddd;
+  vertical-align: top;
+}
+
+/* ----- Header ----- */
 .header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
+  border: 5px solid #dddddd;
   background: linear-gradient(to right, #ffffff, #337ab7);
 }
 
@@ -48,7 +54,7 @@ body {
 }
 
 
-/* Buttons */
+/* ----- Buttons ----- */
 .btn-header {
   background-color: #337ab7;
   color: #ffffff;
@@ -85,18 +91,7 @@ body {
   gap: 5px;
 }
 
-/* Page Table Layout */
-.layout-table {
-  border-collapse: collapse;
-  border: 1px solid #dddddd;
-}
-
-.layout-table td {
-  border: 5px solid #dddddd;
-  vertical-align: top;
-}
-
-/* Navigation */
+/* ----- Navigation ----- */
 .profilepicture {
   display: block;
   width: 60px;
@@ -149,7 +144,7 @@ body {
   background-color: #d9e4ec;
 }
 
-/* Page Contents */
+/* ----- Content Panel ----- */
 .content-field {
   background-color: #ffffff;
   border: none;
@@ -196,7 +191,7 @@ body {
   font-family: inherit;
 }
 
-/* Page Contents - Tables*/
+/* ----- Content Panel - Tables ----- */
 .content-table {
   width: 100%;
   border-collapse: collapse;
@@ -220,7 +215,7 @@ body {
   padding: 0 8px;
 }
 
-/* Footer */
+/* ----- Footer ----- */
 .footer {
   text-align: center;
   padding: 10px;
@@ -257,6 +252,8 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 10px;
   margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   position: relative;
 }
 
@@ -290,4 +287,37 @@ body {
 .card-menu-btn:hover {
   background-color: #f2f4f7;
   color: #333333;
+}
+
+/* ============================
+   Index / Login - Page Specific
+   ============================ */
+.header-bar p {
+  color: #ffffff;
+  font-size: 16px;
+  text-align: right;
+  width: 100%;
+  margin: 0;
+}
+ 
+.login-image-panel {
+  background-color: #dddddd;
+  text-align: center;
+  vertical-align: middle;
+}
+ 
+.login-image-panel img {
+  max-width: 100%;
+  height: auto;
+}
+ 
+.content fieldset input[type="password"] {
+  width: 100%;
+  max-width: 300px;
+  padding: 6px 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
 }
