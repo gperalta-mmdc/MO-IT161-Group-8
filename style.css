@@ -1,0 +1,293 @@
+/* eto ang ating reusable resources. pakibase yung class and
+style tags nyo sa 'selector' para uniform and code natin across
+all pages. Do not forget to link css inside <head> 
+<link rel="stylesheet" href="style.css" /> */
+
+/* Base Background and Layout */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.layout-table {
+  width: 100%;
+  height: 100vh;
+  border-collapse: collapse;
+  border: 1px solid #dddddd;
+}
+
+/* Header */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(to right, #ffffff, #337ab7);
+}
+
+.header-image {
+  width: 15%;
+}
+
+.header-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.header-buttons form {
+  margin: 0;
+}
+
+
+/* Buttons */
+.btn-header {
+  background-color: #337ab7;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-header:hover {
+  background-color: #285e8e;
+}
+
+.btn-content:hover {
+  background-color: #285e8e;
+  color: #ffffff;
+}
+
+.btn-content {
+  background-color: #ffffff;
+  color: #337ab7;
+  border: 1px solid #337ab7;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-contentgroup {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Page Table Layout */
+.layout-table {
+  border-collapse: collapse;
+  border: 1px solid #dddddd;
+}
+
+.layout-table td {
+  border: 5px solid #dddddd;
+  vertical-align: top;
+}
+
+/* Navigation */
+.profilepicture {
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+}
+
+.profile-name {
+  color: #003366;
+  margin-top: 0;
+  padding: 0 10px;
+  text-align: center;
+}
+
+.profile-department {
+  color: #cccccc;
+  margin-top: 0;
+  text-align: center;
+  font-weight: lighter;
+  font-size: small;
+}
+
+.navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation ul li {
+  margin-bottom: 2px;
+}
+
+.navigation ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  color: #337ab7;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+.navigation ul li a img {
+  width: 18px;
+  height: 18px;
+}
+
+.navigation ul li a:hover {
+  background-color: #d9e4ec;
+}
+
+/* Page Contents */
+.content-field {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 15px 20px;
+  margin: 10px 10px 20px 10px;
+}
+
+.content-legend {
+  color: #003366;
+  font-weight: lighter;
+  font-size: 18px;
+  padding: 0 8px;
+}
+
+.content-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 14px;
+  color: #333333;
+}
+
+.content fieldset input[type="file"] {
+  background-color: #ffffff;
+  color: #337ab7;
+  border: 1px solid #337ab7;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.content fieldset input[type="text"],
+.content fieldset input[type="number"],
+.content fieldset input[type="date"],
+.content fieldset select,
+.content fieldset textarea {
+  width: 100%;
+  max-width: 300px;
+  padding: 6px 8px;
+  border: 1px solid #cccccc;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Page Contents - Tables*/
+.content-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.content fieldset table th {
+  color: #003366;
+  font-weight: lighter;
+  font-size: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.content fieldset table td {
+  color: #003366;
+  font-weight: lighter;
+  font-size: 14px;
+  vertical-align: middle;
+  border: 1px solid #003366;
+  padding: 0 8px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #777777;
+  border-top: 1px solid #dddddd;
+  margin-top: 10px;
+}
+
+/* ============================
+   Dashboard - Page Specific
+   ============================ */
+.content h2 {
+  color: #003366;
+  margin-top: 0;
+  padding: 0 10px;
+}
+
+.content > p {
+  padding: 0 10px;
+  color: #555555;
+  font-size: 14px;
+}
+
+.content hr {
+  border: none;
+  border-top: 1px solid #cccccc;
+  margin: 10px 10px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.card h3 {
+  color: #003366;
+  font-size: 16px;
+  margin: 0 0 5px 0;
+  padding-right: 25px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 14px;
+  color: #444444;
+}
+
+.card-menu-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  color: #999999;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.card-menu-btn:hover {
+  background-color: #f2f4f7;
+  color: #333333;
+}
