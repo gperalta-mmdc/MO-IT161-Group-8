@@ -1,0 +1,278 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <title>ProcureIT - Reports</title>
+  </head>
+
+  <body>
+    <section id="reports">
+      <h1>Company Name</h1>
+      <p>
+        Workplace Zero Paper Initiative<br />
+        Procurement and Inventory Management System
+      </p>
+      <br />
+      <table
+        width="100%"
+        style="height: 100vh"
+        border="1"
+        cellpadding="10"
+        cellspacing="0"
+      >
+        <tr>
+          <td width="13%" valign="top" bgcolor="#f8f9fa">
+            <h3>Hello, [User]</h3>
+            <nav>
+              <ul>
+                <li><a href="index.html#dashboard">Dashboard</a></li>
+                <li><a href="index.html#requisition">Purchase Requisition</a></li>
+                <li><a href="approvals.html">Approvals</a></li>
+                <li><a href="index.html#purchase-order">Purchase Orders</a></li>
+                <li><a href="delivery.html">Delivery Receipts</a></li>
+                <li><a href="index.html#invoices">Invoice Processing</a></li>
+                <li><a href="index.html#vendors">Vendor Sourcing &amp; Documents</a></li>
+                <li><a href="index.html#inventory">Inventory &amp; Asset Tagging</a></li>
+                <li><a href="reports.html">Reports</a></li>
+              </ul>
+            </nav>
+          </td>
+
+          <td width="50%" bgcolor="#e1e2e4" valign="top">
+            <h2>Reports</h2>
+            <p>
+              Generate summaries of procurement and inventory activity for a
+              chosen date range and department, for review or for printing.
+            </p>
+
+            <fieldset>
+              <legend>Generate Report</legend>
+              <form>
+                <label>Report Type</label>
+                <br />
+                <select>
+                  <option>-- Select Report Type --</option>
+                  <option>Requisition Status Summary</option>
+                   <option>Approval Summary</option>
+                  <option>Purchase Orders Summary</option>
+                  <option>Delivery Receipts Summary</option>
+                  <option>Invoice Processing Summary</option>
+                  <option>Vendor Management Summary</option>
+                  <option>Inventory Stock Summary</option>
+                </select>
+                <br /><br />
+                <label>Department</label>
+                <br />
+                <select>
+                  <option>All Departments</option>
+                  <option>IT</option>
+                  <option>Purchasing</option>
+                  <option>Accounting</option>
+                  <option>Administration</option>
+                  <option>Sales / Marketing</option>
+                  <option>Engineering</option>
+                  <option>Human Resources</option>
+                </select>
+                <br /><br />
+                <label>Date From</label>
+                <br />
+                <input type="date" />
+                <br /><br />
+                <label>Date To</label>
+                <br />
+                <input type="date" />
+                <br /><br />
+                <button type="submit">Generate Report</button>
+              </form>
+            </fieldset>
+
+            <br />
+
+            <fieldset>
+              <legend>
+                Report Preview &mdash; Requisition Status Summary (Aug 1 &ndash;
+                Aug 31, 2026)
+              </legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th>Requisitions Filed</th>
+                    <th>Approved</th>
+                    <th>Rejected</th>
+                    <th>Pending</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Purchasing</td>
+                    <td>4</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>IT</td>
+                    <td>6</td>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Sales / Marketing</td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                </tbody>
+              </table>
+              <br />
+              <button type="button">Export as PDF</button>
+              <button type="button">Export as CSV</button>
+              <button type="button">Print</button>
+            </fieldset>
+
+            <br/>
+
+               <fieldset>
+              <legend>
+                Report Preview &mdash; Approval Summary (Aug 1 &ndash; Aug 31,
+                2026)
+              </legend>
+              <p>
+                Tracks how each requisition was decided and how long it took
+                &mdash; useful for spotting slow approvals, not just counting
+                them.
+              </p>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Requisition ID</th>
+                    <th>Department</th>
+                    <th>Decision</th>
+                    <th>Decided By</th>
+                    <th>Date Submitted</th>
+                    <th>Date Decided</th>
+                    <th>Turnaround (Days)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>REQ-0997</td>
+                    <td>Engineering</td>
+                    <td>Rejected</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-11</td>
+                    <td>2026-08-13</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>REQ-0998</td>
+                    <td>Accounting</td>
+                    <td>Approved</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-12</td>
+                    <td>2026-08-14</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>REQ-1002</td>
+                    <td>Sales / Marketing</td>
+                    <td>Approved</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-18</td>
+                    <td>2026-08-19</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>REQ-1003</td>
+                    <td>IT</td>
+                    <td>Rejected</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-20</td>
+                    <td>2026-08-25</td>
+                    <td>5</td>
+                  </tr>
+                  <tr>
+                    <td>REQ-1001</td>
+                    <td>Administration</td>
+                    <td>Pending</td>
+                    <td>&mdash;</td>
+                    <td>2026-08-15</td>
+                    <td>&mdash;</td>
+                    <td>16 (still pending)</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>
+                <strong>Average turnaround (decided requisitions):</strong>
+                2.5 days
+              </p>
+              <br />
+              <button type="button">Export as PDF</button>
+              <button type="button">Export as CSV</button>
+              <button type="button">Print</button>
+            </fieldset>
+
+            <br>   
+
+            <fieldset>
+              <legend>Recently Generated Reports</legend>
+              <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Report Name</th>
+                    <th>Type</th>
+                    <th>Date Range</th>
+                    <th>Generated By</th>
+                    <th>Date Generated</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Requisition Status Summary</td>
+                    <td>Requisition Status Summary</td>
+                    <td>Aug 1 &ndash; Aug 31, 2026</td>
+                    <td>[User]</td>
+                    <td>2026-09-01</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Download</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>July Inventory Stock Summary</td>
+                    <td>Inventory Stock Summary</td>
+                    <td>Jul 1 &ndash; Jul 31, 2026</td>
+                    <td>[User]</td>
+                    <td>2026-08-02</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Download</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Q2 Vendor Management Summary</td>
+                    <td>Vendor Management Summary</td>
+                    <td>Apr 1 &ndash; Jun 30, 2026</td>
+                    <td>[User]</td>
+                    <td>2026-07-05</td>
+                    <td>
+                      <button type="button">View</button>
+                      <button type="button">Download</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+          </td>
+        </tr>
+      </table>
+    </section>
+    <br />
+    <hr />
+    <br />
+  </body>
+</html>
