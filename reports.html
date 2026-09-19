@@ -1,62 +1,115 @@
 <!doctype html>
-
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <title>ProcureIT - Reports</title>
+    <title>
+      Reports - ProcureIT - Procurement and Inventory System
+    </title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="reports.css" />
   </head>
 
   <body>
-    <header class="header-bar">
+    <div class="header-bar">
       <div class="header-image">
-        <img src="./resources/proc1.jpg" alt="ProcureIT" />
+        <img src="./resources/pit-header.png" />
       </div>
-      <p>
-        <strong>Company Name</strong><br />
-        Workplace Zero Paper Initiative &mdash; Procurement and Inventory
-        Management System
-      </p>
+
       <div class="header-buttons">
-        <button type="button" class="btn-header">Settings</button>
+        <button class="btn-header">Notifications</button>
+        <button class="btn-header">Edit Profile</button>
+        <button class="btn-header">Settings</button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
       </div>
-    </header>
+    </div>
 
     <table class="layout-table">
       <tr>
-        <td class="nav-col">
-          <h3 class="profile-name">Hello, [User]</h3>
-          <div class="navigation">
-            <nav>
-              <ul>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="requisition.html">Purchase Requisition</a></li>
-                <li><a href="approvals.html">Approvals</a></li>
-                <li><a href="purchase-order.html">Purchase Orders</a></li>
-                <li><a href="delivery.html">Delivery Receipts</a></li>
-                <li><a href="invoices.html">Invoice Processing</a></li>
-                <li><a href="vendors.html">Vendor Management</a></li>
-                <li>
-                  <a href="inventory.html">Inventory and Asset Tagging</a>
-                </li>
-                <li><a href="reports.html">Reports</a></li>
-              </ul>
-            </nav>
-          </div>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img class="profilepicture" src="./resources/icons/profile.png" />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation">
+            <ul>
+              <li>
+                <a href="dashboard.html"
+                  ><img src="./resources/icons/dashboard.png" />Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="requisition.html"
+                  ><img src="./resources/icons/requisition.png" />Purchase
+                  Requisition</a
+                >
+              </li>
+              <li>
+                <a href="approvals.html"
+                  ><img src="./resources/icons/approvals.png" />Approvals</a
+                >
+              </li>
+              <li>
+                <a href="purchase-order.html"
+                  ><img src="./resources/icons/purchase-order.png" />Purchase
+                  Orders</a
+                >
+              </li>
+              <li>
+                <a href="delivery.html"
+                  ><img src="./resources/icons/delivery.png" />Delivery
+                  Receipts</a
+                >
+              </li>
+              <li>
+                <a href="invoices.html"
+                  ><img src="./resources/icons/invoices.png" />Invoice
+                  Processing</a
+                >
+              </li>
+              <li>
+                <a href="vendors.html"
+                  ><img src="./resources/icons/vendors.png" />Vendor
+                  Management</a
+                >
+              </li>
+              <li>
+                <a href="inventory.html"
+                  ><img src="./resources/icons/inventory.png" />Inventory and
+                  Asset Tagging</a
+                >
+              </li>
+              <li>
+                <a href="reports.html"
+                  ><img src="./resources/icons/reports.png" />Reports</a
+                >
+              </li>
+              <br />
+              <hr />
+              <br />
+              <li>
+                <a href=""
+                  ><img src="./resources/icons/support.png" />Help and
+                  Support</a
+                >
+              </li>
+            </ul>
+          </nav>
         </td>
 
-        <td class="content-col">
-          <div class="content">
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
+            <button class="btn-content">Download Report</button>
+            <button class="btn-content">View Summary</button>
+          </div>
+
             <h2>Reports</h2>
             <p>
               Generate summaries of procurement and inventory activity for a
               chosen date range and department, for review or for printing.
             </p>
-
+            <hr />
             <fieldset class="content-field">
               <legend class="content-legend">Generate Report</legend>
               <form>
