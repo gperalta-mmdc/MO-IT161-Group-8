@@ -17,6 +17,7 @@ body {
   height: 100vh;
   border-collapse: collapse;
   border: 1px solid #dddddd;
+  table-layout: fixed;
 }
 
 .layout-table td {
@@ -35,7 +36,7 @@ body {
 }
 
 .header-bar p {
-  flex: 1 1 auto;   /* was: width: 100% */
+  flex: 1 1 auto; /* was: width: 100% */
   min-width: 0;
   padding: 0 20px;
 }
@@ -58,7 +59,6 @@ body {
 .header-buttons form {
   margin: 0;
 }
-
 
 /* ----- Buttons ----- */
 .btn-header {
@@ -95,6 +95,52 @@ body {
   justify-content: flex-end;
   align-items: center;
   gap: 5px;
+}
+
+.approve-btn {
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.approve-btn:hover {
+  background-color: #245e28;
+}
+
+.reject-btn {
+  background-color: #ffffff;
+  color: #b3261e;
+  border: 1px solid #b3261e;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.reject-btn:hover {
+  background-color: #fbe9e7;
+}
+
+.withraw-btn {
+  background-color: #efc274;
+  color: #efe9e9;
+  border: 1px solid #efc274;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.withraw-btn:hover {
+  background-color: #eca121;
 }
 
 /* ----- Navigation ----- */
@@ -195,6 +241,16 @@ body {
   border: 1px solid #cccccc;
   font-size: 14px;
   font-family: inherit;
+}
+
+.decision-form .content-label {
+  margin-bottom: 2px;
+}
+
+.decision-form input[type="text"] {
+  max-width: 160px;
+  box-sizing: border-box;
+  margin-bottom: 4px;
 }
 
 /* ----- Content Panel - Tables ----- */
@@ -305,18 +361,18 @@ body {
   width: 100%;
   margin: 0;
 }
- 
+
 .login-image-panel {
   background-color: #dddddd;
   text-align: center;
   vertical-align: middle;
 }
- 
+
 .login-image-panel img {
   max-width: 100%;
   height: auto;
 }
- 
+
 .content fieldset input[type="password"] {
   width: 100%;
   max-width: 300px;
@@ -326,4 +382,14 @@ body {
   font-size: 14px;
   font-family: inherit;
   box-sizing: border-box;
+}
+
+.decision-form .content-label {
+  margin-bottom: 2px;
+}
+
+.decision-form input[type="text"] {
+  max-width: 160px;
+  box-sizing: border-box;
+  margin-bottom: 4px;
 }
