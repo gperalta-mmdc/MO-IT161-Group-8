@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-    <body>
+  <body>
     <div class="header-bar">
       <div class="header-image">
         <img src="./resources/pit-header.png" />
       </div>
 
       <div class="header-buttons">
-        <button class = "btn-header"> Notifications </button>
+        <button class="btn-header">Notifications</button>
         <button class="btn-header">Edit Profile</button>
         <button class="btn-header">Settings</button>
         <form action="index.html" method="get">
@@ -23,200 +23,254 @@
       </div>
     </div>
 
-      <table class="layout-table">
-        
-        <tr>
-          <td class = "sidebar" width="13%" valign="top" bgcolor="#f8f9fa">
-            <img class="profilepicture" src="./resources/icons/profile.png" />
-            <h3 class="profile-name">Hello, Bruce</h3>
-            <h4 class="profile-department">IT Department - Head</h4>
-            <hr>
-            <br>
-            <nav class = "navigation">
-              <ul>
-                <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png"/>Dashboard</a></li>
-                <li><a href="requisition.html"><img src="./resources/icons/requisition.png"/>Purchase Requisition</a></li>
-                <li><a href="approvals.html"><img src="./resources/icons/approvals.png"/>Approvals</a></li>
-                <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png"/>Purchase Orders</a></li>
-                <li><a href="delivery.html"><img src="./resources/icons/delivery.png"/>Delivery Receipts</a></li>
-                <li><a href="invoices.html"><img src="./resources/icons/invoices.png"/>Invoice Processing</a></li>
-                <li><a href="vendors.html"><img src="./resources/icons/vendors.png"/>Vendor Management</a></li>
-                <li><a href="inventory.html"><img src="./resources/icons/inventory.png"/>Inventory and Asset Tagging</a></li>
-                <li><a href="reports.html"><img src="./resources/icons/reports.png"/>Reports</a></li>
+    <table class="layout-table">
+      <tr>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img class="profilepicture" src="./resources/icons/profile.png" />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation">
+            <ul>
+              <li>
+                <a href="dashboard.html"
+                  ><img src="./resources/icons/dashboard.png" />Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="requisition.html"
+                  ><img src="./resources/icons/requisition.png" />Purchase
+                  Requisition</a
+                >
+              </li>
+              <li>
+                <a href="approvals.html"
+                  ><img src="./resources/icons/approvals.png" />Approvals</a
+                >
+              </li>
+              <li>
+                <a href="purchase-order.html"
+                  ><img src="./resources/icons/purchase-order.png" />Purchase
+                  Orders</a
+                >
+              </li>
+              <li>
+                <a href="delivery.html"
+                  ><img src="./resources/icons/delivery.png" />Delivery
+                  Receipts</a
+                >
+              </li>
+              <li>
+                <a href="invoices.html"
+                  ><img src="./resources/icons/invoices.png" />Invoice
+                  Processing</a
+                >
+              </li>
+              <li>
+                <a href="vendors.html"
+                  ><img src="./resources/icons/vendors.png" />Vendor
+                  Management</a
+                >
+              </li>
+              <li>
+                <a href="inventory.html"
+                  ><img src="./resources/icons/inventory.png" />Inventory and
+                  Asset Tagging</a
+                >
+              </li>
+              <li>
+                <a href="reports.html"
+                  ><img src="./resources/icons/reports.png" />Reports</a
+                >
+              </li>
               <br />
               <hr />
               <br />
-                <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>   
-              </ul>
-            </nav>
-          </td>
+              <li>
+                <a href=""
+                  ><img src="./resources/icons/support.png" />Help and
+                  Support</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </td>
 
-          <td class = "content" width="50%" bgcolor="#e1e2e4" valign="top">
-            <br>
-            <div class="btn-contentgroup">
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
             <button class="btn-content">Download Report</button>
             <button class="btn-content">View Summary</button>
-            </div>
+          </div>
 
-            <h2>Purchase Requisition</h2>
-            <p>
-              Submit a new purchase request for approval. Multiple items may be
-              listed under a single requisition.
-            </p>
-            <hr>
-            <fieldset class ="content-field" >
-              <legend class = "content-legend">Requisition Form</legend>
-              <label class = "content-label">Requisition ID</label>
-              <br />
-              <input type="text" placeholder="Auto-generated" />
-              <br /><br />
-              <label class = "content-label">Requested By</label>
-              <br />
-              <input type="text" placeholder="Employee name" />
-              <br /><br />
-              <label class = "content-label">Department</label>
-              <br />
-              <select>
-                <option>-- Select Department --</option>
-                <option>IT</option>
-                <option>Purchasing</option>
-                <option>Accounting</option>
-                <option>Administration</option>
-                <option>Sales / Marketing</option>
-                <option>Operations</option>
-                <option>Facilities</option>
-                <option>Engineering</option>
-                <option>Human Resources</option>
-                <option>Leadership</option>
-              </select>
-              <br /><br />
-              <label class = "content-label">Date Submitted</label>
-              <br />
-              <input type="date" />
-              <br /><br />
-            </fieldset>
-           
+          <h2>Purchase Requisition</h2>
+          <p>
+            Submit a new purchase request for approval. Multiple items may be
+            listed under a single requisition.
+          </p>
+          <hr />
+          <fieldset class="content-field">
+            <legend class="content-legend">Requisition Form</legend>
+            <label class="content-label">Requisition ID</label>
+            <br />
+            <input type="text" placeholder="Auto-generated" />
+            <br /><br />
+            <label class="content-label">Requested By</label>
+            <br />
+            <input type="text" placeholder="Employee name" />
+            <br /><br />
+            <label class="content-label">Department</label>
+            <br />
+            <select>
+              <option>-- Select Department --</option>
+              <option>IT</option>
+              <option>Purchasing</option>
+              <option>Accounting</option>
+              <option>Administration</option>
+              <option>Sales / Marketing</option>
+              <option>Operations</option>
+              <option>Facilities</option>
+              <option>Engineering</option>
+              <option>Human Resources</option>
+              <option>Leadership</option>
+            </select>
+            <br /><br />
+            <label class="content-label">Date Submitted</label>
+            <br />
+            <input type="date" />
+            <br /><br />
+          </fieldset>
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Requested Items (up to 5)</legend>
-              <table class = "content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Item / Description</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td><input type="text" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td><input type="text" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td><input type="text" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td><input type="text" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td><input type="text" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
-           
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Additional Details</legend>
-              <label class = "content-label">Reason for Request</label>
-              <textarea rows="4" cols="50"></textarea>
-              <br /><br />
-              <label class = "content-label">Attach Supporting Document</label>
-              <input type="file" />
-              <br /><br />
-              <button class = "btn-content" type="submit">Submit Requisition</button>
-            </fieldset>
+          <fieldset class="content-field">
+            <legend class="content-legend">Requested Items (up to 5)</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Item / Description</th>
+                  <th>Quantity</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><input type="text" /></td>
+                  <td><input type="number" min="1" step="1" /></td>
+                  <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><input type="text" /></td>
+                  <td><input type="number" min="1" step="1" /></td>
+                  <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><input type="text" /></td>
+                  <td><input type="number" min="1" step="1" /></td>
+                  <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td><input type="text" /></td>
+                  <td><input type="number" min="1" step="1" /></td>
+                  <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td><input type="text" /></td>
+                  <td><input type="number" min="1" step="1" /></td>
+                  <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Submitted Requisitions</legend>
-              <table class = "content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Requisition ID</th>
-                    <th>Requested By</th>
-                    <th>Department</th>
-                    <th>No. of Items</th>
-                    <th>Date Submitted</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>REQ-1001</td>
-                    <td>Juan Dela Cruz</td>
-                    <td>Administration</td>
-                    <td>1</td>
-                    <td>2026-08-15</td>
-                    <td>Pending</td>
-                    <td>
-                      <button class = "btn-content" type="button">View Request</button>
-                      <button class = "btn-content" type="button">Print</button>
-                      <button class = "btn-content" type="button">Withraw</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>REQ-1002</td>
-                    <td>Maria Santos</td>
-                    <td>Sales / Marketing</td>
-                    <td>3</td>
-                    <td>2026-08-18</td>
-                    <td>Approved</td>
-                    <td>
-                      <button class = "btn-content" type="button">View Request</button>
-                      <button class = "btn-content" type="button">Print</button>
-                      <button class = "btn-content" type="button">Withraw</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>REQ-1003</td>
-                    <td>Mark Reyes</td>
-                    <td>IT</td>
-                    <td>2</td>
-                    <td>2026-08-20</td>
-                    <td>Rejected</td>
-                    <td>
-                      <button class = "btn-content" type="button">View Request</button>
-                      <button class = "btn-content" type="button">Print</button>
-                      <button class = "btn-content" type="button">Withraw</button>
-                    </td>
-                  </tr>
-                  <button class = "btn-content" type="button">View All Requests</button>
-                </tbody>
-              </table>
-            </fieldset>
-          </td>
-        </tr>
-      </table>
+          <fieldset class="content-field">
+            <legend class="content-legend">Additional Details</legend>
+            <label class="content-label">Reason for Request</label>
+            <textarea rows="4" cols="50"></textarea>
+            <br /><br />
+            <label class="content-label">Attach Supporting Document</label>
+            <input type="file" />
+            <br /><br />
+            <button class="btn-content">View Requisition</button>
+            <button class="btn-content">Submit Requisition</button>
+          </fieldset>
 
-    <footer class = "footer">
+          <fieldset class="content-field">
+            <legend class="content-legend">Submitted Requisitions</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Requisition ID</th>
+                  <th>Requested By</th>
+                  <th>Department</th>
+                  <th>No. of Items</th>
+                  <th>Date Submitted</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>REQ-1001</td>
+                  <td>Juan Dela Cruz</td>
+                  <td>Administration</td>
+                  <td>1</td>
+                  <td>2026-08-15</td>
+                  <td>Pending</td>
+                  <td>
+                    <button class="btn-content" type="button">
+                      View Request
+                    </button>
+                    <button class="btn-content" type="button">Print</button>
+                    <button class="withraw-btn" type="button">Withdraw</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>REQ-1002</td>
+                  <td>Maria Santos</td>
+                  <td>Sales / Marketing</td>
+                  <td>3</td>
+                  <td>2026-08-18</td>
+                  <td>Approved</td>
+                  <td>
+                    <button class="btn-content" type="button">
+                      View Request
+                    </button>
+                    <button class="btn-content" type="button">Print</button>
+                    <button class="withraw-btn" type="button">Withdraw</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>REQ-1003</td>
+                  <td>Mark Reyes</td>
+                  <td>IT</td>
+                  <td>2</td>
+                  <td>2026-08-20</td>
+                  <td>Rejected</td>
+                  <td>
+                    <button class="btn-content" type="button">
+                      View Request
+                    </button>
+                    <button class="btn-content" type="button">Print</button>
+                    <button class="withraw-btn" type="button">Withdraw</button>
+                  </td>
+                </tr>
+                <button class="btn-content" type="button">
+                  View All Requests
+                </button>
+              </tbody>
+            </table>
+          </fieldset>
+        </td>
+      </tr>
+    </table>
+
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
   </body>
