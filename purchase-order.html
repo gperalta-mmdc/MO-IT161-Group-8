@@ -1,53 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
 <title>Purchase Orders - ProcureIT - Procurement and Inventory System</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <section>
-        <h1>Company Name</h1>
-        <p>Workplace Zero Paper Initiative <br>
-            Procurement and Inventory Management System
-        </p>
-        <button>Settings</button><br /><br />
+    <div class="header-bar">
+      <div class="header-image">
+        <img src="./resources/pit-header.png" />
+      </div>
+      <div class="header-buttons">
+        <button class="btn-header">Notifications</button>
+        <button class="btn-header">Edit Profile</button>
+        <button class="btn-header">Settings</button>
         <form action="index.html" method="get">
-            <button type="submit">Log out</button>
+          <button type="submit" class="btn-header">Log Out</button>
         </form>
-        <br>
-      <table
-        width="100%"
-        style="height: 100vh"
-        border="1"
-        cellpadding="10"
-        cellspacing="0"
-      >
+      </div>
+    </div>
+
+      <table class="layout-table">
         <tr>
           <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <h3>Hello, [User]</h3>
-            <nav>
+           <img class="profilepicture" src="./resources/icons/profile.png" />
+           <h3 class="profile-name">Hello, Bruce</h3>
+           <h4 class="profile-department">IT Department - Head</h4>
+           <hr />
+           <br />
+            <nav class="navigation">
               <ul>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="requisition.html">Purchase Requisition</a></li>
-                <li><a href="approvals.html">Approvals</a></li>
-                <li><a href="purchase-order.html">Purchase Orders</a></li>
-                <li><a href="delivery.html">Delivery Receipts</a></li>
-                <li><a href="invoices.html">Invoice Processing</a></li>
-                <li><a href="vendors.html">Vendor Management</a></li>
-                <li><a href="inventory.html">Inventory and Asset Tagging </a></li>
-                <li><a href="reports.html">Reports</a></li>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" />Reports</a></li>
+              <br />
+              <hr />
+              <br />
+              <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>
               </ul>
             </nav>
           </td>
 
-          <td width="50%" bgcolor="#e1e2e4" valign="top">
-                      <h1>Purchase Orders</h1>
+          <td class= "content" width="50%" bgcolor="#e1e2e4" valign="top">
+            <br />
+            
+                      <div class="btn-contentgroup">
                       <form action="purchase-order-detail.html" method="get">
-                        <button type="submit">+ New Purchase Order</button>
+                        <button type="submit" class="btn-content">+ New Purchase Order</button>
                       </form>
-                      <br>
+                      </div>
 
-                      <table width:"100%" border="1" cellpadding="10" cellspacing="1">
-                        <tr bgcolor="lightblue" align="center">
+                      <h2>Purchase Orders</h2>
+                      <p>Track And Manage All Purchase Orders</p>
+                      <hr />
+
+                      <fieldset class="content-field">
+                        <legend class="content-legend"> Purchase Order List</legend>
+
+                        <table class="content-table">
+                          <thead>
+                            <tr>
                             <th>PO #</th>
                             <th>Vendor</th>
                             <th>Date</th>
@@ -55,53 +73,82 @@
                             <th>Status</th>
                             <th>Total</th>
                             <th>Action</th>
-                        </tr>
-                        <tr bgcolor="lightgrey" align="center">
-                            <td>PO#02</td>
-                            <td>Lenovo</td>
-                            <td>9/20/2026</td>
-                            <td>Mario Pison</td>
-                            <td>Pending</td>
-                            <td>5,325.00</td>
-                            <td><button><a href="purchase-order-detail.html">View</a></button><button>Print</button></td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                             <td>PO#02</td>
+                             <td>Lenovo</td>
+                             <td>9/20/2026</td>
+                             <td>Mario Pison</td>
+                             <td>Pending</td>
+                             <td>5,325.00</td>
+                             <td>
+                              <div class="btn-contentgroup">
+                                <form action="purchase-order-detail.html" method="get">
+                                  <button type="submit" class="btn-content">View</button>
+                                </form>
+                                <button class="btn-content">Print</button>
+                              </div>
+                             </td>
+                            </tr>
+                            <tr>
+                              <td>PO#03</td>
+                              <td>Ugreen</td>
+                              <td>9/20/2026</td>
+                              <td>Mario Pison</td>
+                              <td>Pending</td>
+                              <td>5,325.00</td>
+                              <td>
+                                <div class="btn-contentgroup">
+                                <form action="purchase-order-detail.html" method="get">
+                                  <button type="submit" class="btn-content">View</button>
+                                </form>
+                                <button class="btn-content">Print</button>
+                              </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>PO#04</td>
+                              <td>Logitech</td>
+                              <td>9/20/2026</td>
+                              <td>Mario Pison</td>
+                              <td>Pending</td>
+                              <td>5,325.00</td>
+                              <td>
+                                <div class="btn-contentgroup">
+                                  <form action="purchase-order-detail.html" method="get">
+                                    <button type="submit" class="btn-content">View</button>
+                                  </form>
+                                  <button class="btn-content">Print</button>
+                                </div>
+                              </td>
+                              </tr>
+                              <tr>
+                              <td>PO#05</td>
+                              <td>Jabra</td>
+                              <td>9/20/2026</td>
+                              <td>Mario Pison</td>
+                              <td>Pending</td>
+                              <td>5,325.00</td>
+                              <td>
+                                <div class="btn-contentgroup">
+                                  <form action="purchase-order-detail.html" method="get">
+                                    <button type="submit" class="btn-content">View</button>
+                                  </form>
+                                  <button class="btn-content">Print</button>
+                                </div>
+                                </td>
+                              </tr>
+                              </tbody>
+                        </table>
+                      </fieldset>
+                      </td>
+      </tr>
+    </table>
 
-                        </tr>
-                        <tr bgcolor="lightgrey" align="center">
-                            <td>PO#03</td>
-                            <td>Ugreen</td>
-                            <td>9/20/2026</td>
-                            <td>Mario Pison</td>
-                            <td>Pending</td>
-                            <td>5,325.00</td>
-                            <td><button><a href="purchase-order-detail.html">View</a></button><button>Print</button></td>
-
-                        </tr>
-                        <tr bgcolor="lightgrey" align="center">
-                            <td>PO#04</td>
-                            <td>Logitech</td>
-                            <td>9/20/2026</td>
-                            <td>Mario Pison</td>
-                            <td>Pending</td>
-                            <td>5,325.00</td>
-                            <td><button><a href="purchase-order-detail.html">View</a></button><button>Print</button></td>
-
-                        </tr>
-                        <tr bgcolor="lightgrey" align="center">
-                            <td>PO#05</td>
-                            <td>Jabra</td>
-                            <td>9/20/2026</td>
-                            <td>Mario Pison</td>
-                            <td>Pending</td>
-                            <td>5,325.00</td>
-                            <td><button><a href="purchase-order-detail.html">View</a></button><button>Print</button></td>
-                        </tr>
-                      </table>
-          </td>
-        </tr>
-        </table>
-    </section>
-        <footer>
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
-</body>
+  </body>
 </html>
