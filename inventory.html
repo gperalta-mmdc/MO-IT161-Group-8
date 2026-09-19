@@ -6,71 +6,80 @@
     <title>
       Inventory and Asset Tagging - ProcureIT - Procurement and Inventory System
     </title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header>
-      <h1>Company Name</h1>
-      <p>
-        Workplace Zero Paper Initiative<br />
-        Procurement and Inventory Management System
-      </p>
-      <button>Settings</button><br /><br />
-      <form action="index.html" method="get">
-        <button type="submit">Log Out</button>
-      </form>
-    </header>
-    <br />
+    <div class="header-bar">
+  <div class="header-image">
+    <img src="./resources/pit-header.png" />
+  </div>
+  <div class="header-buttons">
+    <button class="btn-header">Notifications</button>
+    <button class="btn-header">Edit Profile</button>
+    <button class="btn-header">Settings</button>
+    <form action="index.html" method="get">
+    <button type="submit" class="btn-header">Log Out</button>
+    </form>
+  </div>
+</div>
     <!--Main navbar namin-->
-    <table
-      width="100%"
-      style="height: 100vh"
-      border="1"
-      cellpadding="10"
-      cellspacing="0"
-    >
+      <table class="layout-table">
       <tr>
         <td width="13%" valign="top" bgcolor="#f8f9fa">
-          <nav>
+         <img class="profilepicture" src="./resources/icons/profile.png" />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br /> 
+          <nav class="navigation">
             <ul>
-              <li><a href="dashboard.html">Dashboard</a></li>
-              <li><a href="requisition.html">Purchase Requisition</a></li>
-              <li><a href="approvals.html">Approvals</a></li>
-              <li><a href="purchase-order.html">Purchase Orders</a></li>
-              <li><a href="delivery.html">Delivery Receipts</a></li>
-              <li><a href="invoices.html">Invoice Processing</a></li>
-              <li>
-                <a href="vendors.html">Vendor Management</a>
-              </li>
-              <li><a href="inventory.html">Inventory and Asset Tagging </a></li>
-              <li><a href="reports.html">Reports</a></li>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" />Reports</a></li>       
+            <br />
+            <hr />
+            <br />
+              <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>   
             </ul>
           </nav>
         </td>
         <!--Main navbar namin-->
 
-        <td width="50%" bgcolor="#e1e2e4" valign="top">
-          <h1>Inventory and Asset Tagging</h1>
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
+            <button type="button" id="add-asset-btn" class="btn-content">Add Asset</button>
+            <button type="button" id="add-request-btn" class="btn-content">New Request</button>
+          </div>
+
+          <h2>Inventory and Asset Tagging</h2>
+          <p>Track Equipment, Assignments and Asset Request</p>
           <!--Navbar ng inventory page-->
-          <nav aria-label="Page sections">
+          <nav class="navigation" aria-label="Page sections"> <!--miniNavbar ng inventory page-->
             <ul>
               <li><a href="#inventory-section">Inventory</a></li>
               <li><a href="#assignments-section">Assignments</a></li>
               <li><a href="#requests-section">Requests</a></li>
             </ul>
           </nav>
-          <!--Navbar ng inventory page-->
+          <hr />
+          
 
           <main>
             <section id="inventory-section">
-              <header>
-                <h2>Inventory</h2>
-                <button type="button" id="add-asset-btn">Add Asset</button>
-              </header>
+              <fieldset class="content-field">
+                <legend class="content-legend">Inventory</legend>
 
               <div id="inventory-filters">
-                <label for="asset-search">Search Inventory:</label>
-                <input type="search" id="asset-search" placeholder="Search" />
-                <label for="status-filter">Filter:</label>
+                <label for="asset-search" class="content-label">Search Inventory:</label>
+                <input type="text" id="asset-search" placeholder="Search" />
+                <label for="status-filter" class="content-label">Filter:</label>
                 <select id="status-filter">
                   <option value="all">All statuses</option>
                   <option value="available">Available</option>
@@ -80,7 +89,7 @@
                 </select>
               </div>
 
-              <table id="asset-table" , border="1" , cellpadding="20">
+              <table id="asset-table" class="content-table">
                 <thead>
                   <tr>
                     <th>Asset ID</th>
@@ -105,7 +114,11 @@
                         <option>For Disposal</option>
                       </select>
                     </td>
-                    <td><button>Assign to User</button></td>
+                    <td>
+                      <div class="btn-contentgroup">
+                        <button class="btn-content">Assign to User</button>
+                      </div>
+                    </td>
                   </tr>
                   <tr>
                     <td>10012</td>
@@ -120,26 +133,30 @@
                         <option>For Disposal</option>
                       </select>
                     </td>
-                    <td><button>Assign to User</button></td>
+                    <td><div class="btn-contentgroup">
+                          <button class="btn-content">Assign to User</button>
+                        </div>
+                      </td>
                   </tr>
                 </tbody>
               </table>
+            </fieldset>
             </section>
 
             <section id="assignments-section">
-              <header>
-                <h2>Assignments</h2>
-              </header>
-              <table id="asset-table" , border="1" , cellpadding="20">
+              <fieldset class="content-field">
+                <legend class="content-legend">Assignments</legend>
+
+              <table id="assignments-table" class="content-table">
                 <thead>
                   <tr>
-                    <td>Asset ID</td>
-                    <td>Manufacturer</td>
-                    <td>Equipment</td>
-                    <td>Serial Number</td>
-                    <td>Assigned To</td>
-                    <td>Department</td>
-                    <td>Action</td>
+                    <th>Asset ID</th>
+                    <th>Manufacturer</th>
+                    <th>Equipment</th>
+                    <th>Serial Number</th>
+                    <th>Assigned To</th>
+                    <th>Department</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,28 +167,35 @@
                     <td>Rt12qM6Tx</td>
                     <td>Mark Johnson</td>
                     <td>Operations</td>
-                    <td><button>Unassign Equipment</button></td>
+                    <td>
+                      <div class="btn-contentgroup">
+                        <button class="btn-content">Unassign Equipment</button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
               <div id="employee-list">
                 <!--Dito naman mga employee-->
               </div>
+              </fieldset>
             </section>
 
             <section id="requests-section">
-              <header>
-                <h2>Request</h2>
-                <button type="button" id="add-request-btn">New requests</button>
-              </header>
+              <fieldset class="content-field">
+                <legend class="content-legend">Request</legend>
 
               <div id="request-list">
                 <!--Dito maglalagay ng request cards-->
               </div>
+              </fieldset>
             </section>
           </main>
         </td>
       </tr>
     </table>
+  <footer class="footer">
+      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
+    </footer>
   </body>
 </html>
