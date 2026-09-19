@@ -2,33 +2,36 @@
 
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>
       Delivery Receipts - ProcureIT - Procurement and Inventory System
     </title>
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <section>
-      <h1>Company Name</h1>
+    <header class="header-bar">
+      <div class="header-image">
+        <img src="./resources/proc1.jpg" alt="ProcureIT" />
+      </div>
       <p>
-        Workplace Zero Paper Initiative<br />
-        Procurement and Inventory Management System
+        <strong>Company Name</strong><br />
+        Workplace Zero Paper Initiative &mdash; Procurement and Inventory
+        Management System
       </p>
-      <button>Settings</button><br /><br />
-      <form action="index.html" method="get">
-        <button type="submit">Log Out</button>
-      </form>
-      <br />
-      <table
-        width="100%"
-        style="height: 100vh"
-        border="1"
-        cellpadding="10"
-        cellspacing="0"
-      >
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <h3>Hello, [User]</h3>
+      <div class="header-buttons">
+        <button type="button" class="btn-header">Settings</button>
+        <form action="index.html" method="get">
+          <button type="submit" class="btn-header">Log Out</button>
+        </form>
+      </div>
+    </header>
+
+    <table class="layout-table">
+      <tr>
+        <td class="nav-col">
+          <h3 class="profile-name">Hello, [User]</h3>
+          <div class="navigation">
             <nav>
               <ul>
                 <li><a href="dashboard.html">Dashboard</a></li>
@@ -37,27 +40,29 @@
                 <li><a href="purchase-order.html">Purchase Orders</a></li>
                 <li><a href="delivery.html">Delivery Receipts</a></li>
                 <li><a href="invoices.html">Invoice Processing</a></li>
-                <li>
-                  <a href="vendors.html">Vendor Management</a>
-                </li>
+                <li><a href="vendors.html">Vendor Management</a></li>
                 <li>
                   <a href="inventory.html">Inventory and Asset Tagging</a>
                 </li>
                 <li><a href="reports.html">Reports</a></li>
               </ul>
             </nav>
-          </td>
+          </div>
+        </td>
 
-          <td width="50%" bgcolor="#e1e2e4" valign="top">
+        <td class="content-col">
+          <div class="content">
             <h2>Delivery Receipts</h2>
             <p>
               Record what actually arrived against a purchase order, so
               inventory and accounting both have proof the delivery happened.
             </p>
 
-            <fieldset>
-              <legend>Purchase Orders Awaiting Delivery</legend>
-              <table border="1" cellpadding="10" cellspacing="0">
+            <fieldset class="content-field">
+              <legend class="content-legend">
+                Purchase Orders Awaiting Delivery
+              </legend>
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>PO Number</th>
@@ -73,42 +78,44 @@
                     <td>MMDC Office Supplies</td>
                     <td>2026-09-10</td>
                     <td>In Transit</td>
-                    <td><button type="button">Record Delivery</button></td>
+                    <td>
+                      <button type="button" class="btn-content">
+                        Record Delivery
+                      </button>
+                    </td>
                   </tr>
                   <tr>
                     <td>PO-2042</td>
                     <td>Hexagon IT Hardware</td>
                     <td>2026-09-12</td>
                     <td>In Transit</td>
-                    <td><button type="button">Record Delivery</button></td>
+                    <td>
+                      <button type="button" class="btn-content">
+                        Record Delivery
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </fieldset>
 
-            <br />
-
-            <fieldset>
-              <legend>New Delivery Receipt</legend>
+            <fieldset class="content-field">
+              <legend class="content-legend">New Delivery Receipt</legend>
               <form>
-                <label>Purchase Order</label>
-                <br />
+                <label class="content-label">Purchase Order</label>
                 <select>
                   <option>-- Select Purchase Order --</option>
                   <option>PO-2041 &mdash; MMDC Office Supplies</option>
                   <option>PO-2042 &mdash; Hexagon IT Hardware</option>
                 </select>
                 <br /><br />
-                <label>Date Received</label>
-                <br />
+                <label class="content-label">Date Received</label>
                 <input type="date" />
                 <br /><br />
-                <label>Received By</label>
-                <br />
+                <label class="content-label">Received By</label>
                 <input type="text" placeholder="Employee name" />
                 <br /><br />
-                <label>Condition of Goods</label>
-                <br />
+                <label class="content-label">Condition of Goods</label>
                 <select>
                   <option>-- Select --</option>
                   <option>Complete &amp; Good Condition</option>
@@ -116,23 +123,23 @@
                   <option>Damaged / Defective</option>
                 </select>
                 <br /><br />
-                <label>Remarks</label>
-                <br />
+                <label class="content-label">Remarks</label>
                 <textarea rows="4" cols="50"></textarea>
                 <br /><br />
-                <label>Attach Proof of Delivery (e.g. photo, waybill)</label>
-                <br />
+                <label class="content-label">
+                  Attach Proof of Delivery (e.g. photo, waybill)
+                </label>
                 <input type="file" />
                 <br /><br />
-                <button type="submit">Save Delivery Receipt</button>
+                <button type="submit" class="btn-content">
+                  Save Delivery Receipt
+                </button>
               </form>
             </fieldset>
 
-            <br />
-
-            <fieldset>
-              <legend>Delivery Receipt Log</legend>
-              <table border="1" cellpadding="10" cellspacing="0">
+            <fieldset class="content-field">
+              <legend class="content-legend">Delivery Receipt Log</legend>
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>PO Number</th>
@@ -153,11 +160,12 @@
                 </tbody>
               </table>
             </fieldset>
-          </td>
-        </tr>
-      </table>
-    </section>
-    <footer>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
   </body>
