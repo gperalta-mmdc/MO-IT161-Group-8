@@ -2,31 +2,35 @@
 
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Approvals - ProcureIT - Procurement and Inventory System</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="approvals.css" />
   </head>
 
   <body>
-    <section>
-      <h1>Company Name</h1>
+    <header class="header-bar">
+      <div class="header-image">
+        <img src="./resources/proc1.jpg" alt="ProcureIT" />
+      </div>
       <p>
-        Workplace Zero Paper Initiative<br />
-        Procurement and Inventory Management System
+        <strong>Company Name</strong><br />
+        Workplace Zero Paper Initiative &mdash; Procurement and Inventory
+        Management System
       </p>
-      <button>Settings</button><br /><br />
-      <form action="index.html" method="get">
-        <button type="submit">Log Out</button>
-      </form>
-      <br />
-      <table
-        width="100%"
-        style="height: 100vh"
-        border="1"
-        cellpadding="10"
-        cellspacing="0"
-      >
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <h3>Hello, [User]</h3>
+      <div class="header-buttons">
+        <button type="button" class="btn-header">Settings</button>
+        <form action="index.html" method="get">
+          <button type="submit" class="btn-header">Log Out</button>
+        </form>
+      </div>
+    </header>
+
+    <table class="layout-table">
+      <tr>
+        <td class="nav-col">
+          <h3 class="profile-name">Hello, [User]</h3>
+          <div class="navigation">
             <nav>
               <ul>
                 <li><a href="dashboard.html">Dashboard</a></li>
@@ -35,27 +39,29 @@
                 <li><a href="purchase-order.html">Purchase Orders</a></li>
                 <li><a href="delivery.html">Delivery Receipts</a></li>
                 <li><a href="invoices.html">Invoice Processing</a></li>
-                <li>
-                  <a href="vendors.html">Vendor Management</a>
-                </li>
+                <li><a href="vendors.html">Vendor Management</a></li>
                 <li>
                   <a href="inventory.html">Inventory and Asset Tagging</a>
                 </li>
                 <li><a href="reports.html">Reports</a></li>
               </ul>
             </nav>
-          </td>
+          </div>
+        </td>
 
-          <td width="39%" bgcolor="#e1e2e4" valign="top">
+        <td class="content-col">
+          <div class="content">
             <h2>Approvals</h2>
             <p>
               Review purchase requisitions submitted by other departments and
               approve or reject them before they move forward to purchasing.
             </p>
 
-            <fieldset>
-              <legend>Requisitions Awaiting Your Decision</legend>
-              <table border="1" cellpadding="5" cellspacing="0">
+            <fieldset class="content-field">
+              <legend class="content-legend">
+                Requisitions Awaiting Your Decision
+              </legend>
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>Requisition ID</th>
@@ -71,18 +77,31 @@
                     <td>REQ-1001</td>
                     <td>Juan Dela Cruz</td>
                     <td>Administration</td>
-                    <td><button>View Requisition</button></td>
+                    <td>
+                      <button type="button" class="btn-content">
+                        View Requisition
+                      </button>
+                    </td>
                     <td>2026-08-15</td>
                     <td>
-                      <form>
-                        <label>Remarks</label>
-                        <br />
+                      <form class="decision-form">
+                        <label class="content-label">Remarks</label>
                         <input type="text" placeholder="Optional remarks" />
                         <br /><br />
-                        <button type="submit" name="decision" value="approve">
+                        <button
+                          type="submit"
+                          name="decision"
+                          value="approve"
+                          class="approve-btn"
+                        >
                           Approve
                         </button>
-                        <button type="submit" name="decision" value="reject">
+                        <button
+                          type="submit"
+                          name="decision"
+                          value="reject"
+                          class="reject-btn"
+                        >
                           Reject
                         </button>
                       </form>
@@ -92,18 +111,31 @@
                     <td>REQ-1002</td>
                     <td>Maria Santos</td>
                     <td>Sales/Marketing</td>
-                    <td><button>View Requisition</button></td>
+                    <td>
+                      <button type="button" class="btn-content">
+                        View Requisition
+                      </button>
+                    </td>
                     <td>2026-08-18</td>
                     <td>
-                      <form>
-                        <label>Remarks</label>
-                        <br />
+                      <form class="decision-form">
+                        <label class="content-label">Remarks</label>
                         <input type="text" placeholder="Optional remarks" />
                         <br /><br />
-                        <button type="submit" name="decision" value="approve">
+                        <button
+                          type="submit"
+                          name="decision"
+                          value="approve"
+                          class="approve-btn"
+                        >
                           Approve
                         </button>
-                        <button type="submit" name="decision" value="reject">
+                        <button
+                          type="submit"
+                          name="decision"
+                          value="reject"
+                          class="reject-btn"
+                        >
                           Reject
                         </button>
                       </form>
@@ -113,11 +145,9 @@
               </table>
             </fieldset>
 
-            <br />
-
-            <fieldset>
-              <legend>Approval History</legend>
-              <table border="1" cellpadding="10" cellspacing="0">
+            <fieldset class="content-field">
+              <legend class="content-legend">Approval History</legend>
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>Requisition ID</th>
@@ -137,14 +167,14 @@
                   </tr>
                   <tr>
                     <td>REQ-0998</td>
-                    <td>Facilities</td>
+                    <td>Accounting</td>
                     <td>Approved</td>
                     <td>[Supervisor Name]</td>
                     <td>2026-08-14</td>
                   </tr>
                   <tr>
                     <td>REQ-0997</td>
-                    <td>Engineering</td>
+                    <td>Administration</td>
                     <td>Rejected</td>
                     <td>[Supervisor Name]</td>
                     <td>2026-08-13</td>
@@ -152,11 +182,12 @@
                 </tbody>
               </table>
             </fieldset>
-          </td>
-        </tr>
-      </table>
-    </section>
-    <footer>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
   </body>

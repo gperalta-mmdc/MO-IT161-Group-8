@@ -34,6 +34,12 @@ body {
   background: linear-gradient(to right, #ffffff, #337ab7);
 }
 
+.header-bar p {
+  flex: 1 1 auto;   /* was: width: 100% */
+  min-width: 0;
+  padding: 0 20px;
+}
+
 .header-image {
   width: 15%;
 }
