@@ -2,58 +2,69 @@
 
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>ProcureIT - Reports</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="reports.css" />
   </head>
 
   <body>
-    <section id="reports">
-      <h1>Company Name</h1>
+    <header class="header-bar">
+      <div class="header-image">
+        <img src="./resources/proc1.jpg" alt="ProcureIT" />
+      </div>
       <p>
-        Workplace Zero Paper Initiative<br />
-        Procurement and Inventory Management System
+        <strong>Company Name</strong><br />
+        Workplace Zero Paper Initiative &mdash; Procurement and Inventory
+        Management System
       </p>
-      <br />
-      <table
-        width="100%"
-        style="height: 100vh"
-        border="1"
-        cellpadding="10"
-        cellspacing="0"
-      >
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <h3>Hello, [User]</h3>
+      <div class="header-buttons">
+        <button type="button" class="btn-header">Settings</button>
+        <form action="index.html" method="get">
+          <button type="submit" class="btn-header">Log Out</button>
+        </form>
+      </div>
+    </header>
+
+    <table class="layout-table">
+      <tr>
+        <td class="nav-col">
+          <h3 class="profile-name">Hello, [User]</h3>
+          <div class="navigation">
             <nav>
               <ul>
-               <li><a href="dashboard.html">Dashboard</a></li>
-               <li><a href="requisition.html">Purchase Requisition</a></li>
-               <li><a href="approvals.html">Approvals</a></li>
-               <li><a href="purchase-order.html">Purchase Orders</a></li>
-               <li><a href="delivery.html">Delivery Receipts</a></li>
-               <li><a href="invoices.html">Invoice Processing</a></li>
-               <li><a href="vendors.html">Vendor Management</a></li>
-               <li><a href="inventory.html">Inventory and Asset Tagging </a></li>
-               <li><a href="reports.html">Reports</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="requisition.html">Purchase Requisition</a></li>
+                <li><a href="approvals.html">Approvals</a></li>
+                <li><a href="purchase-order.html">Purchase Orders</a></li>
+                <li><a href="delivery.html">Delivery Receipts</a></li>
+                <li><a href="invoices.html">Invoice Processing</a></li>
+                <li><a href="vendors.html">Vendor Management</a></li>
+                <li>
+                  <a href="inventory.html">Inventory and Asset Tagging</a>
+                </li>
+                <li><a href="reports.html">Reports</a></li>
               </ul>
             </nav>
-          </td>
+          </div>
+        </td>
 
-          <td width="50%" bgcolor="#e1e2e4" valign="top">
+        <td class="content-col">
+          <div class="content">
             <h2>Reports</h2>
             <p>
               Generate summaries of procurement and inventory activity for a
               chosen date range and department, for review or for printing.
             </p>
 
-            <fieldset>
-              <legend>Generate Report</legend>
+            <fieldset class="content-field">
+              <legend class="content-legend">Generate Report</legend>
               <form>
-                <label>Report Type</label>
-                <br />
+                <label class="content-label">Report Type</label>
                 <select>
                   <option>-- Select Report Type --</option>
                   <option>Requisition Status Summary</option>
-                   <option>Approval Summary</option>
+                  <option>Approval Summary</option>
                   <option>Purchase Orders Summary</option>
                   <option>Delivery Receipts Summary</option>
                   <option>Invoice Processing Summary</option>
@@ -61,8 +72,7 @@
                   <option>Inventory Stock Summary</option>
                 </select>
                 <br /><br />
-                <label>Department</label>
-                <br />
+                <label class="content-label">Department</label>
                 <select>
                   <option>All Departments</option>
                   <option>IT</option>
@@ -74,26 +84,24 @@
                   <option>Human Resources</option>
                 </select>
                 <br /><br />
-                <label>Date From</label>
-                <br />
+                <label class="content-label">Date From</label>
                 <input type="date" />
                 <br /><br />
-                <label>Date To</label>
-                <br />
+                <label class="content-label">Date To</label>
                 <input type="date" />
                 <br /><br />
-                <button type="submit">Generate Report</button>
+                <button type="submit" class="btn-content">
+                  Generate Report
+                </button>
               </form>
             </fieldset>
 
-            <br />
-
-            <fieldset>
-              <legend>
-                Report Preview &mdash; Requisition Status Summary (Aug 1 &ndash;
-                Aug 31, 2026)
+            <fieldset class="content-field">
+              <legend class="content-legend">
+                Report Preview &mdash; Requisition Status Summary (Aug 1
+                &ndash; Aug 31, 2026)
               </legend>
-              <table border="1" cellpadding="10" cellspacing="0">
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>Department</th>
@@ -128,15 +136,17 @@
                 </tbody>
               </table>
               <br />
-              <button type="button">Export as PDF</button>
-              <button type="button">Export as CSV</button>
-              <button type="button">Print</button>
+              <button type="button" class="btn-content">
+                Export as PDF
+              </button>
+              <button type="button" class="btn-content">
+                Export as CSV
+              </button>
+              <button type="button" class="btn-content">Print</button>
             </fieldset>
 
-            <br/>
-
-               <fieldset>
-              <legend>
+            <fieldset class="content-field">
+              <legend class="content-legend">
                 Report Preview &mdash; Approval Summary (Aug 1 &ndash; Aug 31,
                 2026)
               </legend>
@@ -145,7 +155,7 @@
                 &mdash; useful for spotting slow approvals, not just counting
                 them.
               </p>
-              <table border="1" cellpadding="10" cellspacing="0">
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>Requisition ID</th>
@@ -210,16 +220,18 @@
                 2.5 days
               </p>
               <br />
-              <button type="button">Export as PDF</button>
-              <button type="button">Export as CSV</button>
-              <button type="button">Print</button>
+              <button type="button" class="btn-content">
+                Export as PDF
+              </button>
+              <button type="button" class="btn-content">
+                Export as CSV
+              </button>
+              <button type="button" class="btn-content">Print</button>
             </fieldset>
 
-            <br>   
-
-            <fieldset>
-              <legend>Recently Generated Reports</legend>
-              <table border="1" cellpadding="10" cellspacing="0">
+            <fieldset class="content-field">
+              <legend class="content-legend">Recently Generated Reports</legend>
+              <table class="content-table">
                 <thead>
                   <tr>
                     <th>Report Name</th>
@@ -238,8 +250,10 @@
                     <td>[User]</td>
                     <td>2026-09-01</td>
                     <td>
-                      <button type="button">View</button>
-                      <button type="button">Download</button>
+                      <button type="button" class="btn-content">View</button>
+                      <button type="button" class="btn-content">
+                        Download
+                      </button>
                     </td>
                   </tr>
                   <tr>
@@ -249,8 +263,10 @@
                     <td>[User]</td>
                     <td>2026-08-02</td>
                     <td>
-                      <button type="button">View</button>
-                      <button type="button">Download</button>
+                      <button type="button" class="btn-content">View</button>
+                      <button type="button" class="btn-content">
+                        Download
+                      </button>
                     </td>
                   </tr>
                   <tr>
@@ -260,19 +276,22 @@
                     <td>[User]</td>
                     <td>2026-07-05</td>
                     <td>
-                      <button type="button">View</button>
-                      <button type="button">Download</button>
+                      <button type="button" class="btn-content">View</button>
+                      <button type="button" class="btn-content">
+                        Download
+                      </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </fieldset>
-          </td>
-        </tr>
-      </table>
-    </section>
-    <br />
-    <hr />
-    <br />
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <footer class="footer">
+      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
+    </footer>
   </body>
 </html>
