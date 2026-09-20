@@ -2,7 +2,7 @@ Web Systems and Technology<br>
 MO-IT161 - Group 8<br>
 <br>
 Members :<br> 
-Gianross Peralta<br>
+Giannros Peralta<br>
 Marcelyn Madanlo<br>
 Mark Anthony Goyon<br>
 Daniel Cotoner<br>
