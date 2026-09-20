@@ -1,160 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Purchase Order Details - ProcureIT - Procurement and Inventory System</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Purchase Order Details - ProcureIT - Procurement and Inventory System</title>
+  <link rel="stylesheet" href="style.css" />
+
 </head>
 <body>
+  <div class="header-bar">
+      <div class="header-image">
+        <img src="./resources/pit-header.png" />
+      </div>
+      <div class="header-buttons">
+        <button class="btn-header">Notifications</button>
+        <button class="btn-header">Edit Profile</button>
+        <button class="btn-header">Settings</button>
+        <form action="index.html" method="get">
+          <button type="submit" class="btn-header">Log Out</button>
+        </form>
+      </div>
+    </div>
 
-    <section>
-      <h1>Company Name</h1>
-      <p>
-        Workplace Zero Paper Initiative<br>
-        Procurement and Inventory Management System
-      </p>
-      <button>Settings</button><br><br>
-      <form action="index.html" method="get">
-        <button type="submit">Log Out</button>
-      </form>
-      <br>
-        <table
-        width="100%"
-        style="height: 100vh"
-        border="1"
-        cellpadding="10"
-        cellspacing="0"
-      >
+
+  
+        <table class="layout-table">
         <tr>
           <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <h3>Hello, [User]</h3>
-            <nav>
+            <img class="profilepicture" src="./resources/icons/profile.png" />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation">
               <ul>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="requisition.html">Purchase Requisition</a></li>
-                <li><a href="approvals.html">Approvals</a></li>
-                <li><a href="purchase-order.html">Purchase Orders</a></li>
-                <li><a href="delivery.html">Delivery Receipts</a></li>
-                <li><a href="invoices.html">Invoice Processing</a></li>
-                <li><a href="vendors.html">Vendor Management</a></li>
-                <li><a href="inventory.html">Inventory and Asset Tagging</a></li>
-                <li><a href="reports.html">Reports</a></li>
-              </ul>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" />Reports</a></li>
+              <br />
+              <hr />
+              <br />
+              <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>
+            </ul>
             </nav>
           </td>
 
-          <td width="50%" bgcolor="#e1e2e4" valign="top">
-          <a href="purchase-order.html">&laquo; Back to Purchase Orders</a>
-          <br><br>
+          <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+            <br />
+            <div class="btn-contentgroup">
+            <form action="purchase-order.html" method="get">
+              <button type="submit" class="btn-content">&laquo; Back to Purchase Orders</button>
+            </form>
+            <button class="btn-content">Print</button>
+            </div>
 
-          <table width="100%">
-            <tr>
-                <td valign="top">
-                    <h2>Company Name</h2>
-                    [Street Address]<br>
-                    [City, ST ZIP]<br>
+            <h2>Purchase Order Details</h2>
+            <p>Review Purchase Order Details</p>
+            <hr />
+
+            <fieldset class="content-field" id="po-info-section">
+             <legend class="content-legend">Order Information</legend>
+             <table class="content-table">
+              <thead>
+               <tr>
+                <th>Company</th>
+                  <th>Date</th>
+                  <th>PO #</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Company Name<br />
+                    [Street Address]<br />
+                    [City, ST ZIP]<br />
                     Phone: (000) 000-0000
-                </td>
-                <td valign="top" align="right">
-                    <h1>Purchase Order</h1>
-                    <table align="right" border="1" cellpadding="5" cellspacing="0">
-                        <tr><td>DATE</td><td>09/10/2026</td></tr>
-                        <tr><td>PO#</td><td>01</td></tr>
-                    </table>
                   </td>
-                    </tr>
-                    </table>
-                  
+                  <td>09/10/2026</td>
+                  <td>01</td>
+                </tr>
+              </tbody>
+             </table>
+            </fieldset>
 
-                    <br clear="all">
+            <fieldset class="content-field" id="po-vendor-section">
+              <legend class="content-legend">Vendor and Shipping</legend>
+              <table class="content-table">
+              <thead>
+               <tr>
+                <th width="50%">Vendor</th>
+                <th width="50%">Ship to</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td valign="top">
+                    <select name="vendor">
+                      <option value="">--Select Vendor--</option>
+                      <option value="hp-direct">Hewlett Packard</option>
+                      <option value="ugreen-direct">Ugreen</option>
+                      <option value="lenovo">Lenovo</option>
+                    </select>
+                  </td>
+                  <td valign="top">
+                    Company Name<br />
+                    [Name]<br />
+                    [Street Address]<br />
+                    [City, ST ZIP]<br />
+                    Phone: (000) 000-0000
+                  </td>
+                </tr>
+              </tbody>
+             </table>
 
-                    <table width="100%" border="1" cellpadding="8" cellspacing="0">
-                        <tr bgcolor="lightblue">
-                            <th width="50%">Vendor</th>
-                            <th width="50%">Ship to</th>
-                        </tr>
-                        <tr>
-                          <td valign="top">
-                            <select name="vendor">
-                              <option value="">--Select Vendor--</option>
-                              <option value="hp-direct">Hewlett Packard</option>
-                              <option value="ugreen-direct">Ugreen</option>
-                              <option value="lenovo">Lenovo</option>
-                            </select>
-                          </td>
-                          <td valign="top">
-                            Company Name <br>
-                            [Name] <br>
-                            [Street Address] <br>
-                            [City, ST ZIP] <br>
-                            Phone: (000) 000-000
-                          </td>
-                        </tr>
-                    </table>
-            
-          <br>
+             <table class="content-table">
+              <thead>
+                <tr>
+                  <th>Requisitioner</th>
+                  <th>Ship Via</th>
+                  <th>F.O.B</th>
+                  <th>Shipping Terms</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Mario Pison</td>
+                  <td>LBC</td>
+                  <td>Destination</td>
+                  <td>Net 30</td>
+                </tr>
+              </tbody>
 
-          <table width="100%" border="1" cellpadding="8" cellspacing="0">
-            <tr bgcolor="lightblue" align="center">
-              <th>Requistioner</th>
-              <th>Ship Via</th>
-              <th>F.O.B</th>
-              <th>Shipping terms</th>
+             </table>
+            </fieldset>
 
-            </tr>
-            <tr align="center">
-              <td>Mario Pison</td>
-              <td>LBC</td>
-              <td>Destination</td>
-              <td>Net 30</td>
-            </tr>
-          </table>
+            <fieldset class="content-field" id="po-items-section">
+              <legend class="content-legend">Items</legend>
 
-          <br>
-
-          <table width="100%" border="1" cellpadding="8" cellspacing="0">
-            <tr bgcolor="lightblue" align="center">
-              <th>Item #</th>
-              <th>Description</th>
-              <th>Qty</th>
-              <th>Unit Price</th>
-              <th>Total</th>
-
-            </tr>
-            <tr align="center">
-              <td>676767</td>
-              <td>Logitech Keyboard</td>
-              <td>67</td>
-              <td>670</td>
-              <td>67,000</td>
-            </tr>
-            <tr align="center">
-              <td>676767</td>
-              <td>Logitech Keyboard</td>
-              <td>67</td>
-              <td>670</td>
-              <td>67,000</td>
-            </tr>
-          
-          </table>
-
-
-          <br>
-
-          <table align="right" border="1" cellpadding="8" cellspacing="0">
-            <tr><td>Subtotal</td><td align="right">67,67.00</td></tr>
-            <tr><td>Tax</td><td align="right">67</td></tr>
-            <tr bgcolor="lightblue"><td><b>Total</b></td><td align="right"><b>67,670.00</b></td></tr>
-            
-          </table>
-          
-          
-          </table>
-
+              <table class="content-table">
+                <thead>
+                  <tr>
+                  <th>Item #</th>
+                  <th>Description</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <td>676767</td>
+                  <td>Logitech Keyboard</td>
+                  <td>67</td>
+                  <td>670</td>
+                  <td>67,000</td>
+                  </tr>
+                  <tr>
+                  <td>676767</td>
+                  <td>Logitech Keyboard</td>
+                  <td>67</td>
+                  <td>670</td>
+                  <td>67,000</td>
+                  </tr>
+                </tbody>
+              </table>
+              
+              <table class="content-table">
+                <tbody>
+                  <tr>
+                   <td>Subtotal</td>
+                   <td>67,67.00</td>
+                  </tr>
+                  <tr>
+                   <td>Tax</td>
+                   <td>67</td>
+                  </tr>
+                  <tr>
+                   <td><b>Total</b></td>
+                   <td><b>67,670.00</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
           </td>
-
         </tr>
       </table>
-
       
-        </section>
+    <footer class="footer">
+      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
+    </footer>
  </body>
 </html>       

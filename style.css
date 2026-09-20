@@ -328,7 +328,22 @@ nav[aria-label="Page sections"] ul li a:hover {
   clear: both;
 }
 
+/* ----- PO Detail Page Specific----- */
 
+#po-info-section .content-legend,
+#po-vendor-section .content-legend,
+#po-items-section .content-legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+#po-info-section .content-legend + *,
+#po-vendor-section .content-legend + *,
+#po-items-section .content-legend + * {
+  clear: both;
+}
 
 
 /* ----- Content Panel - Tables ----- */
