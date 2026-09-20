@@ -88,12 +88,22 @@ body {
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
+  text-decoration: none;
+  color: #337ab7;
 }
 
 .btn-contentgroup {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 5px;
+}
+
+.btn-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0px;
   gap: 5px;
 }
 
@@ -105,7 +115,7 @@ body {
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-  margin-bottom: 5px;
+  text-decoration: none;
 }
 
 .approve-btn:hover {
@@ -120,7 +130,6 @@ body {
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-  margin-bottom: 5px;
 }
 
 .reject-btn:hover {
@@ -255,7 +264,6 @@ body {
 
 /* ----- Inventory Page Specific----- */
 
-
 #inventory-filters input,
 #inventory-filters select,
 #asset-table select,
@@ -344,7 +352,6 @@ nav[aria-label="Page sections"] ul li a:hover {
 #po-items-section .content-legend + * {
   clear: both;
 }
-
 
 /* ----- Content Panel - Tables ----- */
 .content-table {
