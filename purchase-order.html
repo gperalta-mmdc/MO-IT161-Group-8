@@ -112,10 +112,83 @@
           <hr />
 
           <fieldset class="content-field">
-            <legend class="content-legend">Purchase Order List</legend>
+            <legend class="content-legend">Approved Requisitions</legend>
 
             <table class="content-table" border="1">
-              <thead>
+               <thead>
+                  <tr>
+                    <th>Requisition ID</th>
+                    <th>Department</th>
+                    <th>Decision</th>
+                    <th>Decided By</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>REQ-1003</td>
+                    <td>IT</td>
+                    <td>Rejected</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-20</td>
+                    <td>
+                    <div class="btn-action">
+                      <form action="purchase-order-detail.html" method="get">
+                        <button type="submit" class="btn-content">View</button>
+                      </form>
+                      <a href="purchase-order-detail.html" class="approve-btn"
+                        >Create Purchase Order</a
+                      >
+                      <button class="reject-btn">Cancel Order</button>
+                    </div>
+                  </td>
+                  </tr>
+                  <tr>
+                    <td>REQ-0998</td>
+                    <td>Accounting</td>
+                    <td>Approved</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-14</td>
+                    <td>
+                    <div class="btn-action">
+                      <form action="purchase-order-detail.html" method="get">
+                        <button type="submit" class="btn-content">View</button>
+                      </form>
+                      <a href="purchase-order-detail.html" class="approve-btn"
+                        >Create Purchase Order</a
+                      >
+                      <button class="reject-btn">Cancel Order</button>
+                    </div>
+                  </td>
+                  </tr>
+                  <tr>
+                    <td>REQ-0997</td>
+                    <td>Administration</td>
+                    <td>Rejected</td>
+                    <td>[Supervisor Name]</td>
+                    <td>2026-08-13</td>
+                    <td>
+                    <div class="btn-action">
+                      <form action="purchase-order-detail.html" method="get">
+                        <button type="submit" class="btn-content">View</button>
+                      </form>
+                      <a href="purchase-order-detail.html" class="approve-btn"
+                        >Create Purchase Order</a
+                      >
+                      <button class="reject-btn">Cancel Order</button>
+                    </div>
+                  </td>
+                  </tr>
+                </tbody>
+              </tbody>
+            </table>
+          </fieldset>
+
+          <fieldset class="content-field">
+          <legend class="content-legend">Pending Requisitions</legend>
+          <table class="content-table" border="1">
+           <thead>
                 <tr>
                   <th>PO #</th>
                   <th>Vendor</th>
@@ -139,9 +212,6 @@
                       <form action="purchase-order-detail.html" method="get">
                         <button type="submit" class="btn-content">View</button>
                       </form>
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
                       <button class="reject-btn">Cancel Order</button>
                     </div>
                   </td>
@@ -158,9 +228,6 @@
                       <form action="purchase-order-detail.html" method="get">
                         <button type="submit" class="btn-content">View</button>
                       </form>
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
                       <button class="reject-btn">Cancel Order</button>
                     </div>
                   </td>
@@ -177,9 +244,6 @@
                       <form action="purchase-order-detail.html" method="get">
                         <button type="submit" class="btn-content">View</button>
                       </form>
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
                       <button class="reject-btn">Cancel Order</button>
                     </div>
                   </td>
@@ -196,15 +260,12 @@
                       <form action="purchase-order-detail.html" method="get">
                         <button type="submit" class="btn-content">View</button>
                       </form>
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
                       <button class="reject-btn">Cancel Order</button>
                     </div>
                   </td>
                 </tr>
               </tbody>
-            </table>
+          </table>
           </fieldset>
 
           <fieldset class="content-field">

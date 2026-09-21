@@ -91,6 +91,7 @@
                   <option>Sent to Vendor</option>
                   <option>Acknowledged</option>
                   <option>In Transit</option>
+                  <option>Received</option>
                   <option>Cancelled</option>
                       </select>
                     </td>
@@ -113,6 +114,7 @@
                   <option>Sent to Vendor</option>
                   <option>Acknowledged</option>
                   <option>In Transit</option>
+                  <option>Received</option>
                   <option>Cancelled</option>
                       </select>
                     </td>
@@ -129,7 +131,7 @@
             </fieldset>
 
             <fieldset class="content-field">
-              <legend class="content-legend">New Delivery Receipt</legend>
+              <legend class="content-legend">Record Delivery Receipt</legend>
               <form>
                 <label class="content-label">Purchase Order</label>
                 <select>
@@ -137,6 +139,9 @@
                   <option>PO-2041 &mdash; MMDC Office Supplies</option>
                   <option>PO-2042 &mdash; Hexagon IT Hardware</option>
                 </select>
+                <br /><br />
+                <label class="content-label">Delivery Receipt Number</label>
+                <input type="text" placeholder="D.R. Number" />
                 <br /><br />
                 <label class="content-label">Date Received</label>
                 <input type="date" />
@@ -163,6 +168,7 @@
                 <button type="submit" class="btn-content">
                   Save Delivery Receipt
                 </button>
+                <button class = "reject-btn">Cancel / Return Delivery</button>
               </form>
             </fieldset>
 
@@ -172,6 +178,7 @@
               <table class="content-table" border="1">
                 <thead>
                   <tr>
+                    <th>DR Number</th>
                     <th>PO Number</th>
                     <th>Vendor</th>
                     <th>Date Received</th>
@@ -182,6 +189,7 @@
                 </thead>
                 <tbody>
                   <tr>
+                    <td>DR-762332</td>
                     <td>PO-2039</td>
                     <td>Rock and Paper Co.</td>
                     <td>2026-08-30</td>

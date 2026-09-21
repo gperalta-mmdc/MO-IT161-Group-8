@@ -10,42 +10,89 @@
   </head>
   <body>
     <div class="header-bar">
-  <div class="header-image">
-    <img src="./resources/pit-header.png" />
-  </div>
-  <div class="header-buttons">
-    <button class="btn-header">Notifications</button>
-    <button class="btn-header">Edit Profile</button>
-    <button class="btn-header">Settings</button>
-    <form action="index.html" method="get">
-    <button type="submit" class="btn-header">Log Out</button>
-    </form>
-  </div>
-</div>
+      <div class="header-image">
+        <img src="./resources/pit-header.png" />
+      </div>
+      <div class="header-buttons">
+        <button class="btn-header">Notifications</button>
+        <button class="btn-header">Edit Profile</button>
+        <button class="btn-header">Settings</button>
+        <form action="index.html" method="get">
+          <button type="submit" class="btn-header">Log Out</button>
+        </form>
+      </div>
+    </div>
     <!--Main navbar namin-->
-      <table class="layout-table">
+    <table class="layout-table">
       <tr>
         <td width="13%" valign="top" bgcolor="#f8f9fa">
-         <img class="profilepicture" src="./resources/icons/profile.png" />
+          <img class="profilepicture" src="./resources/icons/profile.png" />
           <h3 class="profile-name">Hello, Bruce</h3>
           <h4 class="profile-department">IT Department - Head</h4>
           <hr />
-          <br /> 
+          <br />
           <nav class="navigation">
             <ul>
-              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" />Dashboard</a></li>
-              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" />Purchase Requisition</a></li>
-              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" />Approvals</a></li>
-              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" />Purchase Orders</a></li>
-              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" />Delivery Receipts</a></li>
-              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" />Invoice Processing</a></li>
-              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" />Vendor Management</a></li>
-              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" />Inventory and Asset Tagging</a></li>
-              <li><a href="reports.html"><img src="./resources/icons/reports.png" />Reports</a></li>       
-            <br />
-            <hr />
-            <br />
-              <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>   
+              <li>
+                <a href="dashboard.html"
+                  ><img src="./resources/icons/dashboard.png" />Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="requisition.html"
+                  ><img src="./resources/icons/requisition.png" />Purchase
+                  Requisition</a
+                >
+              </li>
+              <li>
+                <a href="approvals.html"
+                  ><img src="./resources/icons/approvals.png" />Approvals</a
+                >
+              </li>
+              <li>
+                <a href="purchase-order.html"
+                  ><img src="./resources/icons/purchase-order.png" />Purchase
+                  Orders</a
+                >
+              </li>
+              <li>
+                <a href="delivery.html"
+                  ><img src="./resources/icons/delivery.png" />Delivery
+                  Receipts</a
+                >
+              </li>
+              <li>
+                <a href="invoices.html"
+                  ><img src="./resources/icons/invoices.png" />Invoice
+                  Processing</a
+                >
+              </li>
+              <li>
+                <a href="vendors.html"
+                  ><img src="./resources/icons/vendors.png" />Vendor
+                  Management</a
+                >
+              </li>
+              <li>
+                <a href="inventory.html"
+                  ><img src="./resources/icons/inventory.png" />Inventory and
+                  Asset Tagging</a
+                >
+              </li>
+              <li>
+                <a href="reports.html"
+                  ><img src="./resources/icons/reports.png" />Reports</a
+                >
+              </li>
+              <br />
+              <hr />
+              <br />
+              <li>
+                <a href=""
+                  ><img src="./resources/icons/support.png" />Help and
+                  Support</a
+                >
+              </li>
             </ul>
           </nav>
         </td>
@@ -54,14 +101,19 @@
         <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
           <br />
           <div class="btn-contentgroup">
-            <button type="button" id="add-asset-btn" class="btn-content">Add Asset</button>
-            <button type="button" id="add-request-btn" class="btn-content">New Request</button>
+            <button type="button" id="add-asset-btn" class="btn-content">
+              Add Asset
+            </button>
+            <button type="button" id="add-request-btn" class="btn-content">
+              New Request
+            </button>
           </div>
 
           <h2>Inventory and Asset Tagging</h2>
           <p>Track Equipment, Assignments and Asset Request</p>
           <!--Navbar ng inventory page-->
-          <nav class="navigation" aria-label="Page sections"> <!--miniNavbar ng inventory page-->
+          <nav class="navigation" aria-label="Page sections">
+            <!--miniNavbar ng inventory page-->
             <ul>
               <li><a href="#inventory-section">Inventory</a></li>
               <li><a href="#assignments-section">Assignments</a></li>
@@ -69,115 +121,121 @@
             </ul>
           </nav>
           <hr />
-          
 
           <main>
             <section id="inventory-section">
               <fieldset class="content-field">
                 <legend class="content-legend">Inventory</legend>
 
-              <div id="inventory-filters">
-                <label for="asset-search" class="content-label">Search Inventory:</label>
-                <input type="text" id="asset-search" placeholder="Search" />
-                <label for="status-filter" class="content-label">Filter:</label>
-                <select id="status-filter">
-                  <option value="all">All statuses</option>
-                  <option value="available">Available</option>
-                  <option value="assigned">Assigned</option>
-                  <option value="repair">Repair</option>
-                  <option value="retired">Retired</option>
-                </select>
-              </div>
+                <div id="inventory-filters">
+                  <label for="asset-search" class="content-label"
+                    >Search Inventory:</label
+                  >
+                  <input type="text" id="asset-search" placeholder="Search" />
+                  <label for="status-filter" class="content-label"
+                    >Filter:</label
+                  >
+                  <select id="status-filter">
+                    <option value="all">All statuses</option>
+                    <option value="available">Available</option>
+                    <option value="assigned">Assigned</option>
+                    <option value="repair">Repair</option>
+                    <option value="retired">Retired</option>
+                  </select>
+                </div>
 
-              <table id="asset-table" class="content-table">
-                <thead>
-                  <tr>
-                    <th>Asset ID</th>
-                    <th>Manufacturer</th>
-                    <th>Equipment</th>
-                    <th>Serial Number</th>
-                    <th>Status</th>
-                    <th>Deploy</th>
-                  </tr>
-                </thead>
-                <tbody id="asset-table-body">
-                  <tr>
-                    <td>10011</td>
-                    <td>Huawei</td>
-                    <td>Matepad D15</td>
-                    <td>5Qy348DO44</td>
-                    <td>
-                      <select>
-                        <option>New</option>
-                        <option>Refurbished</option>
-                        <option>For Repair</option>
-                        <option>For Disposal</option>
-                      </select>
-                    </td>
-                    <td>
-                      <div class="btn-contentgroup">
-                        <button class="btn-content">Assign to User</button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>10012</td>
-                    <td>Huawei</td>
-                    <td>Matepad D14</td>
-                    <td>7Rz558YL64</td>
-                    <td>
-                      <select>
-                        <option>New</option>
-                        <option>Refurbished</option>
-                        <option>For Repair</option>
-                        <option>For Disposal</option>
-                      </select>
-                    </td>
-                    <td><div class="btn-contentgroup">
+                <table id="asset-table" class="content-table">
+                  <thead>
+                    <tr>
+                      <th>Asset ID</th>
+                      <th>Manufacturer</th>
+                      <th>Equipment</th>
+                      <th>Serial Number</th>
+                      <th>Status</th>
+                      <th>Deploy</th>
+                    </tr>
+                  </thead>
+                  <tbody id="asset-table-body">
+                    <tr>
+                      <td>10011</td>
+                      <td>Huawei</td>
+                      <td>Matepad D15</td>
+                      <td>5Qy348DO44</td>
+                      <td>
+                        <select>
+                          <option>New</option>
+                          <option>Refurbished</option>
+                          <option>For Repair</option>
+                          <option>For Disposal</option>
+                        </select>
+                      </td>
+                      <td>
+                        <div class="btn-action">
                           <button class="btn-content">Assign to User</button>
                         </div>
                       </td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
+                    </tr>
+                    <tr>
+                      <td>10012</td>
+                      <td>Huawei</td>
+                      <td>Matepad D14</td>
+                      <td>7Rz558YL64</td>
+                      <td>
+                        <select>
+                          <option>New</option>
+                          <option>Refurbished</option>
+                          <option>For Repair</option>
+                          <option>For Disposal</option>
+                        </select>
+                      </td>
+                      <td>
+                        <div class="btn-action">
+                          <button class="btn-content">Assign to User</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
             </section>
 
             <section id="assignments-section">
               <fieldset class="content-field">
                 <legend class="content-legend">Assignments</legend>
 
-              <table id="assignments-table" class="content-table">
-                <thead>
-                  <tr>
-                    <th>Asset ID</th>
-                    <th>Manufacturer</th>
-                    <th>Equipment</th>
-                    <th>Serial Number</th>
-                    <th>Assigned To</th>
-                    <th>Department</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>10001</td>
-                    <td>Jabra</td>
-                    <td>Evolve-2 55</td>
-                    <td>Rt12qM6Tx</td>
-                    <td>Mark Johnson</td>
-                    <td>Operations</td>
-                    <td>
-                      <div class="btn-contentgroup">
-                        <button class="btn-content">Unassign Equipment</button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div id="employee-list">
-                <!--Dito naman mga employee-->
-              </div>
+                <table id="assignments-table" class="content-table">
+                  <thead>
+                    <tr>
+                      <th>Asset ID</th>
+                      <th>Manufacturer</th>
+                      <th>Equipment</th>
+                      <th>Serial Number</th>
+                      <th>Assigned To</th>
+                      <th>Department</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10001</td>
+                      <td>Jabra</td>
+                      <td>Evolve-2 55</td>
+                      <td>Rt12qM6Tx</td>
+                      <td>Mark Johnson</td>
+                      <td>Operations</td>
+                      <td>
+                        <div class="btn-action">
+                          <button class="btn-content">
+                            Unassign Equipment
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div id="employee-list">
+                  <!--Dito naman mga employee-->
+                </div>
               </fieldset>
             </section>
 
@@ -185,16 +243,16 @@
               <fieldset class="content-field">
                 <legend class="content-legend">Request</legend>
 
-              <div id="request-list">
-                <!--Dito maglalagay ng request cards-->
-              </div>
+                <div id="request-list">
+                  <!--Dito maglalagay ng request cards-->
+                </div>
               </fieldset>
             </section>
           </main>
         </td>
       </tr>
     </table>
-  <footer class="footer">
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
   </body>
