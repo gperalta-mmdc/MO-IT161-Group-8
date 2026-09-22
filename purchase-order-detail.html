@@ -1,14 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Purchase Order Details - ProcureIT - Procurement and Inventory System</title>
-  <link rel="stylesheet" href="style.css" />
-
-</head>
-<body>
-  <div class="header-bar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Purchase Order Details - ProcureIT - Procurement and Inventory System
+    </title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="header-bar">
       <div class="header-image">
         <img src="./resources/pit-header.png" />
       </div>
@@ -22,54 +23,101 @@
       </div>
     </div>
 
-
-  
-        <table class="layout-table">
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <img class="profilepicture" src="./resources/icons/profile.png" />
+    <table class="layout-table">
+      <tr>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img class="profilepicture" src="./resources/icons/profile.png" />
           <h3 class="profile-name">Hello, Bruce</h3>
           <h4 class="profile-department">IT Department - Head</h4>
           <hr />
           <br />
           <nav class="navigation">
-              <ul>
-              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" />Dashboard</a></li>
-              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" />Purchase Requisition</a></li>
-              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" />Approvals</a></li>
-              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" />Purchase Orders</a></li>
-              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" />Delivery Receipts</a></li>
-              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" />Invoice Processing</a></li>
-              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" />Vendor Management</a></li>
-              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" />Inventory and Asset Tagging</a></li>
-              <li><a href="reports.html"><img src="./resources/icons/reports.png" />Reports</a></li>
+            <ul>
+              <li>
+                <a href="dashboard.html"
+                  ><img src="./resources/icons/dashboard.png" />Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="requisition.html"
+                  ><img src="./resources/icons/requisition.png" />Purchase
+                  Requisition</a
+                >
+              </li>
+              <li>
+                <a href="approvals.html"
+                  ><img src="./resources/icons/approvals.png" />Approvals</a
+                >
+              </li>
+              <li>
+                <a href="purchase-order.html"
+                  ><img src="./resources/icons/purchase-order.png" />Purchase
+                  Orders</a
+                >
+              </li>
+              <li>
+                <a href="delivery.html"
+                  ><img src="./resources/icons/delivery.png" />Delivery
+                  Receipts</a
+                >
+              </li>
+              <li>
+                <a href="invoices.html"
+                  ><img src="./resources/icons/invoices.png" />Invoice
+                  Processing</a
+                >
+              </li>
+              <li>
+                <a href="vendors.html"
+                  ><img src="./resources/icons/vendors.png" />Vendor
+                  Management</a
+                >
+              </li>
+              <li>
+                <a href="inventory.html"
+                  ><img src="./resources/icons/inventory.png" />Inventory and
+                  Asset Tagging</a
+                >
+              </li>
+              <li>
+                <a href="reports.html"
+                  ><img src="./resources/icons/reports.png" />Reports</a
+                >
+              </li>
               <br />
               <hr />
               <br />
-              <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>
+              <li>
+                <a href=""
+                  ><img src="./resources/icons/support.png" />Help and
+                  Support</a
+                >
+              </li>
             </ul>
-            </nav>
-          </td>
+          </nav>
+        </td>
 
-          <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
-            <br />
-            <div class="btn-contentgroup">
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
             <form action="purchase-order.html" method="get">
-              <button type="submit" class="btn-content">&laquo; Back to Purchase Orders</button>
+              <button type="submit" class="btn-content">
+                &laquo; Back to Purchase Orders
+              </button>
             </form>
             <button class="btn-content">Print</button>
-            </div>
+          </div>
 
-            <h2>Purchase Order Details</h2>
-            <p>Review Purchase Order Details</p>
-            <hr />
+          <h2>Purchase Order Details</h2>
+          <p>Review Purchase Order Details</p>
+          <hr />
 
-            <fieldset class="content-field" id="po-info-section">
-             <legend class="content-legend">Order Information</legend>
-             <table class="content-table">
+          <fieldset class="content-field" id="po-info-section">
+            <legend class="content-legend">Order Information</legend>
+            <table class="content-table">
               <thead>
-               <tr>
-                <th>Company</th>
+                <tr>
+                  <th>Company</th>
                   <th>Date</th>
                   <th>PO #</th>
                 </tr>
@@ -86,16 +134,16 @@
                   <td>01</td>
                 </tr>
               </tbody>
-             </table>
-            </fieldset>
+            </table>
+          </fieldset>
 
-            <fieldset class="content-field" id="po-vendor-section">
-              <legend class="content-legend">Vendor and Shipping</legend>
-              <table class="content-table">
+          <fieldset class="content-field" id="po-vendor-section">
+            <legend class="content-legend">Vendor and Shipping</legend>
+            <table class="content-table">
               <thead>
-               <tr>
-                <th width="50%">Vendor</th>
-                <th width="50%">Ship to</th>
+                <tr>
+                  <th width="50%">Vendor</th>
+                  <th width="50%">Ship to</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,9 +165,9 @@
                   </td>
                 </tr>
               </tbody>
-             </table>
+            </table>
 
-             <table class="content-table">
+            <table class="content-table">
               <thead>
                 <tr>
                   <th>Requisitioner</th>
@@ -136,64 +184,64 @@
                   <td>Net 30</td>
                 </tr>
               </tbody>
+            </table>
+          </fieldset>
 
-             </table>
-            </fieldset>
+          <fieldset class="content-field" id="po-items-section">
+            <legend class="content-legend">Items</legend>
 
-            <fieldset class="content-field" id="po-items-section">
-              <legend class="content-legend">Items</legend>
-
-              <table class="content-table">
-                <thead>
-                  <tr>
+            <table class="content-table">
+              <thead>
+                <tr>
                   <th>Item #</th>
                   <th>Description</th>
                   <th>Qty</th>
                   <th>Unit Price</th>
                   <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
                   <td>676767</td>
                   <td>Logitech Keyboard</td>
                   <td>67</td>
                   <td>670</td>
                   <td>67,000</td>
-                  </tr>
-                  <tr>
+                </tr>
+                <tr>
                   <td>676767</td>
                   <td>Logitech Keyboard</td>
                   <td>67</td>
                   <td>670</td>
                   <td>67,000</td>
-                  </tr>
-                </tbody>
-              </table>
-              
-              <table class="content-table">
-                <tbody>
-                  <tr>
-                   <td>Subtotal</td>
-                   <td>67,67.00</td>
-                  </tr>
-                  <tr>
-                   <td>Tax</td>
-                   <td>67</td>
-                  </tr>
-                  <tr>
-                   <td><b>Total</b></td>
-                   <td><b>67,670.00</b></td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
-          </td>
-        </tr>
-      </table>
-      
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="content-table">
+              <tbody>
+                <tr>
+                  <td>Subtotal</td>
+                  <td>67,67.00</td>
+                </tr>
+                <tr>
+                  <td>Tax</td>
+                  <td>67</td>
+                </tr>
+                <tr>
+                  <td><b>Total</b></td>
+                  <td><b>67,670.00</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+        </td>
+      </tr>
+    </table>
+
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
- </body>
-</html>       
+    <script src="script.js" defer></script>
+  </body>
+</html>

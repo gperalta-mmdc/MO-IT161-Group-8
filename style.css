@@ -3,7 +3,29 @@ style tags nyo sa 'selector' para uniform and code natin across
 all pages. Do not forget to link css inside <head> 
 <link rel="stylesheet" href="style.css" /> */
 
-/* ----- Base Background and Layout ----- */
+/* ==========================================================
+  SHARED STYLES (reusable on every page)
+     1  Base and Layout
+     2  Header
+     3  Buttons
+     4  Sidebar Navigation
+     5  Content Panel (title, subtitle, divider)
+     6  Forms and Fieldsets
+     7  Tables
+     8  Footer
+     9  Popup Message
+     10 Popup Screen
+
+  PAGE-SPECIFIC STYLES (only used on one page)
+     1  Login (index.html)
+     2  Dashboard (dashboard.html)
+     3  Approvals (approvals.html)
+     4  Inventory (inventory.html)
+   ========================================================== */
+
+/* PART 1 - SHARED STYLES */
+
+/* ----- 1 Base and Layout ----- */
 body {
   margin: 0;
   padding: 0;
@@ -25,7 +47,7 @@ body {
   vertical-align: top;
 }
 
-/* ----- Header ----- */
+/* ----- 2 Header ----- */
 .header-bar {
   display: flex;
   justify-content: space-between;
@@ -35,10 +57,16 @@ body {
   background: linear-gradient(to right, #ffffff, #337ab7);
 }
 
+/* Tagline text inside the header (shown on the login page) */
 .header-bar p {
-  flex: 1 1 auto; /* was: width: 100% */
+  flex: 1 1 auto;
   min-width: 0;
+  width: 100%;
+  margin: 0;
   padding: 0 20px;
+  color: #ffffff;
+  font-size: 16px;
+  text-align: right;
 }
 
 .header-image {
@@ -60,7 +88,7 @@ body {
   margin: 0;
 }
 
-/* ----- Buttons ----- */
+/* ----- 3 Buttons ----- */
 .btn-header {
   background-color: #337ab7;
   color: #ffffff;
@@ -75,11 +103,6 @@ body {
   background-color: #285e8e;
 }
 
-.btn-content:hover {
-  background-color: #285e8e;
-  color: #ffffff;
-}
-
 .btn-content {
   background-color: #ffffff;
   color: #337ab7;
@@ -89,7 +112,11 @@ body {
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
-  color: #337ab7;
+}
+
+.btn-content:hover {
+  background-color: #285e8e;
+  color: #ffffff;
 }
 
 .btn-contentgroup {
@@ -152,7 +179,7 @@ body {
   background-color: #eca121;
 }
 
-/* ----- Navigation ----- */
+/* ----- 4 Sidebar Navigation ----- */
 .profilepicture {
   display: block;
   width: 60px;
@@ -205,7 +232,33 @@ body {
   background-color: #d9e4ec;
 }
 
-/* ----- Content Panel ----- */
+/* Highlights the sidebar link of the current page */
+.navigation ul li a.active-link {
+  background-color: #d9e4ec;
+  font-weight: bold;
+}
+
+/* ----- 5 Content Panel ----- */
+.content h2 {
+  color: #003366;
+  margin-top: 0;
+  margin-bottom: 4px;
+  padding: 0 10px;
+}
+
+.content > p {
+  padding: 0 10px;
+  color: #555555;
+  font-size: 14px;
+}
+
+.content hr {
+  border: none;
+  border-top: 1px solid #cccccc;
+  margin: 10px 10px;
+}
+
+/* ----- 6 Forms and Fieldsets ----- */
 .content-field {
   background-color: #ffffff;
   border: none;
@@ -252,6 +305,216 @@ body {
   font-family: inherit;
 }
 
+/* ----- 7 Tables ----- */
+.content-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.content fieldset table th {
+  color: #003366;
+  font-weight: lighter;
+  font-size: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.content fieldset table td {
+  color: #003366;
+  font-weight: lighter;
+  font-size: 14px;
+  vertical-align: middle;
+  border: 1px solid #003366;
+  padding: 0 8px;
+}
+
+/* ----- 8 Footer ----- */
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #777777;
+  border-top: 1px solid #dddddd;
+  margin-top: 10px;
+}
+
+/* ----- 9 Popup Message (lower right corner, used by script.js) ----- */
+.popup-message {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background-color: #003366;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+/* ----- 10 Popup Screen (placeholder for information, used by script.js) ----- */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup-box {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px 25px;
+  width: 90%;
+  max-width: 320px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  text-align: right;
+}
+
+/* PART 2 - PAGE-SPECIFIC STYLES */
+
+/* ----- 1 Login (index.html) ----- */
+.login-image-panel {
+  background-color: #dddddd;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.login-image-panel img {
+  max-width: 100%;
+  height: auto;
+}
+
+.content fieldset input[type="password"] {
+  width: 100%;
+  max-width: 300px;
+  padding: 6px 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+/* ----- 2 Dashboard (dashboard.html) ----- */
+
+/* Subtitle on the left, date on the right, same line */
+.subtitle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subtitle-row p {
+  margin: 0;
+  padding: 0 10px;
+  color: #555555;
+  font-size: 14px;
+}
+
+/* Group headings ("Procurement process", "Supporting records") */
+.card-group-title {
+  margin: 15px 10px 0 10px;
+  color: #e01a00;
+  font-size: 15px;
+}
+
+/* Cards */
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  position: relative;
+}
+
+.card h3 {
+  color: #003366;
+  font-size: 16px;
+  margin: 0 0 5px 0;
+  padding-right: 25px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 14px;
+  color: #444444;
+}
+
+.card-count {
+  font-size: 24px;
+  font-weight: bold;
+  color: #f87b21;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* The ▾ button on each card */
+.card-menu-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  color: #999999;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.card-menu-btn:hover {
+  background-color: #f2f4f7;
+  color: #333333;
+}
+
+/* Dropdown menu that opens from the ▾ button */
+.card-menu {
+  display: none;
+  position: absolute;
+  top: 35px;
+  right: 8px;
+  min-width: 120px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.card-menu.show {
+  display: block;
+}
+
+.card-menu a,
+.card-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 14px;
+  color: #333333;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.card-menu a:hover,
+.card-menu button:hover {
+  background-color: #f2f4f7;
+}
+
+/* ----- 3 Approvals (approvals.html) ----- */
 .decision-form .content-label {
   margin-bottom: 2px;
 }
@@ -262,8 +525,7 @@ body {
   margin-bottom: 4px;
 }
 
-/* ----- Inventory Page Specific----- */
-
+/* ----- 4 Inventory (inventory.html) ----- */
 #inventory-filters input,
 #inventory-filters select,
 #asset-table select,
@@ -299,7 +561,7 @@ body {
   clear: both;
 }
 
-/* Horizontal mini nav */
+/* Horizontal mini nav (Inventory / Assignments / Requests) */
 nav[aria-label="Page sections"] ul {
   display: flex;
   flex-direction: row;
@@ -321,175 +583,4 @@ nav[aria-label="Page sections"] ul li a {
 nav[aria-label="Page sections"] ul li a:hover {
   background-color: #337ab7;
   color: #ffffff;
-}
-
-/* ----- PO Page Specific----- */
-
-#po-list-section .content-legend {
-  float: left;
-  width: 100%;
-  padding: 0;
-  margin-bottom: 10px;
-}
-
-#po-list-section .content-legend + * {
-  clear: both;
-}
-
-/* ----- PO Detail Page Specific----- */
-
-#po-info-section .content-legend,
-#po-vendor-section .content-legend,
-#po-items-section .content-legend {
-  float: left;
-  width: 100%;
-  padding: 0;
-  margin-bottom: 10px;
-}
-
-#po-info-section .content-legend + *,
-#po-vendor-section .content-legend + *,
-#po-items-section .content-legend + * {
-  clear: both;
-}
-
-/* ----- Content Panel - Tables ----- */
-.content-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.content fieldset table th {
-  color: #003366;
-  font-weight: lighter;
-  font-size: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-.content fieldset table td {
-  color: #003366;
-  font-weight: lighter;
-  font-size: 14px;
-  vertical-align: middle;
-  border: 1px solid #003366;
-  padding: 0 8px;
-}
-
-/* ----- Footer ----- */
-.footer {
-  text-align: center;
-  padding: 10px;
-  font-size: 12px;
-  color: #777777;
-  border-top: 1px solid #dddddd;
-  margin-top: 10px;
-}
-
-/* ============================
-   Dashboard - Page Specific
-   ============================ */
-.content h2 {
-  color: #003366;
-  margin-top: 0;
-  padding: 0 10px;
-}
-
-.content > p {
-  padding: 0 10px;
-  color: #555555;
-  font-size: 14px;
-}
-
-.content hr {
-  border: none;
-  border-top: 1px solid #cccccc;
-  margin: 10px 10px;
-}
-
-.card {
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 10px;
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  position: relative;
-}
-
-.card h3 {
-  color: #003366;
-  font-size: 16px;
-  margin: 0 0 5px 0;
-  padding-right: 25px;
-}
-
-.card p {
-  margin: 0;
-  font-size: 14px;
-  color: #444444;
-}
-
-.card-menu-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  line-height: 1;
-  color: #999999;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.card-menu-btn:hover {
-  background-color: #f2f4f7;
-  color: #333333;
-}
-
-/* ============================
-   Index / Login - Page Specific
-   ============================ */
-.header-bar p {
-  color: #ffffff;
-  font-size: 16px;
-  text-align: right;
-  width: 100%;
-  margin: 0;
-}
-
-.login-image-panel {
-  background-color: #dddddd;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.login-image-panel img {
-  max-width: 100%;
-  height: auto;
-}
-
-.content fieldset input[type="password"] {
-  width: 100%;
-  max-width: 300px;
-  padding: 6px 8px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-.decision-form .content-label {
-  margin-bottom: 2px;
-}
-
-.decision-form input[type="text"] {
-  max-width: 160px;
-  box-sizing: border-box;
-  margin-bottom: 4px;
 }

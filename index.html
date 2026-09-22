@@ -24,7 +24,7 @@
             <p style="padding-left: 30px">
               Please enter your credentials to access the system
             </p>
-            <form action="dashboard.html" method="get">
+            <form action="dashboard.html" method="get" id="login-form">
               <fieldset style="padding-left: 30px">
                 <legend>Account Log-In</legend>
                 <br />
@@ -42,7 +42,7 @@
                 <br /><br />
                 <label>Department</label>
                 <br />
-                <select>
+                <select id="loginDepartment">
                   <option>-- Select Department --</option>
                   <option>IT</option>
                   <option>Purchasing</option>
@@ -64,9 +64,10 @@
             </form>
             <br />
             <p style="padding-left: 30px">
-              <a href="#">Forgot your password?</a> <br /><br />
+              <a href="#" id="forgotPasswordLink">Forgot your password?</a>
+              <br /><br />
               Don't have an account?
-              <a href="#">Contact your administrator</a>
+              <a href="#" id="contactAdminLink">Contact your administrator</a>
             </p>
           </section>
         </td>
@@ -87,5 +88,6 @@
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
+    <script src="script.js" defer></script>
   </body>
 </html>
