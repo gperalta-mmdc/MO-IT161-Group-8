@@ -110,12 +110,15 @@ function setupHeaderButtons() {
 
   if (editProfileBtn) {
     editProfileBtn.addEventListener("click", () => {
-      showPopup();
+      showPopup(
+        "Edit Profile",
+        "Here you can update your profile information.",
+      );
     });
   }
   if (settingsBtn) {
     settingsBtn.addEventListener("click", () => {
-      showPopup();
+      showPopup("Settings", "Configure system preferences and settings here.");
     });
   }
 
@@ -127,7 +130,7 @@ function setupHeaderButtons() {
 
   if (viewSummaryBtn) {
     viewSummaryBtn.addEventListener("click", () => {
-      showPopup();
+      showPopup("Summary Overview", "Here is your quick summary details.");
     });
   }
 }
@@ -202,8 +205,8 @@ function showMessage(text) {
   }, 3000);
 }
 
-/* ----- Generic popup screen- placeholder ----- */
-function showPopup() {
+/* ----- Generic popup screen with header & body text ----- */
+function showPopup(titleText, contentText) {
   closePopup(); // remove the previous popup first
 
   const overlay = document.createElement("div");
@@ -212,6 +215,16 @@ function showPopup() {
 
   const box = document.createElement("div");
   box.className = "popup-box";
+
+  // Title heading
+  const title = document.createElement("h2");
+  title.textContent = titleText || "Notification";
+  box.appendChild(title);
+
+  // Content body text
+  const content = document.createElement("p");
+  content.textContent = contentText || "No additional information provided.";
+  box.appendChild(content);
 
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
@@ -237,7 +250,6 @@ function closePopup() {
     overlay.remove();
   }
 }
-
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */
@@ -504,13 +516,16 @@ function setupInventoryPage() {
 
   if (addAssetBtn) {
     addAssetBtn.addEventListener("click", () => {
-      showPopup();
+      showPopup("Add Assets", "Add New Equipment / Company Assets Here.");
     });
   }
 
   if (addRequestBtn) {
     addRequestBtn.addEventListener("click", () => {
-      showPopup();
+      showPopup(
+        "Delete Asset",
+        "Remove Equipment / Company Asset from Distribution.",
+      );
     });
   }
 
