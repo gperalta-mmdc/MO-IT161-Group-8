@@ -372,11 +372,6 @@ function setupApprovalsPage() {
   const decisionForms = document.querySelectorAll(".decision-form");
   const viewHistoryBtn = document.getElementById("viewHistoryBtn");
 
-  // Stop the Enter key in the Remarks box from submitting (reloading) the page
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-  });
-
   // "View Requisition" buttons in the awaiting-decision table
   viewButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -386,6 +381,11 @@ function setupApprovalsPage() {
 
   // Approve / Reject buttons inside each row's decision form
   decisionForms.forEach((form) => {
+    // Stop the Enter key in the Remarks box from submitting (reloading) the page
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+
     const approveBtn = form.querySelector(".approve-btn");
     const rejectBtn = form.querySelector(".reject-btn");
     const row = form.closest("tr");
