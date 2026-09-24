@@ -1,286 +1,294 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      Approvals - ProcureIT - Procurement and Inventory System
+      Vendor Management - ProcureIT - Procurement and Inventory System
     </title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
-    <body>
+  <body>
     <div class="header-bar">
       <div class="header-image">
-        <img src="./resources/pit-header.png" />
+        <img src="./resources/pit-header.png" alt="ProcureIT" />
       </div>
 
       <div class="header-buttons">
-        <button class = "btn-header"> Notifications </button>
-        <button class="btn-header">Edit Profile</button>
-        <button class="btn-header">Settings</button>
+        <button type="button" id="notifBtn" class="btn-header">Notifications</button>
+        <button type="button" id="editProfileBtn" class="btn-header">Edit Profile</button>
+        <button type="button" id="settingsBtn" class="btn-header">Settings</button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
       </div>
     </div>
 
-      <table class="layout-table">
-        
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <img class="profilepicture" src="./resources/icons/profile.png" />
-            <h3 class="profile-name">Hello, Bruce</h3>
-            <h4 class="profile-department">IT Department - Head</h4>
-            <hr>
-            <br>
-            <nav class = "navigation">
-              <ul>
-                <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png"/>Dashboard</a></li>
-                <li><a href="requisition.html"><img src="./resources/icons/requisition.png"/>Purchase Requisition</a></li>
-                <li><a href="approvals.html"><img src="./resources/icons/approvals.png"/>Approvals</a></li>
-                <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png"/>Purchase Orders</a></li>
-                <li><a href="delivery.html"><img src="./resources/icons/delivery.png"/>Delivery Receipts</a></li>
-                <li><a href="invoices.html"><img src="./resources/icons/invoices.png"/>Invoice Processing</a></li>
-                <li><a href="vendors.html"><img src="./resources/icons/vendors.png"/>Vendor Management</a></li>
-                <li><a href="inventory.html"><img src="./resources/icons/inventory.png"/>Inventory and Asset Tagging</a></li>
-                <li><a href="reports.html"><img src="./resources/icons/reports.png"/>Reports</a></li>
+    <table class="layout-table">
+      <tr>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img class="profilepicture" src="./resources/icons/profile.png" alt="Profile picture" />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation">
+            <ul>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" alt="" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" alt="" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" alt="" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" alt="" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" alt="" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" alt="" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" alt="" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" alt="" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" alt="" />Reports</a></li>
               <br />
               <hr />
               <br />
-                <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>   
-              </ul>
-            </nav>
-          </td>
+              <li><a href="#"><img src="./resources/icons/support.png" alt="" />Help and Support</a></li>
+            </ul>
+          </nav>
+        </td>
 
-          <td class = "content" width="50%" bgcolor="#e1e2e4" valign="top">
-            <br>
-            <div class="btn-contentgroup">
-            <button class="btn-content">Download Report</button>
-            <button class="btn-content">View Summary</button>
-            </div>
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
+            <button type="button" id="downloadReportBtn" class="btn-content">Download Report</button>
+            <button type="button" id="viewSummaryBtn" class="btn-content">View Summary</button>
+          </div>
 
-            <h2>Vendor Management</h2>
+          <h2>Vendor Management</h2>
+          <div class="subtitle-row">
             <p>
               Maintain the directory of approved suppliers, their contact
               details, and compliance documents used across requisitions and
               purchase orders.
             </p>
-            <hr />
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Vendor Directory</legend>
-              <table class = "content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Vendor ID</th>
-                    <th>Vendor Name</th>
-                    <th>Category</th>
-                    <th>Contact Person</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>VEN-001</td>
-                    <td>Hewlett Packard</td>
-                    <td>IT Hardware</td>
-                    <td>Anna Reyes</td>
-                    <td>Active</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">View</button>
-                      <button class = "btn-content" type="button">Update Status</button>
-                      </div>  
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>VEN-002</td>
-                    <td>Lenovo</td>
-                    <td>IT Hardware</td>
-                    <td>Carlo Diaz</td>
-                    <td>Active</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">View</button>
-                      <button class = "btn-content" type="button">Update Status</button>
-                      </div>  
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>VEN-003</td>
-                    <td>Ugreen</td>
-                    <td>IT Peripherals</td>
-                    <td>Bea Lim</td>
-                    <td>Active</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">View</button>
-                      <button class = "btn-content" type="button">Update Status</button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>VEN-004</td>
-                    <td>Hexagon IT Hardware</td>
-                    <td>IT Hardware</td>
-                    <td>Ramon Cruz</td>
-                    <td>Active</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">View</button>
-                      <button class = "btn-content" type="button">Update Status</button>
-                      </div>    
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>VEN-005</td>
-                    <td>MMDC Office Supplies</td>
-                    <td>Office Supplies</td>
-                    <td>Liza Tan</td>
-                    <td>Inactive</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">View</button>
-                      <button class = "btn-content" type="button">Update Status</button>
-                      </div>  
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
+            <p id="today-label"></p>
+          </div>
+          <hr />
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Add New Vendor</legend>
-              <form>
-                <label class = "content-label">Vendor Name</label>
-                <br />
-                <input type="text" placeholder="Company name" />
-                <br /><br />
-                <label class = "content-label">Category</label>
-                <br />
-                <select>
-                  <option>-- Select Category --</option>
-                  <option>IT Hardware</option>
-                  <option>IT Peripherals</option>
-                  <option>Office Supplies</option>
-                  <option>Repair &amp; Maintenance Services</option>
-                  <option>Other</option>
-                </select>
-                <br /><br />
-                <label class = "content-label">Contact Person</label>
-                <br />
-                <input type="text" placeholder="Full name" />
-                <br /><br />
-                <label class = "content-label">Email</label>
-                <br />
-                <input type="email" placeholder="name@vendor.com" />
-                <br /><br />
-                <label class = "content-label">Phone</label>
-                <br />
-                <input type="tel" placeholder="e.g. 0917 000 0000" />
-                <br /><br />
-                <label class = "content-label">Address</label>
-                <br />
-                <textarea rows="2" cols="50"></textarea>
-                <br /><br />
-                <label class = "content-label">Tax Identification Number (TIN)</label>
-                <br />
-                <input type="text" placeholder="000-000-000-000" />
-                <br /><br />
-                <label class = "content-label">Upload Business Permit / Accreditation Documents</label>
-                <br />
-                <input type="file" multiple />
-                <br /><br />
-                <label class = "content-label">Status</label>
-                <br />
-                <select>
-                  <option>Active</option>
-                  <option>Inactive</option>
-                  <option>Under Review</option>
-                </select>
-                <br /><br />
-                <button class = "btn-content" type="submit">Add Vendor</button>
-              </form>
-            </fieldset>
+          <fieldset class="content-field">
+            <legend class="content-legend">Vendor Directory</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Vendor ID</th>
+                  <th>Vendor Name</th>
+                  <th>Category</th>
+                  <th>Contact Person</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>VEN-001</td>
+                  <td>Hewlett Packard</td>
+                  <td>IT Hardware</td>
+                  <td>Anna Reyes</td>
+                  <td>Active</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-view-vendor" type="button">View</button>
+                      <button class="btn-content js-edit-vendor" type="button">Update Status</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>VEN-002</td>
+                  <td>Lenovo</td>
+                  <td>IT Hardware</td>
+                  <td>Carlo Diaz</td>
+                  <td>Active</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-view-vendor" type="button">View</button>
+                      <button class="btn-content js-edit-vendor" type="button">Update Status</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>VEN-003</td>
+                  <td>Ugreen</td>
+                  <td>IT Peripherals</td>
+                  <td>Bea Lim</td>
+                  <td>Active</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-view-vendor" type="button">View</button>
+                      <button class="btn-content js-edit-vendor" type="button">Update Status</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>VEN-004</td>
+                  <td>Hexagon IT Hardware</td>
+                  <td>IT Hardware</td>
+                  <td>Ramon Cruz</td>
+                  <td>Active</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-view-vendor" type="button">View</button>
+                      <button class="btn-content js-edit-vendor" type="button">Update Status</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>VEN-005</td>
+                  <td>MMDC Office Supplies</td>
+                  <td>Office Supplies</td>
+                  <td>Liza Tan</td>
+                  <td>Inactive</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-view-vendor" type="button">View</button>
+                      <button class="btn-content js-edit-vendor" type="button">Update Status</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Vendor Documents Expiring Soon</legend>
-              <table class = "content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Vendor</th>
-                    <th>Document</th>
-                    <th>Expiry Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Hexagon IT Hardware</td>
-                    <td>Service Agreement</td>
-                    <td>2026-09-25</td>
-                    <td>Expiring Soon</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">Request Renewal</button></td>
-                      </div>  
-                  </tr>
-                  <tr>
-                    <td>MMDC Office Supplies</td>
-                    <td>Business Permit</td>
-                    <td>2026-09-30</td>
-                    <td>Expiring Soon</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">Request Renewal</button></td>
-                      </div>
-                    </tr>
-                </tbody>
-              </table>
-            </fieldset>
+          <fieldset class="content-field">
+            <legend class="content-legend">Add New Vendor</legend>
+            <form id="vendor-form">
+              <label class="content-label" for="vendorName">Vendor Name</label>
+              <br />
+              <input type="text" id="vendorName" placeholder="Company name" />
+              <br /><br />
+              <label class="content-label" for="vendorCategory">Category</label>
+              <br />
+              <select id="vendorCategory">
+                <option>-- Select Category --</option>
+                <option>IT Hardware</option>
+                <option>IT Peripherals</option>
+                <option>Office Supplies</option>
+                <option>Repair &amp; Maintenance Services</option>
+                <option>Other</option>
+              </select>
+              <br /><br />
+              <label class="content-label" for="contactPerson">Contact Person</label>
+              <br />
+              <input type="text" id="contactPerson" placeholder="Full name" />
+              <br /><br />
+              <label class="content-label" for="vendorEmail">Email</label>
+              <br />
+              <input type="email" id="vendorEmail" placeholder="name@vendor.com" />
+              <br /><br />
+              <label class="content-label">Phone</label>
+              <br />
+              <input type="tel" placeholder="e.g. 0917 000 0000" />
+              <br /><br />
+              <label class="content-label">Address</label>
+              <br />
+              <textarea rows="2" cols="50"></textarea>
+              <br /><br />
+              <label class="content-label">Tax Identification Number (TIN)</label>
+              <br />
+              <input type="text" placeholder="000-000-000-000" />
+              <br /><br />
+              <label class="content-label">Upload Business Permit / Accreditation Documents</label>
+              <br />
+              <input type="file" multiple />
+              <br /><br />
+              <label class="content-label">Status</label>
+              <br />
+              <select>
+                <option>Active</option>
+                <option>Inactive</option>
+                <option>Under Review</option>
+              </select>
+              <br /><br />
+              <button class="btn-content" type="button" id="addVendorBtn">Add Vendor</button>
+            </form>
+          </fieldset>
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Inactive Vendors</legend>
-              <table class = "content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Vendor</th>
-                    <th>Document</th>
-                    <th>Expiry Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Hexagon IT Hardware</td>
-                    <td>Service Agreement</td>
-                    <td>2026-09-25</td>
-                    <td>Expiring Soon</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">Renew Vendor</button></td>
-                      </div>  
-                  </tr>
-                  <tr>
-                    <td>MMDC Office Supplies</td>
-                    <td>Business Permit</td>
-                    <td>2026-09-30</td>
-                    <td>Expiring Soon</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button class = "btn-content" type="button">Renew Vendor</button></td>
-                      </div>
-                    </tr>
-                </tbody>
-              </table>
-            </fieldset>
+          <fieldset class="content-field">
+            <legend class="content-legend">Vendor Documents Expiring Soon</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Vendor</th>
+                  <th>Document</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Hexagon IT Hardware</td>
+                  <td>Service Agreement</td>
+                  <td>2026-09-25</td>
+                  <td>Expiring Soon</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-renew-document" type="button">Request Renewal</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>MMDC Office Supplies</td>
+                  <td>Business Permit</td>
+                  <td>2026-09-30</td>
+                  <td>Expiring Soon</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content js-renew-document" type="button">Request Renewal</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
 
-          </td>
-        </tr>
-      </table>
-    </section>
-    <footer class = "footer">
+          <fieldset class="content-field">
+            <legend class="content-legend">Inactive Vendors</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Vendor</th>
+                  <th>Document</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Hexagon IT Hardware</td>
+                  <td>Service Agreement</td>
+                  <td>2026-09-25</td>
+                  <td>Expiring Soon</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content" type="button">Renew Vendor</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>MMDC Office Supplies</td>
+                  <td>Business Permit</td>
+                  <td>2026-09-30</td>
+                  <td>Expiring Soon</td>
+                  <td>
+                    <div class="btn-action">
+                      <button class="btn-content" type="button">Renew Vendor</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+        </td>
+      </tr>
+    </table>
+
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
     <script src="script.js" defer></script>

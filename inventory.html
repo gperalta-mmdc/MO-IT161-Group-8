@@ -11,12 +11,18 @@
   <body>
     <div class="header-bar">
       <div class="header-image">
-        <img src="./resources/pit-header.png" />
+        <img src="./resources/pit-header.png" alt="ProcureIT" />
       </div>
       <div class="header-buttons">
-        <button class="btn-header">Notifications</button>
-        <button class="btn-header">Edit Profile</button>
-        <button class="btn-header">Settings</button>
+        <button type="button" id="notifBtn" class="btn-header">
+          Notifications
+        </button>
+        <button type="button" id="editProfileBtn" class="btn-header">
+          Edit Profile
+        </button>
+        <button type="button" id="settingsBtn" class="btn-header">
+          Settings
+        </button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
@@ -26,7 +32,11 @@
     <table class="layout-table">
       <tr>
         <td width="13%" valign="top" bgcolor="#f8f9fa">
-          <img class="profilepicture" src="./resources/icons/profile.png" />
+          <img
+            class="profilepicture"
+            src="./resources/icons/profile.png"
+            alt="Profile picture"
+          />
           <h3 class="profile-name">Hello, Bruce</h3>
           <h4 class="profile-department">IT Department - Head</h4>
           <hr />
@@ -35,61 +45,71 @@
             <ul>
               <li>
                 <a href="dashboard.html"
-                  ><img src="./resources/icons/dashboard.png" />Dashboard</a
+                  ><img
+                    src="./resources/icons/dashboard.png"
+                    alt=""
+                  />Dashboard</a
                 >
               </li>
               <li>
                 <a href="requisition.html"
-                  ><img src="./resources/icons/requisition.png" />Purchase
-                  Requisition</a
+                  ><img
+                    src="./resources/icons/requisition.png"
+                    alt=""
+                  />Purchase Requisition</a
                 >
               </li>
               <li>
                 <a href="approvals.html"
-                  ><img src="./resources/icons/approvals.png" />Approvals</a
+                  ><img
+                    src="./resources/icons/approvals.png"
+                    alt=""
+                  />Approvals</a
                 >
               </li>
               <li>
                 <a href="purchase-order.html"
-                  ><img src="./resources/icons/purchase-order.png" />Purchase
-                  Orders</a
+                  ><img
+                    src="./resources/icons/purchase-order.png"
+                    alt=""
+                  />Purchase Orders</a
                 >
               </li>
               <li>
                 <a href="delivery.html"
-                  ><img src="./resources/icons/delivery.png" />Delivery
+                  ><img src="./resources/icons/delivery.png" alt="" />Delivery
                   Receipts</a
                 >
               </li>
               <li>
                 <a href="invoices.html"
-                  ><img src="./resources/icons/invoices.png" />Invoice
+                  ><img src="./resources/icons/invoices.png" alt="" />Invoice
                   Processing</a
                 >
               </li>
               <li>
                 <a href="vendors.html"
-                  ><img src="./resources/icons/vendors.png" />Vendor
+                  ><img src="./resources/icons/vendors.png" alt="" />Vendor
                   Management</a
                 >
               </li>
               <li>
                 <a href="inventory.html"
-                  ><img src="./resources/icons/inventory.png" />Inventory and
-                  Asset Tagging</a
+                  ><img src="./resources/icons/inventory.png" alt="" />Inventory
+                  and Asset Tagging</a
                 >
               </li>
               <li>
                 <a href="reports.html"
-                  ><img src="./resources/icons/reports.png" />Reports</a
+                  ><img src="./resources/icons/reports.png" alt="" />Reports</a
                 >
               </li>
               <br />
               <hr />
               <br />
               <li>
-                <a href=""
-                  ><img src="./resources/icons/support.png" />Help and
+                <a href="#"
+                  ><img src="./resources/icons/support.png" alt="" />Help and
                   Support</a
                 >
               </li>
@@ -110,7 +130,13 @@
           </div>
 
           <h2>Inventory and Asset Tagging</h2>
-          <p>Track Equipment, Assignments and Asset Request</p>
+          <div class="subtitle-row">
+            <p>Track equipment, assignments, and asset requests.</p>
+            <p id="today-label"></p>
+          </div>
+
+          <hr />
+
           <!--Navbar ng inventory page-->
           <nav class="navigation" aria-label="Page sections">
             <!--miniNavbar ng inventory page-->
@@ -120,7 +146,6 @@
               <li><a href="#requests-section">Requests</a></li>
             </ul>
           </nav>
-          <hr />
 
           <main>
             <section id="inventory-section">
@@ -171,7 +196,12 @@
                       </td>
                       <td>
                         <div class="btn-action">
-                          <button class="btn-content">Assign to User</button>
+                          <button
+                            type="button"
+                            class="btn-content js-assign-asset"
+                          >
+                            Assign to User
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -190,7 +220,12 @@
                       </td>
                       <td>
                         <div class="btn-action">
-                          <button class="btn-content">Assign to User</button>
+                          <button
+                            type="button"
+                            class="btn-content js-assign-asset"
+                          >
+                            Assign to User
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -225,7 +260,10 @@
                       <td>Operations</td>
                       <td>
                         <div class="btn-action">
-                          <button class="btn-content">
+                          <button
+                            type="button"
+                            class="btn-content js-unassign-asset"
+                          >
                             Unassign Equipment
                           </button>
                         </div>

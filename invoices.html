@@ -1,221 +1,330 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      Approvals - ProcureIT - Procurement and Inventory System
+      Invoice Processing - ProcureIT - Procurement and Inventory System
     </title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
-    <body>
+  <body>
     <div class="header-bar">
       <div class="header-image">
-        <img src="./resources/pit-header.png" />
+        <img src="./resources/pit-header.png" alt="ProcureIT" />
       </div>
 
       <div class="header-buttons">
-        <button class = "btn-header"> Notifications </button>
-        <button class="btn-header">Edit Profile</button>
-        <button class="btn-header">Settings</button>
+        <button type="button" id="notifBtn" class="btn-header">
+          Notifications
+        </button>
+        <button type="button" id="editProfileBtn" class="btn-header">
+          Edit Profile
+        </button>
+        <button type="button" id="settingsBtn" class="btn-header">
+          Settings
+        </button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
       </div>
     </div>
 
-      <table class="layout-table">
-        
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <img class="profilepicture" src="./resources/icons/profile.png" />
-            <h3 class="profile-name">Hello, Bruce</h3>
-            <h4 class="profile-department">IT Department - Head</h4>
-            <hr>
-            <br>
-            <nav class = "navigation">
-              <ul>
-                <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png"/>Dashboard</a></li>
-                <li><a href="requisition.html"><img src="./resources/icons/requisition.png"/>Purchase Requisition</a></li>
-                <li><a href="approvals.html"><img src="./resources/icons/approvals.png"/>Approvals</a></li>
-                <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png"/>Purchase Orders</a></li>
-                <li><a href="delivery.html"><img src="./resources/icons/delivery.png"/>Delivery Receipts</a></li>
-                <li><a href="invoices.html"><img src="./resources/icons/invoices.png"/>Invoice Processing</a></li>
-                <li><a href="vendors.html"><img src="./resources/icons/vendors.png"/>Vendor Management</a></li>
-                <li><a href="inventory.html"><img src="./resources/icons/inventory.png"/>Inventory and Asset Tagging</a></li>
-                <li><a href="reports.html"><img src="./resources/icons/reports.png"/>Reports</a></li>
+    <table class="layout-table">
+      <tr>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img
+            class="profilepicture"
+            src="./resources/icons/profile.png"
+            alt="Profile picture"
+          />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation">
+            <ul>
+              <li>
+                <a href="dashboard.html"
+                  ><img
+                    src="./resources/icons/dashboard.png"
+                    alt=""
+                  />Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="requisition.html"
+                  ><img
+                    src="./resources/icons/requisition.png"
+                    alt=""
+                  />Purchase Requisition</a
+                >
+              </li>
+              <li>
+                <a href="approvals.html"
+                  ><img
+                    src="./resources/icons/approvals.png"
+                    alt=""
+                  />Approvals</a
+                >
+              </li>
+              <li>
+                <a href="purchase-order.html"
+                  ><img
+                    src="./resources/icons/purchase-order.png"
+                    alt=""
+                  />Purchase Orders</a
+                >
+              </li>
+              <li>
+                <a href="delivery.html"
+                  ><img src="./resources/icons/delivery.png" alt="" />Delivery
+                  Receipts</a
+                >
+              </li>
+              <li>
+                <a href="invoices.html"
+                  ><img src="./resources/icons/invoices.png" alt="" />Invoice
+                  Processing</a
+                >
+              </li>
+              <li>
+                <a href="vendors.html"
+                  ><img src="./resources/icons/vendors.png" alt="" />Vendor
+                  Management</a
+                >
+              </li>
+              <li>
+                <a href="inventory.html"
+                  ><img src="./resources/icons/inventory.png" alt="" />Inventory
+                  and Asset Tagging</a
+                >
+              </li>
+              <li>
+                <a href="reports.html"
+                  ><img src="./resources/icons/reports.png" alt="" />Reports</a
+                >
+              </li>
               <br />
               <hr />
               <br />
-                <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>   
-              </ul>
-            </nav>
-          </td>
+              <li>
+                <a href="#"
+                  ><img src="./resources/icons/support.png" alt="" />Help and
+                  Support</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </td>
 
-          <td class = "content" width="50%" bgcolor="#e1e2e4" valign="top">
-            <br>
-            <div class="btn-contentgroup">
-            <button class="btn-content">Download Report</button>
-            <button class="btn-content">View Summary</button>
-            </div>
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
+            <button type="button" id="downloadReportBtn" class="btn-content">
+              Download Report
+            </button>
+            <button type="button" id="viewSummaryBtn" class="btn-content">
+              View Summary
+            </button>
+          </div>
 
-            <h2>Invoice Processing</h2>
+          <h2>Invoice Processing</h2>
+          <div class="subtitle-row">
             <p>
               Match vendor invoices against purchase orders and delivery
               receipts, then route them for approval before payment is released.
             </p>
-            <hr />
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Invoices Awaiting Review</legend>
-              <table class="content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Invoice #</th>
-                    <th>Vendor</th>
-                    <th>PO #</th>
-                    <th>DR #</th>
-                    <th>Amount</th>
-                    <th>Date Received</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>INV-3051</td>
-                    <td>Hexagon IT Hardware</td>
-                    <td>PO-2042</td>
-                    <td>DR#873572
-                    <td>54,200.00</td>
-                    <td>2026-09-09</td>
-                    <td>Pending Review</td>
-                    <td>
-                      <div class = "btn-action"> 
-                      <button class = "btn-content" type="button">Record Invoice</button></td>
-                    </div>    
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
+            <p id="today-label"></p>
+          </div>
+          <hr />
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Record New Invoice</legend>
-              <form>
-                <label class = "content-label">Invoice Number</label>
-                <br />
-                <input type="text" placeholder="e.g. INV-3052" />
-                <br /><br />
-                <label class = "content-label">Vendor</label>
-                <br />
-                <select>
-                  <option>-- Select Vendor --</option>
-                  <option>Hexagon IT Hardware</option>
-                  <option>MMDC Office Supplies</option>
-                  <option>Hewlett Packard</option>
-                  <option>Lenovo</option>
-                  <option>Ugreen</option>
-                </select>
-                <br /><br />
-                <label class = "content-label">Matched Purchase Order</label>
-                <br />
-                <select>
-                  <option>-- Select Purchase Order --</option>
-                  <option>PO-2041</option>
-                  <option>PO-2042</option>
-                  <option>PO#02</option>
-                  <option>PO#03</option>
-                  <option>PO#04</option>
-                  <option>PO#05</option>
-                </select>
-                <br /><br />
-                <label class = "content-label">Matched Delivery Receipt</label>
-                <br />
-                <select>
-                  <option>-- Select Delivery Receipt --</option>
-                  <option>PO-2039 &mdash; Received 2026-08-30</option>
-                </select>
-                <br /><br />
-                <label class = "content-label">Invoice Date</label>
-                <br />
-                <input type="date" />
-                <br /><br />
-                <label class = "content-label">Invoice Amount</label>
-                <br />
-                <input type="number" min="0" step="0.01" placeholder="0.00" />
-                <br /><br />
-                <label class = "content-label">Attach Invoice Document</label>
-                <br />
-                <input type="file" />
-                <br /><br />
-                <label class = "content-label">Remarks</label>
-                <br />
-                <textarea rows="4" cols="50"></textarea>
-                <br /><br />
-                <button type="submit">Submit for Approval</button>
-              </form>
-            </fieldset>
+          <fieldset class="content-field">
+            <legend class="content-legend">Invoices Awaiting Review</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Vendor</th>
+                  <th>PO #</th>
+                  <th>DR #</th>
+                  <th>Amount</th>
+                  <th>Date Received</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INV-3051</td>
+                  <td>Hexagon IT Hardware</td>
+                  <td>PO-2042</td>
+                  <td>DR#873572</td>
+                  <td>54,200.00</td>
+                  <td>2026-09-09</td>
+                  <td>Pending Review</td>
+                  <td>
+                    <div class="btn-action">
+                      <button
+                        class="btn-content js-review-invoice"
+                        type="button"
+                      >
+                        Record Invoice
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Approve / Reject Invoice</legend>
-              <form>
-                <label class = "content-label">Invoice Number</label>
-                <br />
-                <input type="text" placeholder="e.g. INV-3051" />
-                <br /><br />
-                <label class = "content-label">Remarks</label>
-                <br />
-                <input type="text" placeholder="Optional remarks" />
-                <br /><br />
-                <button class = "btn-content" type="submit" name="decision" value="approve">
-                  Approve for Payment
-                </button>
-                <button class = "reject-btn" type="submit" name="decision" value="reject">
-                  Reject / Return to Vendor
-                </button>
-              </form>
-            </fieldset>
+          <fieldset class="content-field">
+            <legend class="content-legend">Record New Invoice</legend>
+            <form id="invoice-form">
+              <label class="content-label" for="invoiceNumber"
+                >Invoice Number</label
+              >
+              <br />
+              <input
+                type="text"
+                id="invoiceNumber"
+                placeholder="e.g. INV-3052"
+              />
+              <br /><br />
+              <label class="content-label" for="invoiceVendor">Vendor</label>
+              <br />
+              <select id="invoiceVendor">
+                <option>-- Select Vendor --</option>
+                <option>Hexagon IT Hardware</option>
+                <option>MMDC Office Supplies</option>
+                <option>Hewlett Packard</option>
+                <option>Lenovo</option>
+                <option>Ugreen</option>
+              </select>
+              <br /><br />
+              <label class="content-label" for="invoicePO"
+                >Matched Purchase Order</label
+              >
+              <br />
+              <select id="invoicePO">
+                <option>-- Select Purchase Order --</option>
+                <option>PO-2041</option>
+                <option>PO-2042</option>
+                <option>PO#02</option>
+                <option>PO#03</option>
+                <option>PO#04</option>
+                <option>PO#05</option>
+              </select>
+              <br /><br />
+              <label class="content-label">Matched Delivery Receipt</label>
+              <br />
+              <select>
+                <option>-- Select Delivery Receipt --</option>
+                <option>PO-2039 &mdash; Received 2026-08-30</option>
+              </select>
+              <br /><br />
+              <label class="content-label">Invoice Date</label>
+              <br />
+              <input type="date" />
+              <br /><br />
+              <label class="content-label" for="invoiceAmount"
+                >Invoice Amount</label
+              >
+              <br />
+              <input
+                type="number"
+                id="invoiceAmount"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+              />
+              <br /><br />
+              <label class="content-label">Attach Invoice Document</label>
+              <br />
+              <input type="file" />
+              <br /><br />
+              <label class="content-label">Remarks</label>
+              <br />
+              <textarea rows="4" cols="50"></textarea>
+              <br /><br />
+              <button type="button" id="submitInvoiceBtn" class="btn-content">
+                Submit for Approval
+              </button>
+            </form>
+          </fieldset>
 
-            <fieldset class = "content-field">
-              <legend class = "content-legend">Invoice History Log</legend>
-              <table class = "content-table" border="1" >
-                <button class = "btn-content">View History</button>
-                <thead>
-                  <tr>
-                    <th>Invoice #</th>
-                    <th>Vendor</th>
-                    <th>PO #</th>
-                    <th>DR #</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Date Processed</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>INV-3049</td>
-                    <td>Rock and Paper Co.</td>
-                    <td>PO-2039</td>
-                    <td>DR-93927
-                    <td>12,800.00</td>
-                    <td>Approved for Payment</td>
-                    <td>2026-09-02</td>
-                  </tr>
-                  <tr>
-                    <td>INV-3048</td>
-                    <td>MMDC Office Supplies</td>
-                    <td>PO-2038</td>
-                    <td>0004321</td>
-                    <td>3,450.00</td>
-                    <td>Rejected</td>
-                    <td>2026-08-29</td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
-          </td>
-        </tr>
-      </table>
-    </section>
-    <footer class = "footer">
+          <fieldset class="content-field">
+            <legend class="content-legend">Approve / Reject Invoice</legend>
+            <form>
+              <label class="content-label" for="decisionInvoiceNumber"
+                >Invoice Number</label
+              >
+              <br />
+              <input
+                type="text"
+                id="decisionInvoiceNumber"
+                placeholder="e.g. INV-3051"
+              />
+              <br /><br />
+              <label class="content-label">Remarks</label>
+              <br />
+              <input type="text" placeholder="Optional remarks" />
+              <br /><br />
+              <button class="btn-content" type="button" id="approveInvoiceBtn">
+                Approve for Payment
+              </button>
+              <button class="reject-btn" type="button" id="rejectInvoiceBtn">
+                Reject / Return to Vendor
+              </button>
+            </form>
+          </fieldset>
+
+          <fieldset class="content-field">
+            <legend class="content-legend">Invoice History Log</legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Vendor</th>
+                  <th>PO #</th>
+                  <th>DR #</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date Processed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INV-3049</td>
+                  <td>Rock and Paper Co.</td>
+                  <td>PO-2039</td>
+                  <td>DR-93927</td>
+                  <td>12,800.00</td>
+                  <td>Approved for Payment</td>
+                  <td>2026-09-02</td>
+                </tr>
+                <tr>
+                  <td>INV-3048</td>
+                  <td>MMDC Office Supplies</td>
+                  <td>PO-2038</td>
+                  <td>0004321</td>
+                  <td>3,450.00</td>
+                  <td>Rejected</td>
+                  <td>2026-08-29</td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
+            <button type="button" id="viewInvoiceBtn" class="btn-content">
+              View History
+            </button>
+          </fieldset>
+        </td>
+      </tr>
+    </table>
+
+    <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
     <script src="script.js" defer></script>

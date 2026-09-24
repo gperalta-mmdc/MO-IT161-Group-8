@@ -1,199 +1,184 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       Approvals - ProcureIT - Procurement and Inventory System
     </title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
-    <body>
+  <body>
     <div class="header-bar">
       <div class="header-image">
-        <img src="./resources/pit-header.png" />
+        <img src="./resources/pit-header.png" alt="ProcureIT" />
       </div>
 
       <div class="header-buttons">
-        <button class = "btn-header"> Notifications </button>
-        <button class="btn-header">Edit Profile</button>
-        <button class="btn-header">Settings</button>
+        <button type="button" id="notifBtn" class="btn-header">Notifications</button>
+        <button type="button" id="editProfileBtn" class="btn-header">Edit Profile</button>
+        <button type="button" id="settingsBtn" class="btn-header">Settings</button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
       </div>
     </div>
 
-      <table class="layout-table">
-        
-        <tr>
-          <td width="13%" valign="top" bgcolor="#f8f9fa">
-            <img class="profilepicture" src="./resources/icons/profile.png" />
-            <h3 class="profile-name">Hello, Bruce</h3>
-            <h4 class="profile-department">IT Department - Head</h4>
-            <hr>
-            <br>
-            <nav class = "navigation">
-              <ul>
-                <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png"/>Dashboard</a></li>
-                <li><a href="requisition.html"><img src="./resources/icons/requisition.png"/>Purchase Requisition</a></li>
-                <li><a href="approvals.html"><img src="./resources/icons/approvals.png"/>Approvals</a></li>
-                <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png"/>Purchase Orders</a></li>
-                <li><a href="delivery.html"><img src="./resources/icons/delivery.png"/>Delivery Receipts</a></li>
-                <li><a href="invoices.html"><img src="./resources/icons/invoices.png"/>Invoice Processing</a></li>
-                <li><a href="vendors.html"><img src="./resources/icons/vendors.png"/>Vendor Management</a></li>
-                <li><a href="inventory.html"><img src="./resources/icons/inventory.png"/>Inventory and Asset Tagging</a></li>
-                <li><a href="reports.html"><img src="./resources/icons/reports.png"/>Reports</a></li>
+    <table class="layout-table">
+      <tr>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img class="profilepicture" src="./resources/icons/profile.png" alt="Profile picture" />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation">
+            <ul>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" alt="" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" alt="" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" alt="" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" alt="" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" alt="" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" alt="" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" alt="" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" alt="" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" alt="" />Reports</a></li>
               <br />
               <hr />
               <br />
-                <li><a href=""><img src="./resources/icons/support.png" />Help and Support</a></li>   
-              </ul>
-            </nav>
-          </td>
+              <li><a href="#"><img src="./resources/icons/support.png" alt="" />Help and Support</a></li>
+            </ul>
+          </nav>
+        </td>
 
-          <td class = "content" width="50%" bgcolor="#e1e2e4" valign="top">
-            <br>
-            <div class="btn-contentgroup">
-            <button class="btn-content">Download Report</button>
-            <button class="btn-content">View Summary</button>
-            </div>
-            <h2>Approvals</h2>
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
+            <button type="button" id="downloadReportBtn" class="btn-content">Download Report</button>
+            <button type="button" id="viewSummaryBtn" class="btn-content">View Summary</button>
+          </div>
+
+          <h2>Approvals</h2>
+          <div class="subtitle-row">
             <p>
               Review purchase requisitions submitted by other departments and
               approve or reject them before they move forward to purchasing.
             </p>
-            <hr />
-            <fieldset class="content-field">
-              <legend class="content-legend">
-                Requisitions Awaiting Your Decision
-              </legend>
-              <table class="content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Requisition ID</th>
-                    <th>Requested By</th>
-                    <th>Department</th>
-                    <th>View Requests</th>
-                    <th>Date Submitted</th>
-                    <th>Approval</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>REQ-1001</td>
-                    <td>Juan Dela Cruz</td>
-                    <td>Administration</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button type="button" class="btn-content">
-                        View Requisition
-                      </button>
-                      </div>
-                    </td>
-                    <td>2026-08-15</td>
-                    <td>
-                      <form class="decision-form">
-                        <label class="content-label">Remarks</label>
-                        <input type="text" placeholder="Optional remarks" />
-                        <br /><br />
-                        <button
-                          type="submit"
-                          name="decision"
-                          value="approve"
-                          class="approve-btn"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          type="submit"
-                          name="decision"
-                          value="reject"
-                          class="reject-btn"
-                        >
-                          Reject
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>REQ-1002</td>
-                    <td>Maria Santos</td>
-                    <td>Sales/Marketing</td>
-                    <td>
-                      <div class = "btn-action">
-                      <button type="button" class="btn-content">
-                        View Requisition
-                      </button>
-                      </div>
-                    </td>
-                    <td>2026-08-18</td>
-                    <td>
-                      <form class="decision-form">
-                        <label class="content-label">Remarks</label>
-                        <input type="text" placeholder="Optional remarks" />
-                        <br /><br />
-                        <button
-                          type="submit"
-                          name="decision"
-                          value="approve"
-                          class="approve-btn"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          type="submit"
-                          name="decision"
-                          value="reject"
-                          class="reject-btn"
-                        >
-                          Reject
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
-
-            <fieldset class="content-field">
-              <legend class="content-legend">Approval History</legend>
-              <button class="btn-content">View History</button>
-              <table class="content-table" border="1">
-                <thead>
-                  <tr>
-                    <th>Requisition ID</th>
-                    <th>Department</th>
-                    <th>Decision</th>
-                    <th>Decided By</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>REQ-1003</td>
-                    <td>IT</td>
-                    <td>Rejected</td>
-                    <td>[Supervisor Name]</td>
-                    <td>2026-08-20</td>
-                  </tr>
-                  <tr>
-                    <td>REQ-0998</td>
-                    <td>Accounting</td>
-                    <td>Approved</td>
-                    <td>[Supervisor Name]</td>
-                    <td>2026-08-14</td>
-                  </tr>
-                  <tr>
-                    <td>REQ-0997</td>
-                    <td>Administration</td>
-                    <td>Rejected</td>
-                    <td>[Supervisor Name]</td>
-                    <td>2026-08-13</td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset>
+            <p id="today-label"></p>
           </div>
+          <hr />
+
+          <fieldset class="content-field">
+            <legend class="content-legend">
+              Requisitions Awaiting Your Decision
+            </legend>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Requisition ID</th>
+                  <th>Requested By</th>
+                  <th>Department</th>
+                  <th>View Requests</th>
+                  <th>Date Submitted</th>
+                  <th>Approval</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>REQ-1001</td>
+                  <td>Juan Dela Cruz</td>
+                  <td>Administration</td>
+                  <td>
+                    <div class="btn-action">
+                      <button type="button" class="btn-content js-view-approval">
+                        View Requisition
+                      </button>
+                    </div>
+                  </td>
+                  <td>2026-08-15</td>
+                  <td>
+                    <form class="decision-form">
+                      <label class="content-label">Remarks</label>
+                      <input type="text" placeholder="Optional remarks" />
+                      <br /><br />
+                      <button type="button" name="decision" value="approve" class="approve-btn">
+                        Approve
+                      </button>
+                      <button type="button" name="decision" value="reject" class="reject-btn">
+                        Reject
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <tr>
+                  <td>REQ-1002</td>
+                  <td>Maria Santos</td>
+                  <td>Sales/Marketing</td>
+                  <td>
+                    <div class="btn-action">
+                      <button type="button" class="btn-content js-view-approval">
+                        View Requisition
+                      </button>
+                    </div>
+                  </td>
+                  <td>2026-08-18</td>
+                  <td>
+                    <form class="decision-form">
+                      <label class="content-label">Remarks</label>
+                      <input type="text" placeholder="Optional remarks" />
+                      <br /><br />
+                      <button type="button" name="decision" value="approve" class="approve-btn">
+                        Approve
+                      </button>
+                      <button type="button" name="decision" value="reject" class="reject-btn">
+                        Reject
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+
+          <fieldset class="content-field">
+            <legend class="content-legend">Approval History</legend>
+            <button type="button" id="viewHistoryBtn" class="btn-content">View History</button>
+            <table class="content-table" border="1">
+              <thead>
+                <tr>
+                  <th>Requisition ID</th>
+                  <th>Department</th>
+                  <th>Decision</th>
+                  <th>Decided By</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>REQ-1003</td>
+                  <td>IT</td>
+                  <td>Rejected</td>
+                  <td>[Supervisor Name]</td>
+                  <td>2026-08-20</td>
+                </tr>
+                <tr>
+                  <td>REQ-0998</td>
+                  <td>Accounting</td>
+                  <td>Approved</td>
+                  <td>[Supervisor Name]</td>
+                  <td>2026-08-14</td>
+                </tr>
+                <tr>
+                  <td>REQ-0997</td>
+                  <td>Administration</td>
+                  <td>Rejected</td>
+                  <td>[Supervisor Name]</td>
+                  <td>2026-08-13</td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
         </td>
       </tr>
     </table>

@@ -12,8 +12,13 @@
   PAGE-SPECIFIC FUNCTIONS (only used on one page)
      1  Login page (index.html only)
      2  Purchase Requisition page (requisition.html only)
-     3  Invoice Processing page (Invoice Processing.html only)
-     4  Vendor Management page (Vendor Management.html only)
+     3  Approvals page (approvals.html only)
+     4  Purchase Orders page (purchase-order.html only)
+     5  Delivery Receipts page (delivery.html only)
+     6  Inventory and Asset Tagging page (inventory.html only)
+     7  Invoice Processing page (invoices.html only)
+     8  Vendor Management page (vendors.html only)
+     9  Reports page (reports.html only)
    ========================================================== */
 
 /* PART 1 - SHARED FUNCTIONS */
@@ -36,18 +41,43 @@ document.addEventListener("DOMContentLoaded", () => {
     setupRequisitionTable();
   }
 
-  /* ----- for Invoice Processing.html only -----*/
+  /* ----- for approvals.html only -----*/
+  if (document.querySelector(".decision-form")) {
+    setupApprovalsPage();
+  }
+
+  /* ----- for purchase-order.html only -----*/
+  if (document.querySelector(".js-cancel-po")) {
+    setupPurchaseOrderPage();
+  }
+
+  /* ----- for delivery.html only -----*/
+  if (document.getElementById("delivery-form")) {
+    setupDeliveryPage();
+  }
+
+  /* ----- for inventory.html only -----*/
+  if (document.getElementById("asset-table")) {
+    setupInventoryPage();
+  }
+
+  /* ----- for invoices.html only -----*/
   if (document.getElementById("invoice-form")) {
     setupInvoiceForm();
     setupInvoiceReviewTable();
     setupInvoiceDecisionForm();
   }
 
-  /* ----- for Vendor Management.html only -----*/
+  /* ----- for vendors.html only -----*/
   if (document.getElementById("vendor-form")) {
     setupVendorForm();
     setupVendorTable();
     setupVendorDocumentsTable();
+  }
+
+  /* ----- for reports.html only -----*/
+  if (document.getElementById("report-form")) {
+    setupReportsPage();
   }
 });
 
@@ -83,7 +113,6 @@ function setupHeaderButtons() {
       showPopup();
     });
   }
-
   if (settingsBtn) {
     settingsBtn.addEventListener("click", () => {
       showPopup();
@@ -215,13 +244,6 @@ function closePopup() {
 function setupLoginForm() {
   const form = document.getElementById("login-form");
   const department = document.getElementById("loginDepartment");
-
-  form.addEventListener("submit", (event) => {
-    if (department.selectedIndex === 0) {
-      event.preventDefault(); // stop the page from navigating to dashboard.html
-      showMessage("Please select a department.");
-    }
-  });
 }
 
 function setupLoginLinks() {
@@ -326,7 +348,191 @@ function setupRequisitionTable() {
   });
 }
 
-/* ----- Invoice Processing page (Invoice Processing.html only) ----- */
+/* ----- Approvals page (approvals.html only) ----- */
+function setupApprovalsPage() {
+  const viewButtons = document.querySelectorAll(".js-view-approval");
+  const decisionForms = document.querySelectorAll(".decision-form");
+  const viewHistoryBtn = document.getElementById("viewHistoryBtn");
+
+  // "View Requisition" buttons in the awaiting-decision table
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+
+  // Approve / Reject buttons inside each row's decision form
+  decisionForms.forEach((form) => {
+    const approveBtn = form.querySelector(".approve-btn");
+    const rejectBtn = form.querySelector(".reject-btn");
+    const row = form.closest("tr");
+    const id = row.cells[0].textContent.trim();
+
+    approveBtn.addEventListener("click", () => {
+      showMessage(id + " has been approved.");
+    });
+
+    rejectBtn.addEventListener("click", () => {
+      showMessage(id + " has been rejected.");
+    });
+  });
+
+  // "View History" button above the Approval History table
+  if (viewHistoryBtn) {
+    viewHistoryBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+}
+
+/* ----- Purchase Orders page (purchase-order.html only) ----- */
+function setupPurchaseOrderPage() {
+  const cancelButtons = document.querySelectorAll(".js-cancel-po");
+  const viewHistoryBtn = document.getElementById("viewHistoryBtn");
+
+  // "Cancel Order" buttons in the Approved Requisitions and Pending Requisitions tables
+  cancelButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const id = row.cells[0].textContent.trim();
+      showMessage(id + " has been cancelled.");
+    });
+  });
+
+  // "View History" button above the Cancelled Orders table
+  if (viewHistoryBtn) {
+    viewHistoryBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+}
+
+/* ----- Delivery Receipts page (delivery.html only) ----- */
+function setupDeliveryPage() {
+  const recordButtons = document.querySelectorAll(".js-record-delivery");
+  const form = document.getElementById("delivery-form");
+  const saveBtn = document.getElementById("saveDeliveryBtn");
+  const cancelBtn = document.getElementById("cancelDeliveryBtn");
+  const poSelect = document.getElementById("deliveryPO");
+  const drNumber = document.getElementById("drNumber");
+  const receivedBy = document.getElementById("receivedBy");
+  const condition = document.getElementById("deliveryCondition");
+  const viewLogButtons = document.querySelectorAll(".js-view-delivery-log");
+  const viewDeliveryHistoryBtn = document.getElementById(
+    "viewDeliveryHistoryBtn",
+  );
+  const viewCancelledOrdersBtn = document.getElementById(
+    "viewCancelledOrdersBtn",
+  );
+
+  // "Record Delivery" buttons in the Purchase Orders Awaiting Delivery table
+  recordButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const poNumber = row.cells[0].textContent.trim();
+      const statusSelect = row.querySelector(".delivery-status-select");
+
+      if (statusSelect.selectedIndex === 0) {
+        showMessage("Please select a status before recording.");
+        return;
+      }
+
+      showMessage(poNumber + " marked as " + statusSelect.value + ".");
+    });
+  });
+
+  // "Save Delivery Receipt" button
+  saveBtn.addEventListener("click", () => {
+    // Stop at the first problem and tell the user what is missing
+    if (poSelect.selectedIndex === 0) {
+      showMessage("Please select a purchase order.");
+      return;
+    }
+
+    if (drNumber.value.trim() === "") {
+      showMessage("Please enter the delivery receipt number.");
+      return;
+    }
+
+    if (receivedBy.value.trim() === "") {
+      showMessage("Please enter who received the delivery.");
+      return;
+    }
+
+    if (condition.selectedIndex === 0) {
+      showMessage("Please select the condition of goods.");
+      return;
+    }
+
+    showMessage("Delivery receipt saved.");
+    form.reset(); // clear the form
+  });
+
+  // "Cancel / Return Delivery" button
+  cancelBtn.addEventListener("click", () => {
+    showMessage("Delivery cancelled / returned.");
+    form.reset();
+  });
+
+  // "View" buttons inside the Delivery Receipt Log table
+  viewLogButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+
+  // "View History" buttons (Delivery Receipt Log and Cancelled Orders each have their own)
+  if (viewDeliveryHistoryBtn) {
+    viewDeliveryHistoryBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+
+  if (viewCancelledOrdersBtn) {
+    viewCancelledOrdersBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+}
+
+/* ----- Inventory and Asset Tagging page (inventory.html only) ----- */
+function setupInventoryPage() {
+  const addAssetBtn = document.getElementById("add-asset-btn");
+  const addRequestBtn = document.getElementById("add-request-btn");
+  const assignButtons = document.querySelectorAll(".js-assign-asset");
+  const unassignButtons = document.querySelectorAll(".js-unassign-asset");
+
+  if (addAssetBtn) {
+    addAssetBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+
+  if (addRequestBtn) {
+    addRequestBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+
+  // "Assign to User" buttons in the Inventory table
+  assignButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+
+  // "Unassign Equipment" buttons in the Assignments table
+  unassignButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const equipment = row.cells[2].textContent.trim();
+      const assignedTo = row.cells[4].textContent.trim();
+      showMessage(equipment + " has been unassigned from " + assignedTo + ".");
+    });
+  });
+}
+
+/* ----- Invoice Processing page (invoices.html only) ----- */
 function setupInvoiceForm() {
   const submitBtn = document.getElementById("submitInvoiceBtn");
   const invoiceNumber = document.getElementById("invoiceNumber");
@@ -404,7 +610,7 @@ function setupInvoiceDecisionForm() {
   });
 }
 
-/* ----- Vendor Management page (Vendor Management.html only) ----- */
+/* ----- Vendor Management page (vendors.html only) ----- */
 function setupVendorForm() {
   const addBtn = document.getElementById("addVendorBtn");
   const vendorName = document.getElementById("vendorName");
@@ -467,6 +673,79 @@ function setupVendorDocumentsTable() {
       const row = button.closest("tr");
       const vendor = row.cells[0].textContent.trim();
       showMessage("Renewal request sent for " + vendor + ".");
+    });
+  });
+}
+
+/* ----- Reports page (reports.html only) ----- */
+function setupReportsPage() {
+  const generateBtn = document.getElementById("generateReportBtn");
+  const reportType = document.getElementById("reportType");
+  const dateFrom = document.getElementById("reportDateFrom");
+  const dateTo = document.getElementById("reportDateTo");
+  const form = document.getElementById("report-form");
+  const exportPdfButtons = document.querySelectorAll(".js-export-pdf");
+  const exportCsvButtons = document.querySelectorAll(".js-export-csv");
+  const printButtons = document.querySelectorAll(".js-print-report");
+  const viewButtons = document.querySelectorAll(".js-view-report");
+  const downloadButtons = document.querySelectorAll(".js-download-report");
+
+  // "Generate Report" button
+  generateBtn.addEventListener("click", () => {
+    // Stop at the first problem and tell the user what is missing
+    if (reportType.selectedIndex === 0) {
+      showMessage("Please select a report type.");
+      return;
+    }
+
+    if (dateFrom.value === "") {
+      showMessage("Please select a start date.");
+      return;
+    }
+
+    if (dateTo.value === "") {
+      showMessage("Please select an end date.");
+      return;
+    }
+
+    showMessage("Report generated.");
+    form.reset(); // clear the form
+  });
+
+  // "Export as PDF" buttons on each report preview
+  exportPdfButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showMessage("Exporting report as PDF...");
+    });
+  });
+
+  // "Export as CSV" buttons on each report preview
+  exportCsvButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showMessage("Exporting report as CSV...");
+    });
+  });
+
+  // "Print" buttons on each report preview
+  printButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showMessage("Printing report...");
+    });
+  });
+
+  // "View" buttons inside the Recently Generated Reports table
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+
+  // "Download" buttons inside the Recently Generated Reports table
+  downloadButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const reportName = row.cells[0].textContent.trim();
+      showMessage("Downloading " + reportName + "...");
     });
   });
 }
