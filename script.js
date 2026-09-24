@@ -12,6 +12,8 @@
   PAGE-SPECIFIC FUNCTIONS (only used on one page)
      1  Login page (index.html only)
      2  Purchase Requisition page (requisition.html only)
+     3  Invoice Processing page (Invoice Processing.html only)
+     4  Vendor Management page (Vendor Management.html only)
    ========================================================== */
 
 /* PART 1 - SHARED FUNCTIONS */
@@ -32,6 +34,20 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("requisition-form")) {
     setupRequisitionForm();
     setupRequisitionTable();
+  }
+
+  /* ----- for Invoice Processing.html only -----*/
+  if (document.getElementById("invoice-form")) {
+    setupInvoiceForm();
+    setupInvoiceReviewTable();
+    setupInvoiceDecisionForm();
+  }
+
+  /* ----- for Vendor Management.html only -----*/
+  if (document.getElementById("vendor-form")) {
+    setupVendorForm();
+    setupVendorTable();
+    setupVendorDocumentsTable();
   }
 });
 
@@ -307,5 +323,150 @@ function setupRequisitionTable() {
 
   viewAllBtn.addEventListener("click", () => {
     showPopup();
+  });
+}
+
+/* ----- Invoice Processing page (Invoice Processing.html only) ----- */
+function setupInvoiceForm() {
+  const submitBtn = document.getElementById("submitInvoiceBtn");
+  const invoiceNumber = document.getElementById("invoiceNumber");
+  const invoiceVendor = document.getElementById("invoiceVendor");
+  const invoicePO = document.getElementById("invoicePO");
+  const invoiceAmount = document.getElementById("invoiceAmount");
+  const form = document.getElementById("invoice-form");
+
+  submitBtn.addEventListener("click", () => {
+    // Stop at the first problem and tell the user what is missing
+    if (invoiceNumber.value.trim() === "") {
+      showMessage("Please enter the invoice number.");
+      return;
+    }
+
+    if (invoiceVendor.selectedIndex === 0) {
+      showMessage("Please select a vendor.");
+      return;
+    }
+
+    if (invoicePO.selectedIndex === 0) {
+      showMessage("Please select the matched purchase order.");
+      return;
+    }
+
+    if (invoiceAmount.value.trim() === "" || Number(invoiceAmount.value) <= 0) {
+      showMessage("Please enter a valid invoice amount.");
+      return;
+    }
+
+    showMessage(invoiceNumber.value.trim() + " submitted for approval.");
+    form.reset(); // clear the form
+  });
+}
+
+/* ----- Buttons inside the Invoices Awaiting Review table ----- */
+function setupInvoiceReviewTable() {
+  const reviewButtons = document.querySelectorAll(".js-review-invoice");
+
+  reviewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+}
+
+/* ----- Approve / Reject Invoice form ----- */
+function setupInvoiceDecisionForm() {
+  const invoiceNumberInput = document.getElementById("decisionInvoiceNumber");
+  const approveBtn = document.getElementById("approveInvoiceBtn");
+  const rejectBtn = document.getElementById("rejectInvoiceBtn");
+
+  approveBtn.addEventListener("click", () => {
+    const id = invoiceNumberInput.value.trim();
+
+    if (id === "") {
+      showMessage("Please enter the invoice number.");
+      return;
+    }
+
+    showMessage(id + " approved for payment.");
+    invoiceNumberInput.value = "";
+  });
+
+  rejectBtn.addEventListener("click", () => {
+    const id = invoiceNumberInput.value.trim();
+
+    if (id === "") {
+      showMessage("Please enter the invoice number.");
+      return;
+    }
+
+    showMessage(id + " rejected and returned to vendor.");
+    invoiceNumberInput.value = "";
+  });
+}
+
+/* ----- Vendor Management page (Vendor Management.html only) ----- */
+function setupVendorForm() {
+  const addBtn = document.getElementById("addVendorBtn");
+  const vendorName = document.getElementById("vendorName");
+  const vendorCategory = document.getElementById("vendorCategory");
+  const contactPerson = document.getElementById("contactPerson");
+  const vendorEmail = document.getElementById("vendorEmail");
+  const form = document.getElementById("vendor-form");
+
+  addBtn.addEventListener("click", () => {
+    // Stop at the first problem and tell the user what is missing
+    if (vendorName.value.trim() === "") {
+      showMessage("Please enter the vendor name.");
+      return;
+    }
+
+    if (vendorCategory.selectedIndex === 0) {
+      showMessage("Please select a category.");
+      return;
+    }
+
+    if (contactPerson.value.trim() === "") {
+      showMessage("Please enter a contact person.");
+      return;
+    }
+
+    if (vendorEmail.value.trim() === "") {
+      showMessage("Please enter the vendor's email address.");
+      return;
+    }
+
+    showMessage(vendorName.value.trim() + " added to the vendor directory.");
+    form.reset(); // clear the form
+  });
+}
+
+/* ----- Buttons inside the Vendor Directory table ----- */
+function setupVendorTable() {
+  const viewButtons = document.querySelectorAll(".js-view-vendor");
+  const editButtons = document.querySelectorAll(".js-edit-vendor");
+
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+
+  editButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
+    });
+  });
+}
+
+/* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
+function setupVendorDocumentsTable() {
+  const renewButtons = document.querySelectorAll(".js-renew-document");
+
+  renewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const vendor = row.cells[0].textContent.trim();
+      showMessage("Renewal request sent for " + vendor + ".");
+    });
   });
 }
