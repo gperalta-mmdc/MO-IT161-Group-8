@@ -21,6 +21,7 @@ all pages. Do not forget to link css inside <head>
      2  Dashboard (dashboard.html)
      3  Approvals (approvals.html)
      4  Inventory (inventory.html)
+     5  Purchase Order Detail (purchase-order-detail.html)
    ========================================================== */
 
 /* PART 1 - SHARED STYLES */
@@ -165,7 +166,7 @@ body {
 
 .withraw-btn {
   background-color: #efc274;
-  color: #efe9e9;
+  color: #3d2b00;
   border: 1px solid #efc274;
   padding: 8px 16px;
   border-radius: 4px;
@@ -293,6 +294,8 @@ body {
 }
 
 .content fieldset input[type="text"],
+.content fieldset input[type="email"],
+.content fieldset input[type="tel"],
 .content fieldset input[type="number"],
 .content fieldset input[type="date"],
 .content fieldset select,
@@ -303,6 +306,10 @@ body {
   border: 1px solid #cccccc;
   font-size: 14px;
   font-family: inherit;
+}
+
+.content fieldset input[readonly] {
+  background-color: #f2f4f7;
 }
 
 /* ----- 7 Tables ----- */
@@ -583,4 +590,73 @@ nav[aria-label="Page sections"] ul li a {
 nav[aria-label="Page sections"] ul li a:hover {
   background-color: #337ab7;
   color: #ffffff;
+}
+
+/* ----- 5 Purchase Order Detail (purchase-order-detail.html) ----- */
+
+/* Items table: fixed column widths so the inputs fit inside their cells */
+#po-items-section .content-table:first-of-type {
+  table-layout: fixed;
+}
+
+#po-items-section .content-table:first-of-type th:nth-child(1) {
+  width: 6%;
+}
+#po-items-section .content-table:first-of-type th:nth-child(2) {
+  width: 14%;
+}
+#po-items-section .content-table:first-of-type th:nth-child(3) {
+  width: 30%;
+}
+#po-items-section .content-table:first-of-type th:nth-child(4) {
+  width: 12%;
+}
+#po-items-section .content-table:first-of-type th:nth-child(5) {
+  width: 18%;
+}
+#po-items-section .content-table:first-of-type th:nth-child(6) {
+  width: 20%;
+}
+
+/* Inputs inside both tables fill their cell instead of using the 300px form width */
+#po-items-section .content-table input {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  padding: 6px 4px;
+}
+
+#po-items-section .content-table td {
+  padding: 4px 6px;
+}
+
+/* Numbers line up on the right */
+#po-items-section input[type="number"],
+#po-items-section .po-line-total,
+#poSubtotal,
+#poTax,
+#poTotal {
+  text-align: right;
+}
+
+/* Totals table: narrower and pushed to the right, like a receipt */
+#po-items-section .content-table:last-of-type {
+  width: 60%;
+  margin-left: auto;
+  margin-top: 15px;
+}
+
+#po-items-section .content-table:last-of-type td:first-child {
+  width: 55%;
+}
+
+/* Grand total row stands out */
+#po-items-section .content-table:last-of-type tr:last-child td {
+  background-color: #eef3f8;
+}
+
+#poTotal {
+  font-weight: bold;
+  font-size: 16px;
+  color: #003366;
 }

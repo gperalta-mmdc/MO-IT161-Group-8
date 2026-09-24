@@ -19,6 +19,7 @@
      7  Invoice Processing page (invoices.html only)
      8  Vendor Management page (vendors.html only)
      9  Reports page (reports.html only)
+    10 Purchase Order Detail page (purchase-order-detail.html only)
    ========================================================== */
 
 /* PART 1 - SHARED FUNCTIONS */
@@ -49,6 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ----- for purchase-order.html only -----*/
   if (document.querySelector(".js-cancel-po")) {
     setupPurchaseOrderPage();
+  }
+
+  /* ----- for purchase-order-detail.html only -----*/
+  if (document.getElementById("po-form")) {
+    setupPurchaseOrderDetailPage();
   }
 
   /* ----- for delivery.html only -----*/
@@ -366,6 +372,11 @@ function setupApprovalsPage() {
   const decisionForms = document.querySelectorAll(".decision-form");
   const viewHistoryBtn = document.getElementById("viewHistoryBtn");
 
+  // Stop the Enter key in the Remarks box from submitting (reloading) the page
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+
   // "View Requisition" buttons in the awaiting-decision table
   viewButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -399,6 +410,7 @@ function setupApprovalsPage() {
 
 /* ----- Purchase Orders page (purchase-order.html only) ----- */
 function setupPurchaseOrderPage() {
+  const viewButtons = document.querySelectorAll(".js-view-po");
   const cancelButtons = document.querySelectorAll(".js-cancel-po");
   const viewHistoryBtn = document.getElementById("viewHistoryBtn");
 
@@ -408,6 +420,13 @@ function setupPurchaseOrderPage() {
       const row = button.closest("tr");
       const id = row.cells[0].textContent.trim();
       showMessage(id + " has been cancelled.");
+    });
+  });
+
+  // "View" buttons in the Approved Requisitions and Pending Requisitions tables
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPopup();
     });
   });
 
@@ -763,4 +782,153 @@ function setupReportsPage() {
       showMessage("Downloading " + reportName + "...");
     });
   });
+}
+
+/* ----- Purchase Order Detail page (purchase-order-detail.html only) ----- */
+function setupPurchaseOrderDetailPage() {
+  const form = document.getElementById("po-form");
+  const calculateBtn = document.getElementById("calculatePoBtn");
+  const saveBtn = document.getElementById("savePoBtn");
+  const clearBtn = document.getElementById("clearPoBtn");
+
+  // "Calculate Total" button
+  calculateBtn.addEventListener("click", () => {
+    if (calculatePoTotals()) {
+      showMessage("Totals updated.");
+    }
+  });
+
+  // "Save Purchase Order" button
+  saveBtn.addEventListener("click", () => {
+    const requisition = document.getElementById("poRequisition");
+    const poDate = document.getElementById("poDate");
+    const requisitioner = document.getElementById("poRequisitioner");
+    const department = document.getElementById("poDepartment");
+    const vendor = document.getElementById("poVendor");
+    const shipToName = document.getElementById("shipToName");
+    const shipToAddress = document.getElementById("shipToAddress");
+    const descInputs = document.querySelectorAll(".po-item-desc");
+    const qtyInputs = document.querySelectorAll(".po-qty");
+    const priceInputs = document.querySelectorAll(".po-price");
+
+    // Stop at the first problem and tell the user what is missing
+    if (requisition.selectedIndex === 0) {
+      showMessage("Please select a requisition.");
+      return;
+    }
+
+    if (poDate.value === "") {
+      showMessage("Please select the order date.");
+      return;
+    }
+
+    if (requisitioner.value.trim() === "") {
+      showMessage("Please enter the requisitioner.");
+      return;
+    }
+
+    if (department.selectedIndex === 0) {
+      showMessage("Please select a department.");
+      return;
+    }
+
+    if (vendor.selectedIndex === 0) {
+      showMessage("Please select a vendor.");
+      return;
+    }
+
+    if (shipToName.value.trim() === "") {
+      showMessage("Please enter the ship-to name.");
+      return;
+    }
+
+    if (shipToAddress.value.trim() === "") {
+      showMessage("Please enter the ship-to address.");
+      return;
+    }
+
+    // Check each item row: a row with anything typed in it must be complete
+    let itemCount = 0;
+    for (let i = 0; i < descInputs.length; i++) {
+      const hasDesc = descInputs[i].value.trim() !== "";
+      const hasQty = Number(qtyInputs[i].value) > 0;
+      const hasPrice = Number(priceInputs[i].value) > 0;
+
+      if (hasDesc || hasQty || hasPrice) {
+        if (!hasDesc) {
+          showMessage("Please enter a description for item " + (i + 1) + ".");
+          return;
+        }
+        if (!hasQty || !hasPrice) {
+          showMessage(
+            "Please enter a quantity and unit price for item " + (i + 1) + ".",
+          );
+          return;
+        }
+        itemCount++;
+      }
+    }
+
+    if (itemCount === 0) {
+      showMessage("Please list at least one item.");
+      return;
+    }
+
+    // Make sure the totals are up to date before saving
+    if (!calculatePoTotals()) {
+      return;
+    }
+
+    const total = document.getElementById("poTotal").value;
+    showMessage(
+      "Purchase order for " + vendor.value + " saved. Total: " + total + ".",
+    );
+    form.reset(); // clear the form
+  });
+
+  // "Clear Form" button
+  clearBtn.addEventListener("click", () => {
+    form.reset();
+    showMessage("Form cleared.");
+  });
+}
+
+/* ----- Computes line totals, subtotal, tax and grand total ----- */
+function calculatePoTotals() {
+  const qtyInputs = document.querySelectorAll(".po-qty");
+  const priceInputs = document.querySelectorAll(".po-price");
+  const lineTotals = document.querySelectorAll(".po-line-total");
+  const taxRate = Number(document.getElementById("poTaxRate").value);
+  const shipping = Number(document.getElementById("poShipping").value);
+
+  // Negative numbers make no sense on a purchase order
+  if (taxRate < 0 || shipping < 0) {
+    showMessage("Tax rate and shipping cannot be negative.");
+    return false;
+  }
+
+  let subtotal = 0;
+
+  for (let i = 0; i < qtyInputs.length; i++) {
+    const qty = Number(qtyInputs[i].value); // an empty box counts as 0
+    const price = Number(priceInputs[i].value);
+
+    if (qty < 0 || price < 0) {
+      showMessage("Quantity and unit price cannot be negative.");
+      return false;
+    }
+
+    // line total = quantity x unit price (rounded to centavos)
+    const lineTotal = Math.round(qty * price * 100) / 100;
+    lineTotals[i].value = lineTotal.toFixed(2);
+    subtotal = subtotal + lineTotal;
+  }
+
+  const tax = Math.round(subtotal * (taxRate / 100) * 100) / 100;
+  const total = subtotal + tax + shipping;
+
+  document.getElementById("poSubtotal").value = subtotal.toFixed(2);
+  document.getElementById("poTax").value = tax.toFixed(2);
+  document.getElementById("poTotal").value = total.toFixed(2);
+  return true;
 }
