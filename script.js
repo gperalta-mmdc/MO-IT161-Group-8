@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupInvoiceForm();
     setupInvoiceReviewTable();
     setupInvoiceDecisionForm();
+    setupInvoiceHistoryTable();
   }
 
   /* ----- for vendors.html only -----*/
@@ -79,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupVendorForm();
     setupVendorTable();
     setupVendorDocumentsTable();
+    setupInvoiceHistoryTable();
   }
 
   /* ----- for reports.html only -----*/
@@ -107,6 +109,7 @@ function setupHeaderButtons() {
   const settingsBtn = document.getElementById("settingsBtn");
   const downloadReportBtn = document.getElementById("downloadReportBtn");
   const viewSummaryBtn = document.getElementById("viewSummaryBtn");
+  const printPoBtn = document.getElementById("printPoBtn");
 
   if (notifBtn) {
     notifBtn.addEventListener("click", () => {
@@ -139,6 +142,12 @@ function setupHeaderButtons() {
       showPopup("Summary Overview", "Here is your quick summary details.");
     });
   }
+}
+
+if (printPoBtn) {
+  printPoBtn.addEventListener("click", () => {
+    showMessage("Printing purchase order...");
+  });
 }
 
 /* ----- Show date on dashboard ----- */
@@ -259,10 +268,7 @@ function closePopup() {
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */
-function setupLoginForm() {
-  const form = document.getElementById("login-form");
-  const department = document.getElementById("loginDepartment");
-}
+function setupLoginForm() {}
 
 function setupLoginLinks() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
@@ -644,6 +650,15 @@ function setupInvoiceDecisionForm() {
   });
 }
 
+/* ----- "View History" button in the Invoice History Log table ----- */
+function setupInvoiceHistoryTable() {
+  const viewInvoiceBtn = document.getElementById("viewInvoiceBtn");
+
+  viewInvoiceBtn.addEventListener("click", () => {
+    showPopup();
+  });
+}
+
 /* ----- Vendor Management page (vendors.html only) ----- */
 function setupVendorForm() {
   const addBtn = document.getElementById("addVendorBtn");
@@ -699,14 +714,25 @@ function setupVendorTable() {
 }
 
 /* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
+/* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 function setupVendorDocumentsTable() {
   const renewButtons = document.querySelectorAll(".js-renew-document");
+  const renewVendorButtons = document.querySelectorAll(".js-renew-vendor");
 
   renewButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const row = button.closest("tr");
       const vendor = row.cells[0].textContent.trim();
       showMessage("Renewal request sent for " + vendor + ".");
+    });
+  });
+
+  // "Renew Vendor" buttons in the Inactive Vendors table
+  renewVendorButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const vendorName = row.cells[0].textContent.trim();
+      showMessage(vendorName + " has been sent for renewal.");
     });
   });
 }

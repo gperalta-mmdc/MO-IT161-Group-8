@@ -380,7 +380,13 @@ body {
   width: 90%;
   max-width: 320px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  text-align: right;
+  text-align: left;
+}
+
+.popup-box .popup-close-btn {
+  display: block;
+  margin-left: auto;
+  margin-top: 15px;
 }
 
 /* PART 2 - PAGE-SPECIFIC STYLES */
