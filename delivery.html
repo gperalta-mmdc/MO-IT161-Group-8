@@ -16,15 +16,9 @@
       </div>
 
       <div class="header-buttons">
-        <button type="button" id="notifBtn" class="btn-header">
-          Notifications
-        </button>
-        <button type="button" id="editProfileBtn" class="btn-header">
-          Edit Profile
-        </button>
-        <button type="button" id="settingsBtn" class="btn-header">
-          Settings
-        </button>
+        <button type="button" id="notifBtn" class="btn-header">Notifications</button>
+        <button type="button" id="editProfileBtn" class="btn-header">Edit Profile</button>
+        <button type="button" id="settingsBtn" class="btn-header">Settings</button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
@@ -34,87 +28,26 @@
     <table class="layout-table">
       <tr>
         <td width="13%" valign="top" bgcolor="#f8f9fa">
-          <img
-            class="profilepicture"
-            src="./resources/icons/profile.png"
-            alt="Profile picture"
-          />
+          <img class="profilepicture" src="./resources/icons/profile.png" alt="Profile picture" />
           <h3 class="profile-name">Hello, Bruce</h3>
           <h4 class="profile-department">IT Department - Head</h4>
           <hr />
           <br />
           <nav class="navigation">
             <ul>
-              <li>
-                <a href="dashboard.html"
-                  ><img
-                    src="./resources/icons/dashboard.png"
-                    alt=""
-                  />Dashboard</a
-                >
-              </li>
-              <li>
-                <a href="requisition.html"
-                  ><img
-                    src="./resources/icons/requisition.png"
-                    alt=""
-                  />Purchase Requisition</a
-                >
-              </li>
-              <li>
-                <a href="approvals.html"
-                  ><img
-                    src="./resources/icons/approvals.png"
-                    alt=""
-                  />Approvals</a
-                >
-              </li>
-              <li>
-                <a href="purchase-order.html"
-                  ><img
-                    src="./resources/icons/purchase-order.png"
-                    alt=""
-                  />Purchase Orders</a
-                >
-              </li>
-              <li>
-                <a href="delivery.html"
-                  ><img src="./resources/icons/delivery.png" alt="" />Delivery
-                  Receipts</a
-                >
-              </li>
-              <li>
-                <a href="invoices.html"
-                  ><img src="./resources/icons/invoices.png" alt="" />Invoice
-                  Processing</a
-                >
-              </li>
-              <li>
-                <a href="vendors.html"
-                  ><img src="./resources/icons/vendors.png" alt="" />Vendor
-                  Management</a
-                >
-              </li>
-              <li>
-                <a href="inventory.html"
-                  ><img src="./resources/icons/inventory.png" alt="" />Inventory
-                  and Asset Tagging</a
-                >
-              </li>
-              <li>
-                <a href="reports.html"
-                  ><img src="./resources/icons/reports.png" alt="" />Reports</a
-                >
-              </li>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" alt="" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" alt="" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" alt="" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" alt="" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" alt="" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" alt="" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" alt="" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" alt="" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" alt="" />Reports</a></li>
               <br />
               <hr />
               <br />
-              <li>
-                <a href="#"
-                  ><img src="./resources/icons/support.png" alt="" />Help and
-                  Support</a
-                >
-              </li>
+              <li><a href="#"><img src="./resources/icons/support.png" alt="" />Help and Support</a></li>
             </ul>
           </nav>
         </td>
@@ -122,12 +55,8 @@
         <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
           <br />
           <div class="btn-contentgroup">
-            <button type="button" id="downloadReportBtn" class="btn-content">
-              Download Report
-            </button>
-            <button type="button" id="viewSummaryBtn" class="btn-content">
-              View Summary
-            </button>
+            <button type="button" id="downloadReportBtn" class="btn-content">Download Report</button>
+            <button type="button" id="viewSummaryBtn" class="btn-content">View Summary</button>
           </div>
 
           <h2>Delivery Receipts</h2>
@@ -172,10 +101,7 @@
                   </td>
                   <td>
                     <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-record-delivery"
-                      >
+                      <button type="button" class="btn-content js-record-delivery">
                         Record Delivery
                       </button>
                     </div>
@@ -198,10 +124,7 @@
                   </td>
                   <td>
                     <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-record-delivery"
-                      >
+                      <button type="button" class="btn-content js-record-delivery">
                         Record Delivery
                       </button>
                     </div>
@@ -214,9 +137,7 @@
           <fieldset class="content-field">
             <legend class="content-legend">Record Delivery Receipt</legend>
             <form id="delivery-form">
-              <label class="content-label" for="deliveryPO"
-                >Purchase Order</label
-              >
+              <label class="content-label" for="deliveryPO">Purchase Order</label>
               <br />
               <select id="deliveryPO">
                 <option>-- Select Purchase Order --</option>
@@ -224,9 +145,7 @@
                 <option>PO-2042 &mdash; Hexagon IT Hardware</option>
               </select>
               <br /><br />
-              <label class="content-label" for="drNumber"
-                >Delivery Receipt Number</label
-              >
+              <label class="content-label" for="drNumber">Delivery Receipt Number</label>
               <br />
               <input type="text" id="drNumber" placeholder="D.R. Number" />
               <br /><br />
@@ -238,9 +157,7 @@
               <br />
               <input type="text" id="receivedBy" placeholder="Employee name" />
               <br /><br />
-              <label class="content-label" for="deliveryCondition"
-                >Condition of Goods</label
-              >
+              <label class="content-label" for="deliveryCondition">Condition of Goods</label>
               <br />
               <select id="deliveryCondition">
                 <option>-- Select --</option>
@@ -262,21 +179,13 @@
               <button type="button" id="saveDeliveryBtn" class="btn-content">
                 Save Delivery Receipt
               </button>
-              <button type="button" id="cancelDeliveryBtn" class="reject-btn">
-                Cancel / Return Delivery
-              </button>
+              <button type="button" id="cancelDeliveryBtn" class="reject-btn">Cancel / Return Delivery</button>
             </form>
           </fieldset>
 
           <fieldset class="content-field">
             <legend class="content-legend">Delivery Receipt Log</legend>
-            <button
-              type="button"
-              id="viewDeliveryHistoryBtn"
-              class="btn-content"
-            >
-              View History
-            </button>
+            <button type="button" id="viewDeliveryHistoryBtn" class="btn-content">View History</button>
             <table class="content-table" border="1">
               <thead>
                 <tr>
@@ -299,12 +208,7 @@
                   <td>Mario Lopez</td>
                   <td>
                     <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-view-delivery-log"
-                      >
-                        View
-                      </button>
+                      <button type="button" class="btn-content js-view-delivery-log">View</button>
                     </div>
                   </td>
                 </tr>
@@ -314,13 +218,7 @@
 
           <fieldset class="content-field">
             <legend class="content-legend">Cancelled Orders</legend>
-            <button
-              type="button"
-              id="viewCancelledOrdersBtn"
-              class="btn-content"
-            >
-              View History
-            </button>
+            <button type="button" id="viewCancelledOrdersBtn" class="btn-content">View History</button>
             <table class="content-table" border="1">
               <thead>
                 <tr>
@@ -351,7 +249,6 @@
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
-    <script src="rbac.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>

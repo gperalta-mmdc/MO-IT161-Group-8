@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Approvals - ProcureIT - Procurement and Inventory System</title>
+    <title>
+      Approvals - ProcureIT - Procurement and Inventory System
+    </title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -14,15 +16,9 @@
       </div>
 
       <div class="header-buttons">
-        <button type="button" id="notifBtn" class="btn-header">
-          Notifications
-        </button>
-        <button type="button" id="editProfileBtn" class="btn-header">
-          Edit Profile
-        </button>
-        <button type="button" id="settingsBtn" class="btn-header">
-          Settings
-        </button>
+        <button type="button" id="notifBtn" class="btn-header">Notifications</button>
+        <button type="button" id="editProfileBtn" class="btn-header">Edit Profile</button>
+        <button type="button" id="settingsBtn" class="btn-header">Settings</button>
         <form action="index.html" method="get">
           <button type="submit" class="btn-header">Log Out</button>
         </form>
@@ -32,87 +28,26 @@
     <table class="layout-table">
       <tr>
         <td width="13%" valign="top" bgcolor="#f8f9fa">
-          <img
-            class="profilepicture"
-            src="./resources/icons/profile.png"
-            alt="Profile picture"
-          />
+          <img class="profilepicture" src="./resources/icons/profile.png" alt="Profile picture" />
           <h3 class="profile-name">Hello, Bruce</h3>
           <h4 class="profile-department">IT Department - Head</h4>
           <hr />
           <br />
           <nav class="navigation">
             <ul>
-              <li>
-                <a href="dashboard.html"
-                  ><img
-                    src="./resources/icons/dashboard.png"
-                    alt=""
-                  />Dashboard</a
-                >
-              </li>
-              <li>
-                <a href="requisition.html"
-                  ><img
-                    src="./resources/icons/requisition.png"
-                    alt=""
-                  />Purchase Requisition</a
-                >
-              </li>
-              <li>
-                <a href="approvals.html"
-                  ><img
-                    src="./resources/icons/approvals.png"
-                    alt=""
-                  />Approvals</a
-                >
-              </li>
-              <li>
-                <a href="purchase-order.html"
-                  ><img
-                    src="./resources/icons/purchase-order.png"
-                    alt=""
-                  />Purchase Orders</a
-                >
-              </li>
-              <li>
-                <a href="delivery.html"
-                  ><img src="./resources/icons/delivery.png" alt="" />Delivery
-                  Receipts</a
-                >
-              </li>
-              <li>
-                <a href="invoices.html"
-                  ><img src="./resources/icons/invoices.png" alt="" />Invoice
-                  Processing</a
-                >
-              </li>
-              <li>
-                <a href="vendors.html"
-                  ><img src="./resources/icons/vendors.png" alt="" />Vendor
-                  Management</a
-                >
-              </li>
-              <li>
-                <a href="inventory.html"
-                  ><img src="./resources/icons/inventory.png" alt="" />Inventory
-                  and Asset Tagging</a
-                >
-              </li>
-              <li>
-                <a href="reports.html"
-                  ><img src="./resources/icons/reports.png" alt="" />Reports</a
-                >
-              </li>
+              <li><a href="dashboard.html"><img src="./resources/icons/dashboard.png" alt="" />Dashboard</a></li>
+              <li><a href="requisition.html"><img src="./resources/icons/requisition.png" alt="" />Purchase Requisition</a></li>
+              <li><a href="approvals.html"><img src="./resources/icons/approvals.png" alt="" />Approvals</a></li>
+              <li><a href="purchase-order.html"><img src="./resources/icons/purchase-order.png" alt="" />Purchase Orders</a></li>
+              <li><a href="delivery.html"><img src="./resources/icons/delivery.png" alt="" />Delivery Receipts</a></li>
+              <li><a href="invoices.html"><img src="./resources/icons/invoices.png" alt="" />Invoice Processing</a></li>
+              <li><a href="vendors.html"><img src="./resources/icons/vendors.png" alt="" />Vendor Management</a></li>
+              <li><a href="inventory.html"><img src="./resources/icons/inventory.png" alt="" />Inventory and Asset Tagging</a></li>
+              <li><a href="reports.html"><img src="./resources/icons/reports.png" alt="" />Reports</a></li>
               <br />
               <hr />
               <br />
-              <li>
-                <a href="#"
-                  ><img src="./resources/icons/support.png" alt="" />Help and
-                  Support</a
-                >
-              </li>
+              <li><a href="#"><img src="./resources/icons/support.png" alt="" />Help and Support</a></li>
             </ul>
           </nav>
         </td>
@@ -120,12 +55,8 @@
         <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
           <br />
           <div class="btn-contentgroup">
-            <button type="button" id="downloadReportBtn" class="btn-content">
-              Download Report
-            </button>
-            <button type="button" id="viewSummaryBtn" class="btn-content">
-              View Summary
-            </button>
+            <button type="button" id="downloadReportBtn" class="btn-content">Download Report</button>
+            <button type="button" id="viewSummaryBtn" class="btn-content">View Summary</button>
           </div>
 
           <h2>Approvals</h2>
@@ -140,30 +71,10 @@
 
           <nav class="workflow-stepper" aria-label="Procurement workflow">
             <ol>
-              <li class="is-complete">
-                <a href="requisition.html"
-                  ><span class="workflow-step-number">1</span
-                  ><span>Requisition</span></a
-                >
-              </li>
-              <li class="is-current" aria-current="step">
-                <a href="approvals.html"
-                  ><span class="workflow-step-number">2</span
-                  ><span>Approval</span></a
-                >
-              </li>
-              <li>
-                <a href="purchase-order.html"
-                  ><span class="workflow-step-number">3</span
-                  ><span>Purchase Order</span></a
-                >
-              </li>
-              <li>
-                <a href="delivery.html"
-                  ><span class="workflow-step-number">4</span
-                  ><span>Fulfillment</span></a
-                >
-              </li>
+              <li class="is-complete"><a href="requisition.html"><span class="workflow-step-number">1</span><span>Requisition</span></a></li>
+              <li class="is-current" aria-current="step"><a href="approvals.html"><span class="workflow-step-number">2</span><span>Approval</span></a></li>
+              <li><a href="purchase-order.html"><span class="workflow-step-number">3</span><span>Purchase Order</span></a></li>
+              <li><a href="delivery.html"><span class="workflow-step-number">4</span><span>Fulfillment</span></a></li>
             </ol>
           </nav>
 
@@ -189,10 +100,7 @@
                   <td>Administration</td>
                   <td>
                     <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-view-approval"
-                      >
+                      <button type="button" class="btn-content js-view-approval">
                         View Requisition
                       </button>
                     </div>
@@ -203,20 +111,10 @@
                       <label class="content-label">Remarks</label>
                       <input type="text" placeholder="Optional remarks" />
                       <br /><br />
-                      <button
-                        type="button"
-                        name="decision"
-                        value="approve"
-                        class="approve-btn"
-                      >
+                      <button type="button" name="decision" value="approve" class="approve-btn">
                         Approve
                       </button>
-                      <button
-                        type="button"
-                        name="decision"
-                        value="reject"
-                        class="reject-btn"
-                      >
+                      <button type="button" name="decision" value="reject" class="reject-btn">
                         Reject
                       </button>
                     </form>
@@ -228,10 +126,7 @@
                   <td>Sales/Marketing</td>
                   <td>
                     <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-view-approval"
-                      >
+                      <button type="button" class="btn-content js-view-approval">
                         View Requisition
                       </button>
                     </div>
@@ -242,20 +137,10 @@
                       <label class="content-label">Remarks</label>
                       <input type="text" placeholder="Optional remarks" />
                       <br /><br />
-                      <button
-                        type="button"
-                        name="decision"
-                        value="approve"
-                        class="approve-btn"
-                      >
+                      <button type="button" name="decision" value="approve" class="approve-btn">
                         Approve
                       </button>
-                      <button
-                        type="button"
-                        name="decision"
-                        value="reject"
-                        class="reject-btn"
-                      >
+                      <button type="button" name="decision" value="reject" class="reject-btn">
                         Reject
                       </button>
                     </form>
@@ -267,9 +152,7 @@
 
           <fieldset class="content-field">
             <legend class="content-legend">Approval History</legend>
-            <button type="button" id="viewHistoryBtn" class="btn-content">
-              View History
-            </button>
+            <button type="button" id="viewHistoryBtn" class="btn-content">View History</button>
             <table class="content-table" border="1">
               <thead>
                 <tr>
@@ -312,7 +195,6 @@
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
-    <script src="rbac.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>

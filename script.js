@@ -30,6 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
   showTodayDate();
   setupCardMenus();
   setupRoleAccess();
+  setupWorkflowSummary();
+  setupSidebarToggle();
+  setupHelpSupportMenu();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
@@ -102,25 +105,17 @@ function setupSidebarToggle() {
   navigation.id = "primary-navigation";
   sidebar.insertBefore(toggle, sidebar.firstChild);
 
-  const collapsedPreference =
-    localStorage.getItem("procureit-sidebar-collapsed") === "true";
+  const collapsedPreference = localStorage.getItem("procureit-sidebar-collapsed") === "true";
   document.body.classList.toggle("sidebar-collapsed", collapsedPreference);
 
   const updateToggle = () => {
     const collapsed = document.body.classList.contains("sidebar-collapsed");
     toggle.textContent = collapsed ? "»" : "☰  Hide menu";
-    toggle.setAttribute(
-      "aria-label",
-      collapsed ? "Expand navigation menu" : "Collapse navigation menu",
-    );
-    toggle.title = collapsed
-      ? "Expand navigation menu"
-      : "Collapse navigation menu";
+    toggle.setAttribute("aria-label", collapsed ? "Expand navigation menu" : "Collapse navigation menu");
+    toggle.title = collapsed ? "Expand navigation menu" : "Collapse navigation menu";
     toggle.setAttribute("aria-expanded", String(!collapsed));
     navigation.querySelectorAll("a").forEach((link) => {
-      const label =
-        link.getAttribute("aria-label") ||
-        link.textContent.trim().replace(/\s+/g, " ");
+      const label = link.getAttribute("aria-label") || link.textContent.trim().replace(/\s+/g, " ");
       link.title = label;
     });
   };
@@ -177,40 +172,20 @@ function showSupportHelpModal(trigger) {
   const list = document.createElement("ul");
   list.className = "procurement-help-options";
   list.append(
-    createHelpContactItem(
-      "Send an email to our IT Helpdesk: ",
-      "it.support@procureit.local",
-    ),
-    createHelpContactItem(
-      "Or contact the ProcureIT System Administrator: ",
-      "admin@procureit.local",
-    ),
+    createHelpContactItem("Send an email to our IT Helpdesk: ", "it.support@procureit.local"),
+    createHelpContactItem("Or contact the ProcureIT System Administrator: ", "admin@procureit.local"),
   );
 
   const faqItem = document.createElement("li");
   const faqTitle = document.createElement("strong");
   faqTitle.textContent = "Procurement FAQ & Guides: ";
-  faqItem.append(
-    faqTitle,
-    document.createTextNode(
-      "Read quick answers about requisition steps and approvals.",
-    ),
-  );
+  faqItem.append(faqTitle, document.createTextNode("Read quick answers about requisition steps and approvals."));
   const faqList = document.createElement("div");
   faqList.className = "procurement-faq-list";
   faqList.append(
-    createFaqItem(
-      "How do I submit a requisition?",
-      "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition.",
-    ),
-    createFaqItem(
-      "What happens after I submit?",
-      "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it with a decision recorded in the system.",
-    ),
-    createFaqItem(
-      "Where can I check my request?",
-      "Use the Purchase Requisition page to view your submitted requests and check their current status.",
-    ),
+    createFaqItem("How do I submit a requisition?", "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition."),
+    createFaqItem("What happens after I submit?", "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it with a decision recorded in the system."),
+    createFaqItem("Where can I check my request?", "Use the Purchase Requisition page to view your submitted requests and check their current status."),
   );
   faqItem.appendChild(faqList);
   list.appendChild(faqItem);
@@ -270,9 +245,7 @@ function setupWorkflowSummary() {
   const modal = document.getElementById("workflow-summary-modal");
   if (!openButton || !modal) return;
 
-  const closeButtons = modal.querySelectorAll(
-    ".workflow-summary-x, .workflow-summary-close",
-  );
+  const closeButtons = modal.querySelectorAll(".workflow-summary-x, .workflow-summary-close");
   const close = () => {
     modal.hidden = true;
     openButton.focus();
@@ -297,12 +270,8 @@ function setupRoleAccess() {
   const allowedRoles = ["requisitioner", "approver", "purchasing"];
   document.querySelectorAll(".navigation a[href]").forEach((link) => {
     const destination = link.getAttribute("href");
-    if (destination === "approvals.html") link.dataset.roleAccess = "approver";
-    if (
-      ["purchase-order.html", "purchase-order-detail.html"].includes(
-        destination,
-      )
-    ) {
+    if (destination === "approvals.html") link.dataset.roleAccess = "approver purchasing";
+    if (["purchase-order.html", "purchase-order-detail.html"].includes(destination)) {
       link.dataset.roleAccess = "purchasing";
     }
   });
@@ -312,12 +281,12 @@ function setupRoleAccess() {
 
   const applyRole = (selectedRole) => {
     document.querySelectorAll("[data-role-access]").forEach((element) => {
-      const permitted = element.dataset.roleAccess === selectedRole;
+      const permitted = element.dataset.roleAccess.split(/\s+/).includes(selectedRole);
       element.classList.toggle("role-restricted", !permitted);
+      element.classList.toggle("nav-restricted", !permitted && element.closest(".navigation") !== null);
+      element.classList.toggle("rbac-disabled", !permitted);
       element.setAttribute("aria-disabled", String(!permitted));
-      const links = element.matches("a")
-        ? [element]
-        : element.querySelectorAll("a");
+      const links = element.matches("a") ? [element] : element.querySelectorAll("a");
       links.forEach((link) => {
         if (!permitted) link.dataset.roleBlocked = "true";
         else delete link.dataset.roleBlocked;
@@ -325,15 +294,61 @@ function setupRoleAccess() {
     });
 
     const page = window.location.pathname.split("/").pop();
-    const requiredRole =
-      page === "approvals.html"
-        ? "approver"
-        : ["purchase-order.html", "purchase-order-detail.html"].includes(page)
-          ? "purchasing"
-          : null;
-    if (requiredRole && selectedRole !== requiredRole) {
-      window.location.replace("dashboard.html?access=restricted");
+    const bannerCopy = page === "approvals.html" && selectedRole === "requisitioner"
+      ? "You are signed in as requisitioner. Only Approvers and Purchasing Managers have authority to approve or reject requisitions. Approval actions below are grayed out."
+      : ["purchase-order.html", "purchase-order-detail.html"].includes(page) && selectedRole !== "purchasing"
+        ? selectedRole === "approver"
+          ? "You are signed in as approver. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
+          : "You are signed in as requisitioner. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
+        : null;
+    let banner = document.querySelector(".rbac-banner");
+    if (bannerCopy) {
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.className = "rbac-banner";
+        banner.setAttribute("role", "status");
+        const insertionPoint = document.querySelector(".workflow-stepper") || document.querySelector(".content hr");
+        insertionPoint?.insertAdjacentElement("afterend", banner);
+      }
+      banner.textContent = bannerCopy;
+    } else if (banner) {
+      banner.remove();
     }
+
+    const restrictedPage = (page === "approvals.html" && selectedRole === "requisitioner")
+      || (["purchase-order.html", "purchase-order-detail.html"].includes(page) && selectedRole !== "purchasing");
+    if (restrictedPage) {
+      const content = document.querySelector(".content");
+      content?.querySelectorAll("button, input, select, textarea").forEach((control) => {
+        control.disabled = true;
+        control.classList.add("rbac-disabled");
+        control.dataset.rbacLocked = "true";
+      });
+      content?.querySelectorAll("a[href]").forEach((link) => {
+        if (!link.closest(".navigation")) {
+          link.classList.add("rbac-disabled");
+          link.setAttribute("aria-disabled", "true");
+          link.dataset.roleBlocked = "true";
+        }
+      });
+    } else {
+      document.querySelectorAll('.content [data-rbac-locked="true"]').forEach((control) => {
+        control.disabled = false;
+        control.classList.remove("rbac-disabled");
+        control.removeAttribute("aria-disabled");
+        delete control.dataset.rbacLocked;
+      });
+      document.querySelectorAll('.content a[data-role-blocked="true"]').forEach((link) => {
+        link.classList.remove("rbac-disabled");
+        link.removeAttribute("aria-disabled");
+        delete link.dataset.roleBlocked;
+      });
+    }
+
+    const requisitionRows = document.querySelectorAll("#requisition-form ~ fieldset .content-table tbody tr");
+    requisitionRows.forEach((row) => {
+      row.hidden = selectedRole === "requisitioner" && row.cells[1]?.textContent.trim() !== "Bruce";
+    });
   };
 
   applyRole(role);
@@ -530,6 +545,8 @@ function closePopup() {
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */
+function setupLoginForm() {}
+
 function setupLoginLinks() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   const contactAdminLink = document.getElementById("contactAdminLink");
@@ -553,10 +570,7 @@ function setupLoginLinks() {
     );
   });
 
-  setupHelpDialog(
-    procurementHelpLink,
-    document.getElementById("procurement-help-modal"),
-  );
+  setupHelpDialog(procurementHelpLink, document.getElementById("procurement-help-modal"));
 }
 
 function setupHelpDialog(trigger, dialog) {
@@ -1072,6 +1086,7 @@ function setupVendorTable() {
   });
 }
 
+/* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 /* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 function setupVendorDocumentsTable() {
   const renewButtons = document.querySelectorAll(".js-renew-document");

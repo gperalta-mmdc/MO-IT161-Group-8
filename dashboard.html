@@ -39,6 +39,14 @@
           />
           <h3 class="profile-name">Hello, Bruce</h3>
           <h4 class="profile-department">IT Department - Head</h4>
+          <div class="role-switcher">
+            <label for="dashboard-role">Demo role</label>
+            <select id="dashboard-role" aria-label="Choose a demo role">
+              <option value="requisitioner">Requisitioner (Staff)</option>
+              <option value="approver">Approver</option>
+              <option value="purchasing">Purchasing Manager</option>
+            </select>
+          </div>
           <hr />
           <br />
           <nav class="navigation">
@@ -60,10 +68,7 @@
                 >
               </li>
               <li>
-                <a
-                  href="approvals.html"
-                  data-role-access="approver"
-                  aria-label="Approvals (Approver only)"
+                <a href="approvals.html" data-role-access="approver purchasing" aria-label="Approvals (Approver or Purchasing Manager)"
                   ><img
                     src="./resources/icons/approvals.png"
                     alt=""
@@ -71,10 +76,7 @@
                 >
               </li>
               <li>
-                <a
-                  href="purchase-order.html"
-                  data-role-access="purchasing"
-                  aria-label="Purchase Orders (Purchasing Manager only)"
+                <a href="purchase-order.html" data-role-access="purchasing" aria-label="Purchase Orders (Purchasing Manager only)"
                   ><img
                     src="./resources/icons/purchase-order.png"
                     alt=""
@@ -140,52 +142,19 @@
             <p id="today-label"></p>
           </div>
 
-          <nav
-            class="workflow-stepper dashboard-stepper"
-            aria-label="Procurement workflow"
-          >
+          <nav class="workflow-stepper dashboard-stepper" aria-label="Procurement workflow">
             <ol>
-              <li class="is-current" aria-current="step">
-                <a href="requisition.html"
-                  ><span class="workflow-step-number">1</span
-                  ><span>Requisition</span><small>Create requests</small></a
-                >
-              </li>
-              <li data-role-access="approver">
-                <a href="approvals.html"
-                  ><span class="workflow-step-number">2</span
-                  ><span>Approval</span><small>Department review</small></a
-                >
-              </li>
-              <li data-role-access="purchasing">
-                <a href="purchase-order.html"
-                  ><span class="workflow-step-number">3</span
-                  ><span>Purchase Order</span
-                  ><small>Generate and issue</small></a
-                >
-              </li>
-              <li>
-                <a href="delivery.html"
-                  ><span class="workflow-step-number">4</span
-                  ><span>Fulfillment</span><small>Receive and invoice</small></a
-                >
-              </li>
+              <li class="is-current" aria-current="step"><a href="requisition.html"><span class="workflow-step-number">1</span><span>Requisition</span><small>Create requests</small></a></li>
+            <li data-role-access="approver purchasing"><a href="approvals.html"><span class="workflow-step-number">2</span><span>Approval</span><small>Department review</small></a></li>
+              <li data-role-access="purchasing"><a href="purchase-order.html"><span class="workflow-step-number">3</span><span>Purchase Order</span><small>Generate and issue</small></a></li>
+              <li><a href="delivery.html"><span class="workflow-step-number">4</span><span>Fulfillment</span><small>Receive and invoice</small></a></li>
             </ol>
           </nav>
           <div class="dashboard-actions">
             <a class="btn-content" href="requisition.html">+ New Requisition</a>
-            <a
-              class="btn-content role-restricted-action"
-              href="approvals.html"
-              data-role-access="approver"
-              >Review Approvals</a
-            >
-            <a
-              class="btn-content role-restricted-action"
-              href="purchase-order.html"
-              data-role-access="purchasing"
-              >Generate PO</a
-            >
+            <a class="btn-content role-restricted-action" href="approvals.html" data-role-access="approver purchasing">Review Approval</a>
+            <a class="btn-content role-restricted-action" href="purchase-order.html" data-role-access="purchasing">Generate PO</a>
+            <button type="button" class="btn-content" id="workflowSummaryBtn" aria-haspopup="dialog" aria-controls="workflow-summary-modal">Workflow Summary</button>
           </div>
 
           <article class="card">
@@ -200,9 +169,7 @@
           <article class="card">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
-              <a href="approvals.html" data-role-access="approver"
-                >View Details</a
-              >
+              <a href="approvals.html" data-role-access="approver purchasing">View Details</a>
               <button type="button" class="dismiss-btn">Dismiss</button>
             </div>
             <h3>Approvals</h3>
@@ -214,9 +181,7 @@
           <article class="card">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
-              <a href="purchase-order.html" data-role-access="purchasing"
-                >View Details</a
-              >
+              <a href="purchase-order.html" data-role-access="purchasing">View Details</a>
               <button type="button" class="dismiss-btn">Dismiss</button>
             </div>
             <h3>Purchase Orders</h3>
@@ -285,10 +250,47 @@
       </tr>
     </table>
 
+    <section class="workflow-summary-overlay" id="workflow-summary-modal" role="dialog" aria-modal="true" aria-labelledby="workflow-summary-title" aria-describedby="workflow-summary-impact" hidden>
+      <div class="workflow-summary-dialog">
+        <header class="workflow-summary-header">
+          <h2 id="workflow-summary-title">Procurement Workflow Summary</h2>
+          <button type="button" class="workflow-summary-x" aria-label="Close workflow summary">&times;</button>
+        </header>
+        <div class="workflow-summary-body">
+          <h3>Workplace Zero Paper Workflow Status</h3>
+          <div class="workflow-summary-grid">
+            <article class="workflow-metric">
+              <span class="workflow-metric-label">Total Requisitions</span>
+              <strong>4</strong>
+              <span class="workflow-metric-note">1 pending review</span>
+            </article>
+            <article class="workflow-metric">
+              <span class="workflow-metric-label">Approved Requisitions</span>
+              <strong class="metric-approved">2</strong>
+              <span class="workflow-metric-note">Ready for PO creation</span>
+            </article>
+            <article class="workflow-metric">
+              <span class="workflow-metric-label">Active Purchase Orders</span>
+              <strong class="metric-active">2</strong>
+              <span class="workflow-metric-note">In procurement pipeline</span>
+            </article>
+            <article class="workflow-metric">
+              <span class="workflow-metric-label">Total PO Volume</span>
+              <strong class="metric-volume">₱ 69,634.00</strong>
+              <span class="workflow-metric-note">Authorized procurement</span>
+            </article>
+          </div>
+          <p class="workflow-summary-impact" id="workflow-summary-impact"><strong>🌱 Zero Paper Initiative Impact:</strong> 100% electronic routing from requisition to manager approval and PO generation eliminates printing delays and saves physical archive space.</p>
+        </div>
+        <footer class="workflow-summary-footer">
+          <button type="button" class="btn-content workflow-summary-close">Close</button>
+        </footer>
+      </div>
+    </section>
+
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
-    <script src="rbac.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>
