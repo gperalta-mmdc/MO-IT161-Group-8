@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRoleAccess();
   setupWorkflowSummary();
   setupSidebarToggle();
+  setupHelpSupportMenu();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
@@ -126,6 +127,117 @@ function setupSidebarToggle() {
     updateToggle();
   });
   updateToggle();
+}
+
+function setupHelpSupportMenu() {
+  document.querySelectorAll(".navigation a").forEach((link) => {
+    const label = link.textContent.trim().replace(/\s+/g, " ");
+    if (!label.includes("Help and Support")) return;
+
+    link.setAttribute("aria-haspopup", "dialog");
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      showSupportHelpModal(link);
+    });
+  });
+}
+
+function showSupportHelpModal(trigger) {
+  closePopup();
+
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
+
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box login-help-modal";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "support-help-title");
+
+  const header = document.createElement("header");
+  header.className = "login-help-header";
+  const title = document.createElement("h2");
+  title.id = "support-help-title";
+  title.textContent = "Need Help with IT Procurement?";
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "login-help-x";
+  closeIcon.setAttribute("aria-label", "Close dialog");
+  closeIcon.textContent = "×";
+  header.append(title, closeIcon);
+
+  const body = document.createElement("div");
+  body.className = "login-help-body procurement-help-body";
+  const list = document.createElement("ul");
+  list.className = "procurement-help-options";
+  list.append(
+    createHelpContactItem("Send an email to our IT Helpdesk: ", "it.support@procureit.local"),
+    createHelpContactItem("Or contact the ProcureIT System Administrator: ", "admin@procureit.local"),
+  );
+
+  const faqItem = document.createElement("li");
+  const faqTitle = document.createElement("strong");
+  faqTitle.textContent = "Procurement FAQ & Guides: ";
+  faqItem.append(faqTitle, document.createTextNode("Read quick answers about requisition steps and approvals."));
+  const faqList = document.createElement("div");
+  faqList.className = "procurement-faq-list";
+  faqList.append(
+    createFaqItem("How do I submit a requisition?", "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition."),
+    createFaqItem("What happens after I submit?", "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it with a decision recorded in the system."),
+    createFaqItem("Where can I check my request?", "Use the Purchase Requisition page to view your submitted requests and check their current status."),
+  );
+  faqItem.appendChild(faqList);
+  list.appendChild(faqItem);
+  body.appendChild(list);
+
+  const footer = document.createElement("footer");
+  footer.className = "login-help-footer";
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn-content";
+  closeButton.textContent = "Close";
+  footer.appendChild(closeButton);
+
+  dialog.append(header, body, footer);
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+
+  const close = () => {
+    document.removeEventListener("keydown", handleKeydown);
+    overlay.remove();
+    trigger.focus();
+  };
+  const handleKeydown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  closeIcon.addEventListener("click", close);
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) close();
+  });
+  document.addEventListener("keydown", handleKeydown);
+  closeIcon.focus();
+}
+
+function createHelpContactItem(prefix, email) {
+  const item = document.createElement("li");
+  item.append(document.createTextNode(prefix));
+  const link = document.createElement("a");
+  link.href = `mailto:${email}`;
+  link.textContent = email;
+  item.appendChild(link);
+  return item;
+}
+
+function createFaqItem(question, answer) {
+  const details = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.textContent = question;
+  const paragraph = document.createElement("p");
+  paragraph.textContent = answer;
+  details.append(summary, paragraph);
+  return details;
 }
 
 function setupWorkflowSummary() {
@@ -438,16 +550,112 @@ function setupLoginForm() {}
 function setupLoginLinks() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   const contactAdminLink = document.getElementById("contactAdminLink");
+  const procurementHelpLink = document.getElementById("procurementHelpLink");
 
   forgotPasswordLink.addEventListener("click", (event) => {
     event.preventDefault(); // href="#" would otherwise jump to the top of the page
-    showMessage("Password reset is not implemented yet.");
+    showLoginInfoModal(
+      "Password Assistance",
+      "For password reset, please contact the IT Helpdesk at local 104 or email it.support@procureit.local with your Employee ID.",
+      forgotPasswordLink,
+    );
   });
 
   contactAdminLink.addEventListener("click", (event) => {
     event.preventDefault();
-    showMessage("Contact your administrator screen not implemented yet.");
+    showLoginInfoModal(
+      "Administrator Contact",
+      "ProcureIT System Administrator: Group # 8 MO-IT161 Email: admin@procureit.local | IT Operations Dept.",
+      contactAdminLink,
+    );
   });
+
+  setupHelpDialog(procurementHelpLink, document.getElementById("procurement-help-modal"));
+}
+
+function setupHelpDialog(trigger, dialog) {
+  if (!trigger || !dialog) return;
+  const closeButtons = dialog.querySelectorAll("[data-close-help]");
+  const close = () => {
+    dialog.hidden = true;
+    document.removeEventListener("keydown", handleKeydown);
+    trigger.focus();
+  };
+  const handleKeydown = (event) => {
+    if (event.key === "Escape" && !dialog.hidden) close();
+  };
+
+  trigger.addEventListener("click", (event) => {
+    event.preventDefault();
+    dialog.hidden = false;
+    dialog.querySelector("[data-close-help]").focus();
+    document.addEventListener("keydown", handleKeydown);
+  });
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) close();
+  });
+}
+
+function showLoginInfoModal(titleText, messageText, trigger) {
+  closePopup();
+
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
+
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box login-help-modal";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "login-help-title");
+
+  const header = document.createElement("header");
+  header.className = "login-help-header";
+  const title = document.createElement("h2");
+  title.id = "login-help-title";
+  title.textContent = titleText;
+
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "login-help-x";
+  closeIcon.setAttribute("aria-label", "Close dialog");
+  closeIcon.textContent = "×";
+  header.append(title, closeIcon);
+
+  const body = document.createElement("div");
+  body.className = "login-help-body";
+  const message = document.createElement("p");
+  message.textContent = messageText;
+  body.appendChild(message);
+
+  const footer = document.createElement("footer");
+  footer.className = "login-help-footer";
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn-content";
+  closeButton.textContent = "Close";
+  footer.appendChild(closeButton);
+
+  dialog.append(header, body, footer);
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+
+  const close = () => {
+    document.removeEventListener("keydown", handleKeydown);
+    overlay.remove();
+    trigger.focus();
+  };
+  const handleKeydown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  closeIcon.addEventListener("click", close);
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) close();
+  });
+  document.addEventListener("keydown", handleKeydown);
+  closeIcon.focus();
 }
 
 /* ----- Purchase Requisition page (requisition.html only)----- */
