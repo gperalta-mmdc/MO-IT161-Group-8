@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   showTodayDate();
   setupCardMenus();
   setupRoleAccess();
+  setupWorkflowSummary();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
@@ -90,13 +91,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+function setupWorkflowSummary() {
+  const openButton = document.getElementById("workflowSummaryBtn");
+  const modal = document.getElementById("workflow-summary-modal");
+  if (!openButton || !modal) return;
+
+  const closeButtons = modal.querySelectorAll(".workflow-summary-x, .workflow-summary-close");
+  const close = () => {
+    modal.hidden = true;
+    openButton.focus();
+  };
+
+  openButton.addEventListener("click", () => {
+    modal.hidden = false;
+    modal.querySelector(".workflow-summary-x").focus();
+  });
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modal.hidden) close();
+  });
+}
+
 /* Demo role access for this static prototype. Real access control requires a server. */
 function setupRoleAccess() {
   const roleSelect = document.getElementById("dashboard-role");
   const allowedRoles = ["requisitioner", "approver", "purchasing"];
   document.querySelectorAll(".navigation a[href]").forEach((link) => {
     const destination = link.getAttribute("href");
-    if (destination === "approvals.html") link.dataset.roleAccess = "approver";
+    if (destination === "approvals.html") link.dataset.roleAccess = "approver purchasing";
     if (["purchase-order.html", "purchase-order-detail.html"].includes(destination)) {
       link.dataset.roleAccess = "purchasing";
     }
@@ -107,8 +132,10 @@ function setupRoleAccess() {
 
   const applyRole = (selectedRole) => {
     document.querySelectorAll("[data-role-access]").forEach((element) => {
-      const permitted = element.dataset.roleAccess === selectedRole;
+      const permitted = element.dataset.roleAccess.split(/\s+/).includes(selectedRole);
       element.classList.toggle("role-restricted", !permitted);
+      element.classList.toggle("nav-restricted", !permitted && element.closest(".navigation") !== null);
+      element.classList.toggle("rbac-disabled", !permitted);
       element.setAttribute("aria-disabled", String(!permitted));
       const links = element.matches("a") ? [element] : element.querySelectorAll("a");
       links.forEach((link) => {
@@ -118,11 +145,61 @@ function setupRoleAccess() {
     });
 
     const page = window.location.pathname.split("/").pop();
-    const requiredRole = page === "approvals.html" ? "approver"
-      : ["purchase-order.html", "purchase-order-detail.html"].includes(page) ? "purchasing" : null;
-    if (requiredRole && selectedRole !== requiredRole) {
-      window.location.replace("dashboard.html?access=restricted");
+    const bannerCopy = page === "approvals.html" && selectedRole === "requisitioner"
+      ? "You are signed in as requisitioner. Only Approvers and Purchasing Managers have authority to approve or reject requisitions. Approval actions below are grayed out."
+      : ["purchase-order.html", "purchase-order-detail.html"].includes(page) && selectedRole !== "purchasing"
+        ? selectedRole === "approver"
+          ? "You are signed in as approver. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
+          : "You are signed in as requisitioner. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
+        : null;
+    let banner = document.querySelector(".rbac-banner");
+    if (bannerCopy) {
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.className = "rbac-banner";
+        banner.setAttribute("role", "status");
+        const insertionPoint = document.querySelector(".workflow-stepper") || document.querySelector(".content hr");
+        insertionPoint?.insertAdjacentElement("afterend", banner);
+      }
+      banner.textContent = bannerCopy;
+    } else if (banner) {
+      banner.remove();
     }
+
+    const restrictedPage = (page === "approvals.html" && selectedRole === "requisitioner")
+      || (["purchase-order.html", "purchase-order-detail.html"].includes(page) && selectedRole !== "purchasing");
+    if (restrictedPage) {
+      const content = document.querySelector(".content");
+      content?.querySelectorAll("button, input, select, textarea").forEach((control) => {
+        control.disabled = true;
+        control.classList.add("rbac-disabled");
+        control.dataset.rbacLocked = "true";
+      });
+      content?.querySelectorAll("a[href]").forEach((link) => {
+        if (!link.closest(".navigation")) {
+          link.classList.add("rbac-disabled");
+          link.setAttribute("aria-disabled", "true");
+          link.dataset.roleBlocked = "true";
+        }
+      });
+    } else {
+      document.querySelectorAll('.content [data-rbac-locked="true"]').forEach((control) => {
+        control.disabled = false;
+        control.classList.remove("rbac-disabled");
+        control.removeAttribute("aria-disabled");
+        delete control.dataset.rbacLocked;
+      });
+      document.querySelectorAll('.content a[data-role-blocked="true"]').forEach((link) => {
+        link.classList.remove("rbac-disabled");
+        link.removeAttribute("aria-disabled");
+        delete link.dataset.roleBlocked;
+      });
+    }
+
+    const requisitionRows = document.querySelectorAll("#requisition-form ~ fieldset .content-table tbody tr");
+    requisitionRows.forEach((row) => {
+      row.hidden = selectedRole === "requisitioner" && row.cells[1]?.textContent.trim() !== "Bruce";
+    });
   };
 
   applyRole(role);
