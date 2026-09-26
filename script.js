@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
   showTodayDate();
   setupCardMenus();
   setupRoleAccess();
+  applyLoggedInProfile();
+  setupLogout();
+  setupWorkflowSummary();
+  setupSidebarToggle();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
@@ -90,53 +94,73 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-/* Demo role access for this static prototype. Real access control requires a server. */
-function setupRoleAccess() {
-  const roleSelect = document.getElementById("dashboard-role");
-  const allowedRoles = ["requisitioner", "approver", "purchasing"];
-  document.querySelectorAll(".navigation a[href]").forEach((link) => {
-    const destination = link.getAttribute("href");
-    if (destination === "approvals.html") link.dataset.roleAccess = "approver";
-    if (["purchase-order.html", "purchase-order-detail.html"].includes(destination)) {
-      link.dataset.roleAccess = "purchasing";
-    }
-  });
-  let role = localStorage.getItem("procureit-demo-role");
-  if (!allowedRoles.includes(role)) role = "requisitioner";
-  if (roleSelect) roleSelect.value = role;
+function setupSidebarToggle() {
+  const sidebar = document.querySelector(".layout-table tr > td:first-child");
+  const navigation = sidebar?.querySelector(".navigation");
+  if (!sidebar || !navigation) return;
 
-  const applyRole = (selectedRole) => {
-    document.querySelectorAll("[data-role-access]").forEach((element) => {
-      const permitted = element.dataset.roleAccess === selectedRole;
-      element.classList.toggle("role-restricted", !permitted);
-      element.setAttribute("aria-disabled", String(!permitted));
-      const links = element.matches("a") ? [element] : element.querySelectorAll("a");
-      links.forEach((link) => {
-        if (!permitted) link.dataset.roleBlocked = "true";
-        else delete link.dataset.roleBlocked;
-      });
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "sidebar-toggle";
+  toggle.setAttribute("aria-controls", "primary-navigation");
+  navigation.id = "primary-navigation";
+  sidebar.insertBefore(toggle, sidebar.firstChild);
+
+  const collapsedPreference =
+    localStorage.getItem("procureit-sidebar-collapsed") === "true";
+  document.body.classList.toggle("sidebar-collapsed", collapsedPreference);
+
+  const updateToggle = () => {
+    const collapsed = document.body.classList.contains("sidebar-collapsed");
+    toggle.textContent = collapsed ? "»" : "☰  Hide menu";
+    toggle.setAttribute(
+      "aria-label",
+      collapsed ? "Expand navigation menu" : "Collapse navigation menu",
+    );
+    toggle.title = collapsed
+      ? "Expand navigation menu"
+      : "Collapse navigation menu";
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+    navigation.querySelectorAll("a").forEach((link) => {
+      const label =
+        link.getAttribute("aria-label") ||
+        link.textContent.trim().replace(/\s+/g, " ");
+      link.title = label;
     });
-
-    const page = window.location.pathname.split("/").pop();
-    const requiredRole = page === "approvals.html" ? "approver"
-      : ["purchase-order.html", "purchase-order-detail.html"].includes(page) ? "purchasing" : null;
-    if (requiredRole && selectedRole !== requiredRole) {
-      window.location.replace("dashboard.html?access=restricted");
-    }
   };
 
-  applyRole(role);
-  if (roleSelect) {
-    roleSelect.addEventListener("change", () => {
-      localStorage.setItem("procureit-demo-role", roleSelect.value);
-      applyRole(roleSelect.value);
-    });
-  }
+  toggle.addEventListener("click", () => {
+    const collapsed = !document.body.classList.contains("sidebar-collapsed");
+    document.body.classList.toggle("sidebar-collapsed", collapsed);
+    localStorage.setItem("procureit-sidebar-collapsed", String(collapsed));
+    updateToggle();
+  });
+  updateToggle();
+}
 
-  document.addEventListener("click", (event) => {
-    if (event.target.closest('a[data-role-blocked="true"]')) {
-      event.preventDefault();
-    }
+function setupWorkflowSummary() {
+  const openButton = document.getElementById("workflowSummaryBtn");
+  const modal = document.getElementById("workflow-summary-modal");
+  if (!openButton || !modal) return;
+
+  const closeButtons = modal.querySelectorAll(
+    ".workflow-summary-x, .workflow-summary-close",
+  );
+  const close = () => {
+    modal.hidden = true;
+    openButton.focus();
+  };
+
+  openButton.addEventListener("click", () => {
+    modal.hidden = false;
+    modal.querySelector(".workflow-summary-x").focus();
+  });
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modal.hidden) close();
   });
 }
 
@@ -319,8 +343,6 @@ function closePopup() {
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */
-function setupLoginForm() {}
-
 function setupLoginLinks() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   const contactAdminLink = document.getElementById("contactAdminLink");
@@ -764,7 +786,6 @@ function setupVendorTable() {
   });
 }
 
-/* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 /* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 function setupVendorDocumentsTable() {
   const renewButtons = document.querySelectorAll(".js-renew-document");

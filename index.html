@@ -27,25 +27,40 @@
               Please enter your credentials to access the system
             </p>
             <br />
-            <form action="dashboard.html" method="get" id="login-form">
+            <!-- Removed action and method attributes to allow rbac.js to handle login logic -->
+            <form id="login-form">
               <fieldset style="padding-left: 30px">
                 <legend>Account Log-In</legend>
                 <br />
-                <label>Username or E-Mail</label>
+                <label for="username">Username or E-Mail</label>
                 <br />
                 <input
                   type="text"
+                  id="username"
+                  name="username"
                   placeholder="Enter username or email"
                   required
                 />
                 <br /><br />
-                <label>Password</label>
+                <label for="password">Password</label>
                 <br />
-                <input type="password" placeholder="Enter password" required />
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter password"
+                  required
+                />
                 <br /><br />
-                <br /><br />
-                <input type="checkbox" />
-                <label>Remember Me</label>
+
+                <!-- Container for RBAC authentication error messages -->
+                <p
+                  id="login-error"
+                  style="color: red; display: none; font-weight: bold"
+                ></p>
+
+                <input type="checkbox" id="remember" />
+                <label for="remember">Remember Me</label>
                 <br /><br />
                 <button
                   type="submit"
@@ -82,6 +97,7 @@
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
+    <script src="rbac.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>
