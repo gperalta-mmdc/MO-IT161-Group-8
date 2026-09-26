@@ -174,7 +174,7 @@
               <legend class="content-legend">Requisition Form</legend>
               <label class="content-label">Requisition ID</label>
               <br />
-              <input type="text" placeholder="Auto-generated" />
+              <input type="text" id="requisitionIdPreview" readonly />
               <br /><br />
               <label class="content-label" for="requestedBy"
                 >Requested By</label
@@ -200,7 +200,7 @@
               <br /><br />
               <label class="content-label">Date Submitted</label>
               <br />
-              <input type="date" />
+              <input type="date" id="requisitionDate" />
               <br /><br />
             </fieldset>
 
@@ -219,32 +219,72 @@
                   <tr>
                     <td>1</td>
                     <td><input type="text" class="item-desc" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                    <td>
+                      <input type="number" min="1" step="1" class="item-qty" />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder="e.g. pcs, box"
+                        class="item-unit"
+                      />
+                    </td>
                   </tr>
                   <tr>
                     <td>2</td>
                     <td><input type="text" class="item-desc" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                    <td>
+                      <input type="number" min="1" step="1" class="item-qty" />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder="e.g. pcs, box"
+                        class="item-unit"
+                      />
+                    </td>
                   </tr>
                   <tr>
                     <td>3</td>
                     <td><input type="text" class="item-desc" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                    <td>
+                      <input type="number" min="1" step="1" class="item-qty" />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder="e.g. pcs, box"
+                        class="item-unit"
+                      />
+                    </td>
                   </tr>
                   <tr>
                     <td>4</td>
                     <td><input type="text" class="item-desc" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                    <td>
+                      <input type="number" min="1" step="1" class="item-qty" />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder="e.g. pcs, box"
+                        class="item-unit"
+                      />
+                    </td>
                   </tr>
                   <tr>
                     <td>5</td>
                     <td><input type="text" class="item-desc" /></td>
-                    <td><input type="number" min="1" step="1" /></td>
-                    <td><input type="text" placeholder="e.g. pcs, box" /></td>
+                    <td>
+                      <input type="number" min="1" step="1" class="item-qty" />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder="e.g. pcs, box"
+                        class="item-unit"
+                      />
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -253,7 +293,7 @@
             <fieldset class="content-field">
               <legend class="content-legend">Additional Details</legend>
               <label class="content-label">Reason for Request</label>
-              <textarea rows="4" cols="50"></textarea>
+              <textarea rows="4" cols="50" id="requisitionReason"></textarea>
               <br /><br />
               <label class="content-label">Attach Supporting Document</label>
               <input type="file" />
@@ -285,71 +325,7 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>REQ-1001</td>
-                  <td>Bruce</td>
-                  <td>Administration</td>
-                  <td>1</td>
-                  <td>2026-08-15</td>
-                  <td>Pending</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view" type="button">
-                        View Request
-                      </button>
-                      <button class="btn-content js-print" type="button">
-                        Print
-                      </button>
-                      <button class="withraw-btn js-withdraw" type="button">
-                        Withdraw
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>REQ-1002</td>
-                  <td>Maria Santos</td>
-                  <td>Sales / Marketing</td>
-                  <td>3</td>
-                  <td>2026-08-18</td>
-                  <td>Approved</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view" type="button">
-                        View Request
-                      </button>
-                      <button class="btn-content js-print" type="button">
-                        Print
-                      </button>
-                      <button class="withraw-btn js-withdraw" type="button">
-                        Withdraw
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>REQ-1003</td>
-                  <td>Mark Reyes</td>
-                  <td>IT</td>
-                  <td>2</td>
-                  <td>2026-08-20</td>
-                  <td>Rejected</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view" type="button">
-                        View Request
-                      </button>
-                      <button class="btn-content js-print" type="button">
-                        Print
-                      </button>
-                      <button class="withraw-btn js-withdraw" type="button">
-                        Withdraw
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="requisitions-table-body"></tbody>
             </table>
             <br />
             <button type="button" id="viewAllBtn" class="btn-content">
@@ -365,5 +341,6 @@
     </footer>
     <script src="rbac.js"></script>
     <script src="script.js" defer></script>
+    <script src="workflow.js"></script>
   </body>
 </html>

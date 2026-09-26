@@ -41,12 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupLoginLinks();
   }
 
-  /* ----- for requisition.html only -----*/
-  if (document.getElementById("requisition-form")) {
-    setupRequisitionForm();
-    setupRequisitionTable();
-  }
-
   /* ----- for approvals.html only -----*/
   if (document.querySelector(".decision-form")) {
     setupApprovalsPage();
@@ -85,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupVendorForm();
     setupVendorTable();
     setupVendorDocumentsTable();
-    setupInvoiceHistoryTable();
   }
 
   /* ----- for reports.html only -----*/
@@ -217,12 +210,12 @@ function setupHeaderButtons() {
       showPopup("Summary Overview", "Here is your quick summary details.");
     });
   }
-}
 
-if (printPoBtn) {
-  printPoBtn.addEventListener("click", () => {
-    showMessage("Printing purchase order...");
-  });
+  if (printPoBtn) {
+    printPoBtn.addEventListener("click", () => {
+      showMessage("Printing purchase order...");
+    });
+  }
 }
 
 /* ----- Show date on dashboard ----- */
