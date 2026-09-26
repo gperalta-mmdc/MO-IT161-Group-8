@@ -27,25 +27,40 @@
               Please enter your credentials to access the system
             </p>
             <br />
-            <form action="dashboard.html" method="get" id="login-form">
+            <!-- Removed action and method attributes to allow rbac.js to handle login logic -->
+            <form id="login-form">
               <fieldset style="padding-left: 30px">
                 <legend>Account Log-In</legend>
                 <br />
-                <label>Username or E-Mail</label>
+                <label for="username">Username or E-Mail</label>
                 <br />
                 <input
                   type="text"
+                  id="username"
+                  name="username"
                   placeholder="Enter username or email"
                   required
                 />
                 <br /><br />
-                <label>Password</label>
+                <label for="password">Password</label>
                 <br />
-                <input type="password" placeholder="Enter password" required />
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter password"
+                  required
+                />
                 <br /><br />
-                <br /><br />
-                <input type="checkbox" />
-                <label>Remember Me</label>
+
+                <!-- Container for RBAC authentication error messages -->
+                <p
+                  id="login-error"
+                  style="color: red; display: none; font-weight: bold"
+                ></p>
+
+                <input type="checkbox" id="remember" />
+                <label for="remember">Remember Me</label>
                 <br /><br />
                 <button
                   type="submit"
@@ -63,10 +78,6 @@
               Don't have an account?
               <a href="#" id="contactAdminLink">Contact your administrator</a>
             </p>
-            <aside class="login-procurement-help">
-              <h3>Need Help with IT Procurement?</h3>
-              <a href="#" id="procurementHelpLink" aria-haspopup="dialog" aria-controls="procurement-help-modal">Open Procurement FAQ &amp; Guides</a>
-            </aside>
           </section>
         </td>
 
@@ -83,44 +94,10 @@
         </td>
       </tr>
     </table>
-
-    <section class="popup-overlay" id="procurement-help-modal" role="dialog" aria-modal="true" aria-labelledby="procurement-help-title" hidden>
-      <div class="popup-box login-help-modal">
-        <header class="login-help-header">
-          <h2 id="procurement-help-title">Need Help with IT Procurement?</h2>
-          <button type="button" class="login-help-x" data-close-help aria-label="Close dialog">×</button>
-        </header>
-        <div class="login-help-body procurement-help-body">
-          <ul class="procurement-help-options">
-            <li>Send an email to our IT Helpdesk: <a href="mailto:it.support@procureit.local">it.support@procureit.local</a></li>
-            <li>Or contact the ProcureIT System Administrator: <a href="mailto:admin@procureit.local">admin@procureit.local</a></li>
-            <li><strong>Procurement FAQ &amp; Guides:</strong> Read quick answers about requisition steps and approvals.
-              <div class="procurement-faq-list">
-                <details>
-                  <summary>How do I submit a requisition?</summary>
-                  <p>Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition.</p>
-                </details>
-                <details>
-                  <summary>What happens after I submit?</summary>
-                  <p>An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it with a decision recorded in the system.</p>
-                </details>
-                <details>
-                  <summary>Where can I check my request?</summary>
-                  <p>Use the Purchase Requisition page to view your submitted requests and check their current status.</p>
-                </details>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <footer class="login-help-footer">
-          <button type="button" class="btn-content" data-close-help>Close</button>
-        </footer>
-      </div>
-    </section>
-
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
+    <script src="rbac.js"></script>
     <script src="script.js" defer></script>
   </body>
 </html>

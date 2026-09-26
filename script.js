@@ -30,9 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
   showTodayDate();
   setupCardMenus();
   setupRoleAccess();
+  applyLoggedInProfile();
+  setupLogout();
   setupWorkflowSummary();
   setupSidebarToggle();
-  setupHelpSupportMenu();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
@@ -105,17 +106,25 @@ function setupSidebarToggle() {
   navigation.id = "primary-navigation";
   sidebar.insertBefore(toggle, sidebar.firstChild);
 
-  const collapsedPreference = localStorage.getItem("procureit-sidebar-collapsed") === "true";
+  const collapsedPreference =
+    localStorage.getItem("procureit-sidebar-collapsed") === "true";
   document.body.classList.toggle("sidebar-collapsed", collapsedPreference);
 
   const updateToggle = () => {
     const collapsed = document.body.classList.contains("sidebar-collapsed");
     toggle.textContent = collapsed ? "»" : "☰  Hide menu";
-    toggle.setAttribute("aria-label", collapsed ? "Expand navigation menu" : "Collapse navigation menu");
-    toggle.title = collapsed ? "Expand navigation menu" : "Collapse navigation menu";
+    toggle.setAttribute(
+      "aria-label",
+      collapsed ? "Expand navigation menu" : "Collapse navigation menu",
+    );
+    toggle.title = collapsed
+      ? "Expand navigation menu"
+      : "Collapse navigation menu";
     toggle.setAttribute("aria-expanded", String(!collapsed));
     navigation.querySelectorAll("a").forEach((link) => {
-      const label = link.getAttribute("aria-label") || link.textContent.trim().replace(/\s+/g, " ");
+      const label =
+        link.getAttribute("aria-label") ||
+        link.textContent.trim().replace(/\s+/g, " ");
       link.title = label;
     });
   };
@@ -129,123 +138,14 @@ function setupSidebarToggle() {
   updateToggle();
 }
 
-function setupHelpSupportMenu() {
-  document.querySelectorAll(".navigation a").forEach((link) => {
-    const label = link.textContent.trim().replace(/\s+/g, " ");
-    if (!label.includes("Help and Support")) return;
-
-    link.setAttribute("aria-haspopup", "dialog");
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      showSupportHelpModal(link);
-    });
-  });
-}
-
-function showSupportHelpModal(trigger) {
-  closePopup();
-
-  const overlay = document.createElement("div");
-  overlay.id = "popup-overlay";
-  overlay.className = "popup-overlay";
-
-  const dialog = document.createElement("section");
-  dialog.className = "popup-box login-help-modal";
-  dialog.setAttribute("role", "dialog");
-  dialog.setAttribute("aria-modal", "true");
-  dialog.setAttribute("aria-labelledby", "support-help-title");
-
-  const header = document.createElement("header");
-  header.className = "login-help-header";
-  const title = document.createElement("h2");
-  title.id = "support-help-title";
-  title.textContent = "Need Help with IT Procurement?";
-  const closeIcon = document.createElement("button");
-  closeIcon.type = "button";
-  closeIcon.className = "login-help-x";
-  closeIcon.setAttribute("aria-label", "Close dialog");
-  closeIcon.textContent = "×";
-  header.append(title, closeIcon);
-
-  const body = document.createElement("div");
-  body.className = "login-help-body procurement-help-body";
-  const list = document.createElement("ul");
-  list.className = "procurement-help-options";
-  list.append(
-    createHelpContactItem("Send an email to our IT Helpdesk: ", "it.support@procureit.local"),
-    createHelpContactItem("Or contact the ProcureIT System Administrator: ", "admin@procureit.local"),
-  );
-
-  const faqItem = document.createElement("li");
-  const faqTitle = document.createElement("strong");
-  faqTitle.textContent = "Procurement FAQ & Guides: ";
-  faqItem.append(faqTitle, document.createTextNode("Read quick answers about requisition steps and approvals."));
-  const faqList = document.createElement("div");
-  faqList.className = "procurement-faq-list";
-  faqList.append(
-    createFaqItem("How do I submit a requisition?", "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition."),
-    createFaqItem("What happens after I submit?", "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it with a decision recorded in the system."),
-    createFaqItem("Where can I check my request?", "Use the Purchase Requisition page to view your submitted requests and check their current status."),
-  );
-  faqItem.appendChild(faqList);
-  list.appendChild(faqItem);
-  body.appendChild(list);
-
-  const footer = document.createElement("footer");
-  footer.className = "login-help-footer";
-  const closeButton = document.createElement("button");
-  closeButton.type = "button";
-  closeButton.className = "btn-content";
-  closeButton.textContent = "Close";
-  footer.appendChild(closeButton);
-
-  dialog.append(header, body, footer);
-  overlay.appendChild(dialog);
-  document.body.appendChild(overlay);
-
-  const close = () => {
-    document.removeEventListener("keydown", handleKeydown);
-    overlay.remove();
-    trigger.focus();
-  };
-  const handleKeydown = (event) => {
-    if (event.key === "Escape") close();
-  };
-  closeIcon.addEventListener("click", close);
-  closeButton.addEventListener("click", close);
-  overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) close();
-  });
-  document.addEventListener("keydown", handleKeydown);
-  closeIcon.focus();
-}
-
-function createHelpContactItem(prefix, email) {
-  const item = document.createElement("li");
-  item.append(document.createTextNode(prefix));
-  const link = document.createElement("a");
-  link.href = `mailto:${email}`;
-  link.textContent = email;
-  item.appendChild(link);
-  return item;
-}
-
-function createFaqItem(question, answer) {
-  const details = document.createElement("details");
-  const summary = document.createElement("summary");
-  summary.textContent = question;
-  const paragraph = document.createElement("p");
-  paragraph.textContent = answer;
-  details.append(summary, paragraph);
-  return details;
-}
-
 function setupWorkflowSummary() {
   const openButton = document.getElementById("workflowSummaryBtn");
   const modal = document.getElementById("workflow-summary-modal");
   if (!openButton || !modal) return;
 
-  const closeButtons = modal.querySelectorAll(".workflow-summary-x, .workflow-summary-close");
+  const closeButtons = modal.querySelectorAll(
+    ".workflow-summary-x, .workflow-summary-close",
+  );
   const close = () => {
     modal.hidden = true;
     openButton.focus();
@@ -261,108 +161,6 @@ function setupWorkflowSummary() {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !modal.hidden) close();
-  });
-}
-
-/* Demo role access for this static prototype. Real access control requires a server. */
-function setupRoleAccess() {
-  const roleSelect = document.getElementById("dashboard-role");
-  const allowedRoles = ["requisitioner", "approver", "purchasing"];
-  document.querySelectorAll(".navigation a[href]").forEach((link) => {
-    const destination = link.getAttribute("href");
-    if (destination === "approvals.html") link.dataset.roleAccess = "approver purchasing";
-    if (["purchase-order.html", "purchase-order-detail.html"].includes(destination)) {
-      link.dataset.roleAccess = "purchasing";
-    }
-  });
-  let role = localStorage.getItem("procureit-demo-role");
-  if (!allowedRoles.includes(role)) role = "requisitioner";
-  if (roleSelect) roleSelect.value = role;
-
-  const applyRole = (selectedRole) => {
-    document.querySelectorAll("[data-role-access]").forEach((element) => {
-      const permitted = element.dataset.roleAccess.split(/\s+/).includes(selectedRole);
-      element.classList.toggle("role-restricted", !permitted);
-      element.classList.toggle("nav-restricted", !permitted && element.closest(".navigation") !== null);
-      element.classList.toggle("rbac-disabled", !permitted);
-      element.setAttribute("aria-disabled", String(!permitted));
-      const links = element.matches("a") ? [element] : element.querySelectorAll("a");
-      links.forEach((link) => {
-        if (!permitted) link.dataset.roleBlocked = "true";
-        else delete link.dataset.roleBlocked;
-      });
-    });
-
-    const page = window.location.pathname.split("/").pop();
-    const bannerCopy = page === "approvals.html" && selectedRole === "requisitioner"
-      ? "You are signed in as requisitioner. Only Approvers and Purchasing Managers have authority to approve or reject requisitions. Approval actions below are grayed out."
-      : ["purchase-order.html", "purchase-order-detail.html"].includes(page) && selectedRole !== "purchasing"
-        ? selectedRole === "approver"
-          ? "You are signed in as approver. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
-          : "You are signed in as requisitioner. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
-        : null;
-    let banner = document.querySelector(".rbac-banner");
-    if (bannerCopy) {
-      if (!banner) {
-        banner = document.createElement("div");
-        banner.className = "rbac-banner";
-        banner.setAttribute("role", "status");
-        const insertionPoint = document.querySelector(".workflow-stepper") || document.querySelector(".content hr");
-        insertionPoint?.insertAdjacentElement("afterend", banner);
-      }
-      banner.textContent = bannerCopy;
-    } else if (banner) {
-      banner.remove();
-    }
-
-    const restrictedPage = (page === "approvals.html" && selectedRole === "requisitioner")
-      || (["purchase-order.html", "purchase-order-detail.html"].includes(page) && selectedRole !== "purchasing");
-    if (restrictedPage) {
-      const content = document.querySelector(".content");
-      content?.querySelectorAll("button, input, select, textarea").forEach((control) => {
-        control.disabled = true;
-        control.classList.add("rbac-disabled");
-        control.dataset.rbacLocked = "true";
-      });
-      content?.querySelectorAll("a[href]").forEach((link) => {
-        if (!link.closest(".navigation")) {
-          link.classList.add("rbac-disabled");
-          link.setAttribute("aria-disabled", "true");
-          link.dataset.roleBlocked = "true";
-        }
-      });
-    } else {
-      document.querySelectorAll('.content [data-rbac-locked="true"]').forEach((control) => {
-        control.disabled = false;
-        control.classList.remove("rbac-disabled");
-        control.removeAttribute("aria-disabled");
-        delete control.dataset.rbacLocked;
-      });
-      document.querySelectorAll('.content a[data-role-blocked="true"]').forEach((link) => {
-        link.classList.remove("rbac-disabled");
-        link.removeAttribute("aria-disabled");
-        delete link.dataset.roleBlocked;
-      });
-    }
-
-    const requisitionRows = document.querySelectorAll("#requisition-form ~ fieldset .content-table tbody tr");
-    requisitionRows.forEach((row) => {
-      row.hidden = selectedRole === "requisitioner" && row.cells[1]?.textContent.trim() !== "Bruce";
-    });
-  };
-
-  applyRole(role);
-  if (roleSelect) {
-    roleSelect.addEventListener("change", () => {
-      localStorage.setItem("procureit-demo-role", roleSelect.value);
-      applyRole(roleSelect.value);
-    });
-  }
-
-  document.addEventListener("click", (event) => {
-    if (event.target.closest('a[data-role-blocked="true"]')) {
-      event.preventDefault();
-    }
   });
 }
 
@@ -545,117 +343,19 @@ function closePopup() {
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */
-function setupLoginForm() {}
-
 function setupLoginLinks() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   const contactAdminLink = document.getElementById("contactAdminLink");
-  const procurementHelpLink = document.getElementById("procurementHelpLink");
 
   forgotPasswordLink.addEventListener("click", (event) => {
     event.preventDefault(); // href="#" would otherwise jump to the top of the page
-    showLoginInfoModal(
-      "Password Assistance",
-      "For password reset, please contact the IT Helpdesk at local 104 or email it.support@procureit.local with your Employee ID.",
-      forgotPasswordLink,
-    );
+    showMessage("Password reset is not implemented yet.");
   });
 
   contactAdminLink.addEventListener("click", (event) => {
     event.preventDefault();
-    showLoginInfoModal(
-      "Administrator Contact",
-      "ProcureIT System Administrator: Group # 8 MO-IT161 Email: admin@procureit.local | IT Operations Dept.",
-      contactAdminLink,
-    );
+    showMessage("Contact your administrator screen not implemented yet.");
   });
-
-  setupHelpDialog(procurementHelpLink, document.getElementById("procurement-help-modal"));
-}
-
-function setupHelpDialog(trigger, dialog) {
-  if (!trigger || !dialog) return;
-  const closeButtons = dialog.querySelectorAll("[data-close-help]");
-  const close = () => {
-    dialog.hidden = true;
-    document.removeEventListener("keydown", handleKeydown);
-    trigger.focus();
-  };
-  const handleKeydown = (event) => {
-    if (event.key === "Escape" && !dialog.hidden) close();
-  };
-
-  trigger.addEventListener("click", (event) => {
-    event.preventDefault();
-    dialog.hidden = false;
-    dialog.querySelector("[data-close-help]").focus();
-    document.addEventListener("keydown", handleKeydown);
-  });
-  closeButtons.forEach((button) => button.addEventListener("click", close));
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) close();
-  });
-}
-
-function showLoginInfoModal(titleText, messageText, trigger) {
-  closePopup();
-
-  const overlay = document.createElement("div");
-  overlay.id = "popup-overlay";
-  overlay.className = "popup-overlay";
-
-  const dialog = document.createElement("section");
-  dialog.className = "popup-box login-help-modal";
-  dialog.setAttribute("role", "dialog");
-  dialog.setAttribute("aria-modal", "true");
-  dialog.setAttribute("aria-labelledby", "login-help-title");
-
-  const header = document.createElement("header");
-  header.className = "login-help-header";
-  const title = document.createElement("h2");
-  title.id = "login-help-title";
-  title.textContent = titleText;
-
-  const closeIcon = document.createElement("button");
-  closeIcon.type = "button";
-  closeIcon.className = "login-help-x";
-  closeIcon.setAttribute("aria-label", "Close dialog");
-  closeIcon.textContent = "×";
-  header.append(title, closeIcon);
-
-  const body = document.createElement("div");
-  body.className = "login-help-body";
-  const message = document.createElement("p");
-  message.textContent = messageText;
-  body.appendChild(message);
-
-  const footer = document.createElement("footer");
-  footer.className = "login-help-footer";
-  const closeButton = document.createElement("button");
-  closeButton.type = "button";
-  closeButton.className = "btn-content";
-  closeButton.textContent = "Close";
-  footer.appendChild(closeButton);
-
-  dialog.append(header, body, footer);
-  overlay.appendChild(dialog);
-  document.body.appendChild(overlay);
-
-  const close = () => {
-    document.removeEventListener("keydown", handleKeydown);
-    overlay.remove();
-    trigger.focus();
-  };
-  const handleKeydown = (event) => {
-    if (event.key === "Escape") close();
-  };
-  closeIcon.addEventListener("click", close);
-  closeButton.addEventListener("click", close);
-  overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) close();
-  });
-  document.addEventListener("keydown", handleKeydown);
-  closeIcon.focus();
 }
 
 /* ----- Purchase Requisition page (requisition.html only)----- */
@@ -1086,7 +786,6 @@ function setupVendorTable() {
   });
 }
 
-/* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 /* ----- Buttons inside the Vendor Documents Expiring Soon table ----- */
 function setupVendorDocumentsTable() {
   const renewButtons = document.querySelectorAll(".js-renew-document");
