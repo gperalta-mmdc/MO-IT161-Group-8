@@ -9,6 +9,11 @@ Daniel Cotoner<br>
 <br>
 Project - ProcureIT<br>
 <br>
+Log-in Credentials : <br>
+username : staffprocureit / password : staff123<br>
+username : approverprocureit / password : approver123<br>
+username : managerprocureit / password : manager123<br>
+<br>
 Description :<br>
 A paperless procurement solution for a BPO's IT Department, it replaces forms and spreadsheets 
 with an end-to-end digital process for managing/tracking assets like laptops, desktops, headsets
