@@ -48,6 +48,78 @@ body {
   vertical-align: top;
 }
 
+.sidebar-toggle {
+  display: block;
+  margin: 10px auto 14px;
+  padding: 7px 10px;
+  border: 1px solid #337ab7;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #245e8e;
+  font: 600 13px Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+
+.sidebar-toggle:hover,
+.sidebar-toggle:focus-visible {
+  background: #eaf2f8;
+  outline: 2px solid #337ab7;
+  outline-offset: 2px;
+}
+
+.layout-table tr > td:first-child,
+.layout-table tr > td.content {
+  transition: width 180ms ease;
+}
+
+.sidebar-collapsed .layout-table tr > td:first-child {
+  width: 68px !important;
+}
+
+.sidebar-collapsed .layout-table tr > td.content {
+  width: calc(100% - 68px) !important;
+}
+
+.sidebar-collapsed .layout-table tr > td:first-child .profile-name,
+.sidebar-collapsed .layout-table tr > td:first-child .profile-department,
+.sidebar-collapsed .layout-table tr > td:first-child .role-switcher,
+.sidebar-collapsed .layout-table tr > td:first-child > hr,
+.sidebar-collapsed .layout-table tr > td:first-child > br,
+.sidebar-collapsed .layout-table tr > td:first-child .navigation br,
+.sidebar-collapsed .layout-table tr > td:first-child .navigation hr {
+  display: none;
+}
+
+.sidebar-collapsed .layout-table tr > td:first-child .profilepicture {
+  width: 42px;
+  height: 42px;
+}
+
+.sidebar-collapsed .layout-table tr > td:first-child .navigation ul li a {
+  justify-content: center;
+  gap: 0;
+  padding: 10px 0;
+  overflow: hidden;
+  font-size: 0;
+}
+
+.sidebar-collapsed .layout-table tr > td:first-child .navigation ul li a img {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+.sidebar-collapsed .sidebar-toggle {
+  min-width: 42px;
+  padding: 7px;
+  font-size: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout-table tr > td:first-child,
+  .layout-table tr > td.content { transition: none; }
+}
+
 /* Procurement workflow stepper */
 .workflow-stepper {
   margin: 18px 10px 24px;
