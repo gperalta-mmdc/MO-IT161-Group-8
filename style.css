@@ -536,6 +536,8 @@ body {
   z-index: 2000;
 }
 
+.popup-overlay[hidden] { display: none !important; }
+
 .popup-box {
   background-color: #ffffff;
   border-radius: 8px;
@@ -550,6 +552,121 @@ body {
   display: block;
   margin-left: auto;
   margin-top: 15px;
+}
+
+.popup-box.login-help-modal {
+  width: min(95vw, 820px);
+  max-width: 820px;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #cbd5df;
+  border-radius: 9px;
+}
+
+.login-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 22px;
+  background: linear-gradient(110deg, #003b70, #337ab7);
+  color: #ffffff;
+}
+
+.login-help-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 21px;
+}
+
+.login-help-x {
+  padding: 0 3px;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.login-help-body {
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  padding: 20px 28px;
+}
+
+.login-help-body p {
+  margin: 0;
+  color: #444444;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.login-help-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 22px;
+  border-top: 1px solid #e0e5ea;
+  background: #f7f8fa;
+}
+
+@media (max-width: 560px) {
+  .login-help-body { min-height: 100px; padding: 18px; }
+  .login-help-body p { font-size: 16px; }
+  .login-help-header h2 { font-size: 18px; }
+}
+
+.login-procurement-help {
+  margin: 14px 30px 0;
+  padding: 12px 14px;
+  border-left: 4px solid #337ab7;
+  border-radius: 4px;
+  background: #f1f6fa;
+}
+
+.login-procurement-help h3 {
+  margin: 0 0 5px;
+  color: #003366;
+  font-size: 15px;
+}
+
+.procurement-help-body {
+  display: block;
+  max-height: min(62vh, 460px);
+  overflow-y: auto;
+}
+
+.procurement-help-options {
+  margin: 0;
+  padding-left: 22px;
+  color: #444444;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.procurement-help-options > li { margin: 0 0 12px; }
+.procurement-help-options a { color: #1769aa; }
+.procurement-faq-list { margin-top: 10px; }
+
+.procurement-faq-list details {
+  margin-top: 7px;
+  padding: 9px 11px;
+  border: 1px solid #d6e0e9;
+  border-radius: 5px;
+  background: #f6f8fa;
+}
+
+.procurement-faq-list summary {
+  color: #003b70;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.procurement-faq-list p {
+  margin: 8px 0 0;
+  font-size: 14px;
 }
 
 /* PART 2 - PAGE-SPECIFIC STYLES */
