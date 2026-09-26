@@ -48,6 +48,97 @@ body {
   vertical-align: top;
 }
 
+/* Procurement workflow stepper */
+.workflow-stepper {
+  margin: 18px 10px 24px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #d5dce3;
+  border-radius: 6px;
+}
+
+.workflow-stepper ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workflow-stepper li {
+  position: relative;
+  min-width: 0;
+  text-align: center;
+}
+
+.workflow-stepper li:not(:last-child)::after {
+  position: absolute;
+  z-index: 0;
+  top: 16px;
+  left: calc(50% + 19px);
+  width: calc(100% - 38px);
+  height: 2px;
+  background: #d5dce3;
+  content: "";
+}
+
+.workflow-stepper li.is-complete:not(:last-child)::after {
+  background: #337ab7;
+}
+
+.workflow-stepper a {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 7px;
+  color: #687582;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.workflow-stepper a:hover { color: #285e8e; }
+
+.workflow-step-number {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 2px solid #c4cdd6;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #687582;
+}
+
+.workflow-stepper .is-complete .workflow-step-number {
+  border-color: #337ab7;
+  background: #337ab7;
+  color: #ffffff;
+}
+
+.workflow-stepper .is-current a {
+  color: #174e7d;
+  font-weight: 700;
+}
+
+.workflow-stepper .is-current .workflow-step-number {
+  border-color: #174e7d;
+  background: #174e7d;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px #dcebf7;
+}
+
+@media (max-width: 600px) {
+  .workflow-stepper { margin-right: 4px; margin-left: 4px; padding: 12px 6px; }
+  .workflow-stepper a { font-size: 11px; }
+  .workflow-stepper li:not(:last-child)::after { left: calc(50% + 16px); width: calc(100% - 32px); }
+  .workflow-step-number { width: 28px; height: 28px; }
+  .workflow-stepper li:not(:last-child)::after { top: 14px; }
+}
+
 /* ----- 2 Header ----- */
 .header-bar {
   display: flex;
@@ -665,4 +756,51 @@ nav[aria-label="Page sections"] ul li a:hover {
   font-weight: bold;
   font-size: 16px;
   color: #003366;
+}
+
+/* Dashboard workflow and demo role controls */
+.role-switcher {
+  margin: 12px 10px;
+  padding: 10px;
+  border: 1px solid #d5dce3;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.role-switcher label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555555;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.role-switcher select {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #333333;
+}
+
+.dashboard-stepper { margin-top: 12px; }
+.dashboard-stepper small { color: #687582; font-size: 11px; font-weight: 400; }
+.dashboard-stepper .role-restricted { opacity: 0.42; }
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 10px 14px;
+}
+
+.dashboard-actions .btn-content { display: inline-block; }
+.dashboard-actions .role-restricted-action { opacity: 0.45; cursor: not-allowed; }
+.role-restricted { opacity: 0.45; }
+.navigation a.role-restricted { cursor: not-allowed; }
+
+@media (max-width: 600px) {
+  .dashboard-stepper small { display: none; }
 }

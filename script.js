@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupHeaderButtons();
   showTodayDate();
   setupCardMenus();
+  setupRoleAccess();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
@@ -88,6 +89,56 @@ document.addEventListener("DOMContentLoaded", () => {
     setupReportsPage();
   }
 });
+
+/* Demo role access for this static prototype. Real access control requires a server. */
+function setupRoleAccess() {
+  const roleSelect = document.getElementById("dashboard-role");
+  const allowedRoles = ["requisitioner", "approver", "purchasing"];
+  document.querySelectorAll(".navigation a[href]").forEach((link) => {
+    const destination = link.getAttribute("href");
+    if (destination === "approvals.html") link.dataset.roleAccess = "approver";
+    if (["purchase-order.html", "purchase-order-detail.html"].includes(destination)) {
+      link.dataset.roleAccess = "purchasing";
+    }
+  });
+  let role = localStorage.getItem("procureit-demo-role");
+  if (!allowedRoles.includes(role)) role = "requisitioner";
+  if (roleSelect) roleSelect.value = role;
+
+  const applyRole = (selectedRole) => {
+    document.querySelectorAll("[data-role-access]").forEach((element) => {
+      const permitted = element.dataset.roleAccess === selectedRole;
+      element.classList.toggle("role-restricted", !permitted);
+      element.setAttribute("aria-disabled", String(!permitted));
+      const links = element.matches("a") ? [element] : element.querySelectorAll("a");
+      links.forEach((link) => {
+        if (!permitted) link.dataset.roleBlocked = "true";
+        else delete link.dataset.roleBlocked;
+      });
+    });
+
+    const page = window.location.pathname.split("/").pop();
+    const requiredRole = page === "approvals.html" ? "approver"
+      : ["purchase-order.html", "purchase-order-detail.html"].includes(page) ? "purchasing" : null;
+    if (requiredRole && selectedRole !== requiredRole) {
+      window.location.replace("dashboard.html?access=restricted");
+    }
+  };
+
+  applyRole(role);
+  if (roleSelect) {
+    roleSelect.addEventListener("change", () => {
+      localStorage.setItem("procureit-demo-role", roleSelect.value);
+      applyRole(roleSelect.value);
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest('a[data-role-blocked="true"]')) {
+      event.preventDefault();
+    }
+  });
+}
 
 /* Highlight sidebar nav link for the current page */
 function highlightActiveNavLink() {
