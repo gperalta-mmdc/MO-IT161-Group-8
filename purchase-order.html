@@ -181,64 +181,14 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>REQ-1003</td>
-                  <td>IT</td>
-                  <td>Rejected</td>
-                  <td>[Supervisor Name]</td>
-                  <td>2026-08-20</td>
-                  <td>
-                    <div class="btn-action">
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>REQ-0998</td>
-                  <td>Accounting</td>
-                  <td>Approved</td>
-                  <td>[Supervisor Name]</td>
-                  <td>2026-08-14</td>
-                  <td>
-                    <div class="btn-action">
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>REQ-0997</td>
-                  <td>Administration</td>
-                  <td>Rejected</td>
-                  <td>[Supervisor Name]</td>
-                  <td>2026-08-13</td>
-                  <td>
-                    <div class="btn-action">
-                      <a href="purchase-order-detail.html" class="approve-btn"
-                        >Create Purchase Order</a
-                      >
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="approved-requisitions-table-body"></tbody>
             </table>
           </fieldset>
 
           <fieldset class="content-field">
-            <legend class="content-legend">Pending Requisitions</legend>
+            <legend class="content-legend">
+              Pending Delivery from Vendor / Supplier
+            </legend>
             <table class="content-table" border="1">
               <thead>
                 <tr>
@@ -251,80 +201,7 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>PO#02</td>
-                  <td>Lenovo</td>
-                  <td>9/20/2026</td>
-                  <td>Mario Pison</td>
-                  <td>Approved</td>
-                  <td>5,325.00</td>
-                  <td>
-                    <div class="btn-action">
-                      <button type="button" class="btn-content js-view-po">
-                        View
-                      </button>
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>PO#03</td>
-                  <td>Ugreen</td>
-                  <td>9/20/2026</td>
-                  <td>Mario Pison</td>
-                  <td>Approved</td>
-                  <td>5,325.00</td>
-                  <td>
-                    <div class="btn-action">
-                      <button type="button" class="btn-content js-view-po">
-                        View
-                      </button>
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>PO#04</td>
-                  <td>Logitech</td>
-                  <td>9/20/2026</td>
-                  <td>Mario Pison</td>
-                  <td>Approved</td>
-                  <td>5,325.00</td>
-                  <td>
-                    <div class="btn-action">
-                      <button type="button" class="btn-content js-view-po">
-                        View
-                      </button>
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>PO#05</td>
-                  <td>Jabra</td>
-                  <td>9/20/2026</td>
-                  <td>Mario Pison</td>
-                  <td>Rejected</td>
-                  <td>5,325.00</td>
-                  <td>
-                    <div class="btn-action">
-                      <button type="button" class="btn-content js-view-po">
-                        View
-                      </button>
-                      <button type="button" class="reject-btn js-cancel-po">
-                        Cancel Order
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="active-pos-table-body"></tbody>
             </table>
           </fieldset>
 
@@ -344,16 +221,7 @@
                   <th>Total</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>PO#06</td>
-                  <td>Lenovo</td>
-                  <td>9/20/2026</td>
-                  <td>Mario Pison</td>
-                  <td>Cancelled</td>
-                  <td>5,325.00</td>
-                </tr>
-              </tbody>
+              <tbody id="cancelled-pos-table-body"></tbody>
             </table>
           </fieldset>
         </td>

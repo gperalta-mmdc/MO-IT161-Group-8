@@ -112,6 +112,15 @@ function peekNextId(type) {
   return prefix + "-" + (current + 1);
 }
 
+/* Returns today's date as YYYY-MM-DD */
+function getTodayIso() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  return yyyy + "-" + mm + "-" + dd;
+}
+
 /* ----- Requisition page (requisition.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -269,7 +278,7 @@ function collectRequisitionItems() {
 /* Rebuilds the Submitted Requisitions table from what's in storage. */
 function renderRequisitionsTable() {
   const tableBody = document.getElementById("requisitions-table-body");
-  const requisitions = getRequisitions();
+  const requisitions = getRequisitions().filter((r) => r.status === "Pending");
 
   tableBody.innerHTML = "";
 
@@ -299,6 +308,850 @@ function renderRequisitionsTable() {
       '<button class="btn-content js-view" type="button">View Request</button>' +
       '<button class="btn-content js-print" type="button">Print</button>' +
       '<button class="withraw-btn js-withdraw" type="button">Withdraw</button>' +
+      "</div></td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* ----- Approvals page (approvals.html only) ----- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("pending-approvals-table-body")) {
+    setupApprovalsPage();
+  }
+});
+
+function setupApprovalsPage() {
+  renderPendingApprovalsTable();
+  renderApprovalHistoryTable();
+
+  const pendingTableBody = document.getElementById(
+    "pending-approvals-table-body",
+  );
+  const viewHistoryBtn = document.getElementById("viewHistoryBtn");
+
+  // View / Approve / Reject buttons in the awaiting-decision table
+  // (one listener on the table body, since rows are added dynamically)
+  pendingTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+
+    const row = button.closest("tr");
+    const id = row.getAttribute("data-id");
+    const requisitions = getRequisitions();
+    const requisition = requisitions.find((r) => r.id === id);
+    if (!requisition) return;
+
+    if (button.classList.contains("js-view-approval")) {
+      showMessage(
+        requisition.id +
+          " — " +
+          requisition.requestedBy +
+          " (" +
+          requisition.department +
+          "), " +
+          requisition.items.length +
+          " item(s), " +
+          requisition.status +
+          ".",
+      );
+      return;
+    }
+
+    if (
+      !button.classList.contains("js-approve") &&
+      !button.classList.contains("js-reject")
+    ) {
+      return;
+    }
+
+    const remarksInput = row.querySelector(".decision-remarks");
+    const remarks = remarksInput ? remarksInput.value.trim() : "";
+    const loggedInName = localStorage.getItem("procureit-name") || "System";
+
+    requisition.status = button.classList.contains("js-approve")
+      ? "Approved"
+      : "Rejected";
+    requisition.decidedBy = loggedInName;
+    requisition.dateDecided = getTodayIso();
+    requisition.remarks = remarks;
+
+    saveRequisitions(requisitions);
+    renderPendingApprovalsTable();
+    renderApprovalHistoryTable();
+    showMessage(
+      requisition.id + " has been " + requisition.status.toLowerCase() + ".",
+    );
+  });
+
+  // "View History" button above the Approval History table
+  if (viewHistoryBtn) {
+    viewHistoryBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+}
+
+/* Rebuilds the "Requisitions Awaiting Your Decision" table from storage. */
+function renderPendingApprovalsTable() {
+  const tableBody = document.getElementById("pending-approvals-table-body");
+  const pending = getRequisitions().filter((r) => r.status === "Pending");
+
+  tableBody.innerHTML = "";
+
+  pending.forEach((requisition) => {
+    const row = document.createElement("tr");
+    row.setAttribute("data-id", requisition.id);
+    row.innerHTML =
+      "<td>" +
+      requisition.id +
+      "</td>" +
+      "<td>" +
+      requisition.requestedBy +
+      "</td>" +
+      "<td>" +
+      requisition.department +
+      "</td>" +
+      '<td><div class="btn-action">' +
+      '<button type="button" class="btn-content js-view-approval">View Requisition</button>' +
+      "</div></td>" +
+      "<td>" +
+      requisition.dateSubmitted +
+      "</td>" +
+      '<td><form class="decision-form">' +
+      '<label class="content-label">Remarks</label>' +
+      '<input type="text" class="decision-remarks" placeholder="Optional remarks" />' +
+      "<br /><br />" +
+      '<button type="button" class="approve-btn js-approve">Approve</button>' +
+      '<button type="button" class="reject-btn js-reject">Reject</button>' +
+      "</form></td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* Rebuilds the Approval History table from storage */
+function renderApprovalHistoryTable() {
+  const tableBody = document.getElementById("approval-history-table-body");
+  const decided = getRequisitions()
+    .filter((r) => r.status === "Approved" || r.status === "Rejected")
+    .sort((a, b) => (b.dateDecided || "").localeCompare(a.dateDecided || ""));
+
+  tableBody.innerHTML = "";
+
+  decided.forEach((requisition) => {
+    const row = document.createElement("tr");
+    row.innerHTML =
+      "<td>" +
+      requisition.id +
+      "</td>" +
+      "<td>" +
+      requisition.department +
+      "</td>" +
+      "<td>" +
+      requisition.status +
+      "</td>" +
+      "<td>" +
+      (requisition.decidedBy || "—") +
+      "</td>" +
+      "<td>" +
+      (requisition.dateDecided || "—") +
+      "</td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* ----- Purchase Orders page (purchase-order.html only) ----- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("approved-requisitions-table-body")) {
+    setupPurchaseOrderPage();
+  }
+});
+
+function setupPurchaseOrderPage() {
+  renderApprovedRequisitionsTable();
+  renderActivePurchaseOrdersTable();
+  renderCancelledPurchaseOrdersTable();
+
+  const approvedTableBody = document.getElementById(
+    "approved-requisitions-table-body",
+  );
+  const activeTableBody = document.getElementById("active-pos-table-body");
+  const viewHistoryBtn = document.getElementById("viewHistoryBtn");
+
+  // "Cancel Order" for an approved requisition awaiting a purchase order
+  approvedTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button || !button.classList.contains("js-cancel-po")) return;
+
+    const row = button.closest("tr");
+    const id = row.getAttribute("data-id");
+    const requisitions = getRequisitions();
+    const requisition = requisitions.find((r) => r.id === id);
+    if (!requisition) return;
+
+    requisition.status = "Cancelled";
+    saveRequisitions(requisitions);
+    renderApprovedRequisitionsTable();
+    showMessage(requisition.id + " has been cancelled.");
+  });
+
+  // View / Cancel Order for an already-created purchase order
+  activeTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+
+    const row = button.closest("tr");
+    const id = row.getAttribute("data-id");
+    const purchaseOrders = getPurchaseOrders();
+    const purchaseOrder = purchaseOrders.find((po) => po.id === id);
+    if (!purchaseOrder) return;
+
+    if (button.classList.contains("js-view-po")) {
+      showMessage(
+        purchaseOrder.id +
+          " — " +
+          purchaseOrder.vendor +
+          ", total " +
+          purchaseOrder.total +
+          ", status " +
+          purchaseOrder.status +
+          ".",
+      );
+      return;
+    }
+
+    if (button.classList.contains("js-cancel-po")) {
+      purchaseOrder.status = "Cancelled";
+      savePurchaseOrders(purchaseOrders);
+      renderActivePurchaseOrdersTable();
+      renderCancelledPurchaseOrdersTable();
+      showMessage(purchaseOrder.id + " has been cancelled.");
+    }
+  });
+
+  if (viewHistoryBtn) {
+    viewHistoryBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+}
+
+/* Rebuilds the Approved Requisitions table: Approved requisitions with no PO yet. */
+function renderApprovedRequisitionsTable() {
+  const tableBody = document.getElementById("approved-requisitions-table-body");
+  const approved = getRequisitions().filter(
+    (r) => r.status === "Approved" && !r.poId,
+  );
+
+  tableBody.innerHTML = "";
+
+  approved.forEach((requisition) => {
+    const row = document.createElement("tr");
+    row.setAttribute("data-id", requisition.id);
+    row.innerHTML =
+      "<td>" +
+      requisition.id +
+      "</td>" +
+      "<td>" +
+      requisition.department +
+      "</td>" +
+      "<td>" +
+      requisition.status +
+      "</td>" +
+      "<td>" +
+      (requisition.decidedBy || "—") +
+      "</td>" +
+      "<td>" +
+      (requisition.dateDecided || "—") +
+      "</td>" +
+      '<td><div class="btn-action">' +
+      '<a href="purchase-order-detail.html?reqId=' +
+      encodeURIComponent(requisition.id) +
+      '" class="approve-btn">Create Purchase Order</a>' +
+      '<button type="button" class="reject-btn js-cancel-po">Cancel Order</button>' +
+      "</div></td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* Rebuilds the active (non-cancelled) Purchase Orders table. */
+function renderActivePurchaseOrdersTable() {
+  const tableBody = document.getElementById("active-pos-table-body");
+  const active = getPurchaseOrders().filter((po) => po.status !== "Cancelled");
+
+  tableBody.innerHTML = "";
+
+  active.forEach((purchaseOrder) => {
+    const row = document.createElement("tr");
+    row.setAttribute("data-id", purchaseOrder.id);
+    row.innerHTML =
+      "<td>" +
+      purchaseOrder.id +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.vendor +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.dateCreated +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.requisitioner +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.status +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.total +
+      "</td>" +
+      '<td><div class="btn-action">' +
+      '<button type="button" class="btn-content js-view-po">View</button>' +
+      '<button type="button" class="reject-btn js-cancel-po">Cancel Order</button>' +
+      "</div></td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* Rebuilds the Cancelled Orders table. */
+function renderCancelledPurchaseOrdersTable() {
+  const tableBody = document.getElementById("cancelled-pos-table-body");
+  const cancelled = getPurchaseOrders().filter(
+    (po) => po.status === "Cancelled",
+  );
+
+  tableBody.innerHTML = "";
+
+  cancelled.forEach((purchaseOrder) => {
+    const row = document.createElement("tr");
+    row.innerHTML =
+      "<td>" +
+      purchaseOrder.id +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.vendor +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.dateCreated +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.requisitioner +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.status +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.total +
+      "</td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* ----- Purchase Order Detail page (purchase-order-detail.html only) ----- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("po-form")) {
+    setupPurchaseOrderDetailPage();
+  }
+});
+
+function setupPurchaseOrderDetailPage() {
+  const form = document.getElementById("po-form");
+  const calculateBtn = document.getElementById("calculatePoBtn");
+  const saveBtn = document.getElementById("savePoBtn");
+  const clearBtn = document.getElementById("clearPoBtn");
+  const requisitionSelect = document.getElementById("poRequisition");
+
+  document.getElementById("poNumber").value = peekNextId("purchaseOrder");
+  const preselectId = getQueryParam("reqId");
+  populatePoRequisitionOptions(preselectId);
+
+  requisitionSelect.addEventListener("change", () => {
+    applyRequisitionPrefill(requisitionSelect.value);
+  });
+
+  // "Calculate Total" button
+  calculateBtn.addEventListener("click", () => {
+    if (calculatePoTotals()) {
+      showMessage("Totals updated.");
+    }
+  });
+
+  // "Save Purchase Order" button
+  saveBtn.addEventListener("click", () => {
+    const requisitionSelectEl = document.getElementById("poRequisition");
+    const poDate = document.getElementById("poDate");
+    const requisitioner = document.getElementById("poRequisitioner");
+    const department = document.getElementById("poDepartment");
+    const vendor = document.getElementById("poVendor");
+    const shipToName = document.getElementById("shipToName");
+    const shipToAddress = document.getElementById("shipToAddress");
+    const descInputs = document.querySelectorAll(".po-item-desc");
+    const qtyInputs = document.querySelectorAll(".po-qty");
+    const priceInputs = document.querySelectorAll(".po-price");
+
+    if (requisitionSelectEl.selectedIndex === 0) {
+      showMessage("Please select a requisition.");
+      return;
+    }
+
+    if (poDate.value === "") {
+      showMessage("Please select the order date.");
+      return;
+    }
+
+    if (requisitioner.value.trim() === "") {
+      showMessage("Please enter the requisitioner.");
+      return;
+    }
+
+    if (department.selectedIndex === 0) {
+      showMessage("Please select a department.");
+      return;
+    }
+
+    if (vendor.selectedIndex === 0) {
+      showMessage("Please select a vendor.");
+      return;
+    }
+
+    if (shipToName.value.trim() === "") {
+      showMessage("Please enter the ship-to name.");
+      return;
+    }
+
+    if (shipToAddress.value.trim() === "") {
+      showMessage("Please enter the ship-to address.");
+      return;
+    }
+
+    // Check each item row: a row with anything typed in it must be complete
+    let itemCount = 0;
+    for (let i = 0; i < descInputs.length; i++) {
+      const hasDesc = descInputs[i].value.trim() !== "";
+      const hasQty = Number(qtyInputs[i].value) > 0;
+      const hasPrice = Number(priceInputs[i].value) > 0;
+
+      if (hasDesc || hasQty || hasPrice) {
+        if (!hasDesc) {
+          showMessage("Please enter a description for item " + (i + 1) + ".");
+          return;
+        }
+        if (!hasQty || !hasPrice) {
+          showMessage(
+            "Please enter a quantity and unit price for item " + (i + 1) + ".",
+          );
+          return;
+        }
+        itemCount++;
+      }
+    }
+
+    if (itemCount === 0) {
+      showMessage("Please list at least one item.");
+      return;
+    }
+
+    // Make sure the totals are up to date before saving
+    if (!calculatePoTotals()) {
+      return;
+    }
+
+    const requisitions = getRequisitions();
+    const requisition = requisitions.find(
+      (r) => r.id === requisitionSelectEl.value,
+    );
+    if (!requisition) {
+      showMessage(
+        "That requisition is no longer available. Please choose another.",
+      );
+      populatePoRequisitionOptions();
+      return;
+    }
+
+    const purchaseOrder = {
+      id: generateId("purchaseOrder"),
+      requisitionId: requisition.id,
+      dateCreated: poDate.value,
+      requisitioner: requisitioner.value.trim(),
+      department: department.value,
+      vendor: vendor.value,
+      shipToName: shipToName.value.trim(),
+      shipToAddress: shipToAddress.value.trim(),
+      shipToPhone: document.getElementById("shipToPhone").value.trim(),
+      shipVia: document.getElementById("shipVia").value,
+      fob: document.getElementById("fob").value,
+      shippingTerms: document.getElementById("shippingTerms").value,
+      expectedDelivery: document.getElementById("expectedDelivery").value,
+      items: collectPoItemLines(),
+      subtotal: document.getElementById("poSubtotal").value,
+      taxRate: document.getElementById("poTaxRate").value,
+      tax: document.getElementById("poTax").value,
+      shipping: document.getElementById("poShipping").value,
+      total: document.getElementById("poTotal").value,
+      notes: document.getElementById("poNotes").value.trim(),
+      status: "Active",
+    };
+
+    // Link the requisition to this PO so it drops off the awaiting-PO list
+    requisition.poId = purchaseOrder.id;
+    saveRequisitions(requisitions);
+
+    const purchaseOrders = getPurchaseOrders();
+    purchaseOrders.push(purchaseOrder);
+    savePurchaseOrders(purchaseOrders);
+
+    showMessage(
+      "Purchase order " +
+        purchaseOrder.id +
+        " for " +
+        vendor.value +
+        " saved. Total: " +
+        purchaseOrder.total +
+        ".",
+    );
+    form.reset();
+    document.getElementById("poNumber").value = peekNextId("purchaseOrder");
+    populatePoRequisitionOptions();
+  });
+
+  // "Clear Form" button
+  clearBtn.addEventListener("click", () => {
+    form.reset();
+    document.getElementById("poNumber").value = peekNextId("purchaseOrder");
+    populatePoRequisitionOptions();
+    showMessage("Form cleared.");
+  });
+}
+
+/* Fills the requisition dropdown with Approved requisitions that don't have a
+   purchase order yet. Optionally preselects one and prefills its details. */
+function populatePoRequisitionOptions(preselectId) {
+  const select = document.getElementById("poRequisition");
+  const eligible = getRequisitions().filter(
+    (r) => r.status === "Approved" && !r.poId,
+  );
+
+  select.innerHTML = "";
+  const placeholder = document.createElement("option");
+  placeholder.textContent = "-- Select Approved Requisition --";
+  select.appendChild(placeholder);
+
+  eligible.forEach((requisition) => {
+    const option = document.createElement("option");
+    option.value = requisition.id;
+    option.textContent =
+      requisition.id +
+      " — " +
+      requisition.department +
+      " — " +
+      requisition.requestedBy;
+    select.appendChild(option);
+  });
+
+  if (preselectId) {
+    select.value = preselectId;
+    applyRequisitionPrefill(preselectId);
+  }
+}
+
+/* Prefills Requisitioner, Department, and item rows from the selected requisition. */
+function applyRequisitionPrefill(requisitionId) {
+  const requisition = getRequisitions().find((r) => r.id === requisitionId);
+  if (!requisition) return;
+
+  document.getElementById("poRequisitioner").value = requisition.requestedBy;
+  document.getElementById("poDepartment").value = requisition.department;
+
+  const itemNoInputs = document.querySelectorAll(".po-item-no");
+  const descInputs = document.querySelectorAll(".po-item-desc");
+  const qtyInputs = document.querySelectorAll(".po-qty");
+  const priceInputs = document.querySelectorAll(".po-price");
+  const lineTotals = document.querySelectorAll(".po-line-total");
+
+  // Clear all 5 rows first, then fill in what the requisition listed.
+  // Unit price isn't part of a requisition, so those boxes stay blank for you to fill in.
+  for (let i = 0; i < descInputs.length; i++) {
+    itemNoInputs[i].value = "";
+    descInputs[i].value = "";
+    qtyInputs[i].value = "";
+    priceInputs[i].value = "";
+    lineTotals[i].value = "0.00";
+  }
+
+  requisition.items.forEach((item, i) => {
+    if (i >= descInputs.length) return; // safety; requisitions max out at 5 anyway
+    descInputs[i].value = item.description;
+    qtyInputs[i].value = item.quantity;
+  });
+
+  calculatePoTotals();
+}
+
+/* Reads one query string parameter from the current page URL. */
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+/* Reads the item rows and returns the completed lines, for saving to storage. */
+function collectPoItemLines() {
+  const itemNos = document.querySelectorAll(".po-item-no");
+  const descs = document.querySelectorAll(".po-item-desc");
+  const qtys = document.querySelectorAll(".po-qty");
+  const prices = document.querySelectorAll(".po-price");
+  const lineTotals = document.querySelectorAll(".po-line-total");
+  const items = [];
+
+  for (let i = 0; i < descs.length; i++) {
+    const description = descs[i].value.trim();
+    const quantity = Number(qtys[i].value);
+    const unitPrice = Number(prices[i].value);
+
+    if (description !== "" && quantity > 0 && unitPrice > 0) {
+      items.push({
+        itemNo: itemNos[i].value.trim(),
+        description: description,
+        quantity: quantity,
+        unitPrice: unitPrice,
+        lineTotal: lineTotals[i].value,
+      });
+    }
+  }
+
+  return items;
+}
+
+/* ----- Delivery Receipts page (delivery.html only) ----- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("pending-delivery-table-body")) {
+    setupDeliveryPage();
+  }
+});
+
+function setupDeliveryPage() {
+  renderPendingDeliveryTable();
+  renderDeliveryLogTable();
+  renderCancelledPurchaseOrdersTable(); // same function purchase-order.html uses
+
+  populateDeliveryPoOptions();
+  document.getElementById("drNumber").value = peekNextId("delivery");
+
+  const pendingTableBody = document.getElementById(
+    "pending-delivery-table-body",
+  );
+  const logTableBody = document.getElementById("delivery-log-table-body");
+  const deliveryPoSelect = document.getElementById("deliveryPO");
+  const deliveryForm = document.getElementById("delivery-form");
+  const saveDeliveryBtn = document.getElementById("saveDeliveryBtn");
+  const cancelDeliveryBtn = document.getElementById("cancelDeliveryBtn");
+  const viewDeliveryHistoryBtn = document.getElementById(
+    "viewDeliveryHistoryBtn",
+  );
+  const viewCancelledOrdersBtn = document.getElementById(
+    "viewCancelledOrdersBtn",
+  );
+
+  // "Record Delivery" button in the awaiting-delivery table: preselects that PO below
+  pendingTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest(".js-record-delivery");
+    if (!button) return;
+
+    const row = button.closest("tr");
+    const poId = row.getAttribute("data-id");
+    deliveryPoSelect.value = poId;
+    document.getElementById("receivedBy").focus();
+  });
+
+  // "View" buttons inside the Delivery Receipt Log table
+  logTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest(".js-view-delivery-log");
+    if (!button) return;
+
+    const row = button.closest("tr");
+    const id = row.getAttribute("data-id");
+    const delivery = getDeliveries().find((d) => d.id === id);
+    if (!delivery) return;
+
+    showMessage(
+      delivery.id +
+        " — " +
+        delivery.condition +
+        ", received by " +
+        delivery.receivedBy +
+        " on " +
+        delivery.dateReceived +
+        ".",
+    );
+  });
+
+  // "Save Delivery Receipt" button
+  saveDeliveryBtn.addEventListener("click", () => {
+    const poId = deliveryPoSelect.value;
+    const dateReceived = document.getElementById("deliveryDateReceived").value;
+    const receivedBy = document.getElementById("receivedBy");
+    const condition = document.getElementById("deliveryCondition");
+    const remarksInput = document.getElementById("deliveryRemarks");
+
+    if (!poId) {
+      showMessage("Please select a purchase order.");
+      return;
+    }
+
+    if (dateReceived === "") {
+      showMessage("Please select the date received.");
+      return;
+    }
+
+    if (receivedBy.value.trim() === "") {
+      showMessage("Please enter who received the delivery.");
+      return;
+    }
+
+    if (condition.selectedIndex === 0) {
+      showMessage("Please select the condition of goods.");
+      return;
+    }
+
+    const purchaseOrders = getPurchaseOrders();
+    const purchaseOrder = purchaseOrders.find((po) => po.id === poId);
+    if (!purchaseOrder) {
+      showMessage("That purchase order is no longer available.");
+      populateDeliveryPoOptions();
+      return;
+    }
+
+    const delivery = {
+      id: generateId("delivery"),
+      poId: poId,
+      dateReceived: dateReceived,
+      receivedBy: receivedBy.value.trim(),
+      condition: condition.value,
+      remarks: remarksInput.value.trim(),
+    };
+
+    purchaseOrder.status = "Delivered";
+    savePurchaseOrders(purchaseOrders);
+
+    const deliveries = getDeliveries();
+    deliveries.push(delivery);
+    saveDeliveries(deliveries);
+
+    showMessage(delivery.id + " recorded for " + purchaseOrder.id + ".");
+    deliveryForm.reset();
+    document.getElementById("drNumber").value = peekNextId("delivery");
+    renderPendingDeliveryTable();
+    renderDeliveryLogTable();
+    populateDeliveryPoOptions();
+  });
+
+  // "Cancel / Return Delivery" button
+  cancelDeliveryBtn.addEventListener("click", () => {
+    deliveryForm.reset();
+    document.getElementById("drNumber").value = peekNextId("delivery");
+    populateDeliveryPoOptions();
+    showMessage("Delivery entry cleared.");
+  });
+
+  if (viewDeliveryHistoryBtn) {
+    viewDeliveryHistoryBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+
+  if (viewCancelledOrdersBtn) {
+    viewCancelledOrdersBtn.addEventListener("click", () => {
+      showPopup();
+    });
+  }
+}
+
+/* Rebuilds the Purchase Orders Awaiting Delivery table: Active POs not yet delivered. */
+function renderPendingDeliveryTable() {
+  const tableBody = document.getElementById("pending-delivery-table-body");
+  const pending = getPurchaseOrders().filter((po) => po.status === "Active");
+
+  tableBody.innerHTML = "";
+
+  pending.forEach((purchaseOrder) => {
+    const row = document.createElement("tr");
+    row.setAttribute("data-id", purchaseOrder.id);
+    row.innerHTML =
+      "<td>" +
+      purchaseOrder.id +
+      "</td>" +
+      "<td>" +
+      purchaseOrder.vendor +
+      "</td>" +
+      "<td>" +
+      (purchaseOrder.expectedDelivery || "—") +
+      "</td>" +
+      '<td><select class="delivery-status-select">' +
+      "<option>-- Status --</option><option>Open</option>" +
+      "<option>Sent to Vendor</option><option>Acknowledged</option>" +
+      "<option>In Transit</option><option>Received</option>" +
+      "<option>Cancelled</option></select></td>" +
+      '<td><div class="btn-action">' +
+      '<button type="button" class="btn-content js-record-delivery">Record Delivery</button>' +
+      "</div></td>";
+    tableBody.appendChild(row);
+  });
+}
+
+/* Fills the "Purchase Order" dropdown on the Record Delivery Receipt form
+   with Active purchase orders not yet delivered. */
+function populateDeliveryPoOptions() {
+  const select = document.getElementById("deliveryPO");
+  const eligible = getPurchaseOrders().filter((po) => po.status === "Active");
+
+  select.innerHTML = "";
+  const placeholder = document.createElement("option");
+  placeholder.textContent = "-- Select Purchase Order --";
+  select.appendChild(placeholder);
+
+  eligible.forEach((purchaseOrder) => {
+    const option = document.createElement("option");
+    option.value = purchaseOrder.id;
+    option.textContent = purchaseOrder.id + " — " + purchaseOrder.vendor;
+    select.appendChild(option);
+  });
+}
+
+/* Rebuilds the Delivery Receipt Log table from storage. */
+function renderDeliveryLogTable() {
+  const tableBody = document.getElementById("delivery-log-table-body");
+  const deliveries = getDeliveries();
+  const purchaseOrders = getPurchaseOrders();
+
+  tableBody.innerHTML = "";
+
+  deliveries.forEach((delivery) => {
+    const purchaseOrder = purchaseOrders.find((po) => po.id === delivery.poId);
+    const vendor = purchaseOrder ? purchaseOrder.vendor : "—";
+
+    const row = document.createElement("tr");
+    row.setAttribute("data-id", delivery.id);
+    row.innerHTML =
+      "<td>" +
+      delivery.id +
+      "</td>" +
+      "<td>" +
+      delivery.poId +
+      "</td>" +
+      "<td>" +
+      vendor +
+      "</td>" +
+      "<td>" +
+      delivery.dateReceived +
+      "</td>" +
+      "<td>" +
+      delivery.condition +
+      "</td>" +
+      "<td>" +
+      delivery.receivedBy +
+      "</td>" +
+      '<td><div class="btn-action">' +
+      '<button type="button" class="btn-content js-view-delivery-log">View</button>' +
       "</div></td>";
     tableBody.appendChild(row);
   });
