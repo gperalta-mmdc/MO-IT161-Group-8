@@ -154,60 +154,7 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>PO-2041</td>
-                  <td>MMDC Office Supplies</td>
-                  <td>2026-09-10</td>
-                  <td>
-                    <select class="delivery-status-select">
-                      <option>-- Status --</option>
-                      <option>Open</option>
-                      <option>Sent to Vendor</option>
-                      <option>Acknowledged</option>
-                      <option>In Transit</option>
-                      <option>Received</option>
-                      <option>Cancelled</option>
-                    </select>
-                  </td>
-                  <td>
-                    <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-record-delivery"
-                      >
-                        Record Delivery
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>PO-2042</td>
-                  <td>Hexagon IT Hardware</td>
-                  <td>2026-09-12</td>
-                  <td>
-                    <select class="delivery-status-select">
-                      <option>-- Status --</option>
-                      <option>Open</option>
-                      <option>Sent to Vendor</option>
-                      <option>Acknowledged</option>
-                      <option>In Transit</option>
-                      <option>Received</option>
-                      <option>Cancelled</option>
-                    </select>
-                  </td>
-                  <td>
-                    <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-record-delivery"
-                      >
-                        Record Delivery
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="pending-delivery-table-body"></tbody>
             </table>
           </fieldset>
 
@@ -218,21 +165,17 @@
                 >Purchase Order</label
               >
               <br />
-              <select id="deliveryPO">
-                <option>-- Select Purchase Order --</option>
-                <option>PO-2041 &mdash; MMDC Office Supplies</option>
-                <option>PO-2042 &mdash; Hexagon IT Hardware</option>
-              </select>
+              <select id="deliveryPO"></select>
               <br /><br />
               <label class="content-label" for="drNumber"
                 >Delivery Receipt Number</label
               >
               <br />
-              <input type="text" id="drNumber" placeholder="D.R. Number" />
+              <input type="text" id="drNumber" readonly />
               <br /><br />
               <label class="content-label">Date Received</label>
               <br />
-              <input type="date" />
+              <input type="date" id="deliveryDateReceived" />
               <br /><br />
               <label class="content-label" for="receivedBy">Received By</label>
               <br />
@@ -251,7 +194,7 @@
               <br /><br />
               <label class="content-label">Remarks</label>
               <br />
-              <textarea rows="4" cols="50"></textarea>
+              <textarea rows="4" cols="50" id="deliveryRemarks"></textarea>
               <br /><br />
               <label class="content-label">
                 Attach Proof of Delivery (e.g. photo, waybill)
@@ -289,26 +232,7 @@
                   <th>Documentation</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>DR-762332</td>
-                  <td>PO-2039</td>
-                  <td>Rock and Paper Co.</td>
-                  <td>2026-08-30</td>
-                  <td>Complete &amp; Good Condition</td>
-                  <td>Mario Lopez</td>
-                  <td>
-                    <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-view-delivery-log"
-                      >
-                        View
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="delivery-log-table-body"></tbody>
             </table>
           </fieldset>
 
@@ -332,16 +256,7 @@
                   <th>Total</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>PO#06</td>
-                  <td>Lenovo</td>
-                  <td>9/20/2026</td>
-                  <td>Mario Pison</td>
-                  <td>Cancelled</td>
-                  <td>5,325.00</td>
-                </tr>
-              </tbody>
+              <tbody id="cancelled-pos-table-body"></tbody>
             </table>
           </fieldset>
         </td>

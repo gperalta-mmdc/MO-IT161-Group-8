@@ -182,86 +182,7 @@
                   <th>Approval</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>REQ-1001</td>
-                  <td>Juan Dela Cruz</td>
-                  <td>Administration</td>
-                  <td>
-                    <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-view-approval"
-                      >
-                        View Requisition
-                      </button>
-                    </div>
-                  </td>
-                  <td>2026-08-15</td>
-                  <td>
-                    <form class="decision-form">
-                      <label class="content-label">Remarks</label>
-                      <input type="text" placeholder="Optional remarks" />
-                      <br /><br />
-                      <button
-                        type="button"
-                        name="decision"
-                        value="approve"
-                        class="approve-btn"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        type="button"
-                        name="decision"
-                        value="reject"
-                        class="reject-btn"
-                      >
-                        Reject
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-                <tr>
-                  <td>REQ-1002</td>
-                  <td>Maria Santos</td>
-                  <td>Sales/Marketing</td>
-                  <td>
-                    <div class="btn-action">
-                      <button
-                        type="button"
-                        class="btn-content js-view-approval"
-                      >
-                        View Requisition
-                      </button>
-                    </div>
-                  </td>
-                  <td>2026-08-18</td>
-                  <td>
-                    <form class="decision-form">
-                      <label class="content-label">Remarks</label>
-                      <input type="text" placeholder="Optional remarks" />
-                      <br /><br />
-                      <button
-                        type="button"
-                        name="decision"
-                        value="approve"
-                        class="approve-btn"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        type="button"
-                        name="decision"
-                        value="reject"
-                        class="reject-btn"
-                      >
-                        Reject
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="pending-approvals-table-body"></tbody>
             </table>
           </fieldset>
 
@@ -280,29 +201,7 @@
                   <th>Date</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>REQ-1003</td>
-                  <td>IT</td>
-                  <td>Rejected</td>
-                  <td>[Supervisor Name]</td>
-                  <td>2026-08-20</td>
-                </tr>
-                <tr>
-                  <td>REQ-0998</td>
-                  <td>Accounting</td>
-                  <td>Approved</td>
-                  <td>[Supervisor Name]</td>
-                  <td>2026-08-14</td>
-                </tr>
-                <tr>
-                  <td>REQ-0997</td>
-                  <td>Administration</td>
-                  <td>Rejected</td>
-                  <td>[Supervisor Name]</td>
-                  <td>2026-08-13</td>
-                </tr>
-              </tbody>
+              <tbody id="approval-history-table-body"></tbody>
             </table>
           </fieldset>
         </td>
