@@ -7,6 +7,9 @@ Marcelyn Madanlo<br>
 Mark Anthony Goyon<br>
 Daniel Cotoner<br>
 <br>
+Documentation : <br>
+AI-Use Statement : https://docs.google.com/document/d/19z25TC36VcNYAJuEGOokYcKDwtZ2JF6s1mCVSkrNDMA/edit?usp=sharing <br>
+Development Worksheet : https://docs.google.com/spreadsheets/d/12RqRDf8C7PoGM7Ky-QcVY0JuqXZ4AIcQhaRaPh_aJ_g/edit?usp=sharing<br><br>
 Project - ProcureIT<br>
 <br>
 Log-in Credentials : <br>
