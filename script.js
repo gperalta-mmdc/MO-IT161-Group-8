@@ -342,13 +342,81 @@ function setupLoginLinks() {
 
   forgotPasswordLink.addEventListener("click", (event) => {
     event.preventDefault(); // href="#" would otherwise jump to the top of the page
-    showMessage("Password reset is not implemented yet.");
+    showLoginInfoModal(
+      "Password Assistance",
+      "For password reset, please contact the IT Helpdesk or email at it.support@procureit.local with your Employee ID.",
+      forgotPasswordLink,
+    );
   });
 
   contactAdminLink.addEventListener("click", (event) => {
     event.preventDefault();
-    showMessage("Contact your administrator screen not implemented yet.");
+    showLoginInfoModal(
+      "Administrator Contact",
+      "ProcureIT System Administrator Email: admin@procureit.local | IT Operations Dept.",
+      contactAdminLink,
+    );
   });
+}
+
+function showLoginInfoModal(titleText, messageText, trigger) {
+  closePopup();
+
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
+
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box login-help-modal";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "login-help-title");
+
+  const header = document.createElement("header");
+  header.className = "login-help-header";
+  const title = document.createElement("h2");
+  title.id = "login-help-title";
+  title.textContent = titleText;
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "login-help-x";
+  closeIcon.setAttribute("aria-label", "Close dialog");
+  closeIcon.textContent = "×";
+  header.append(title, closeIcon);
+
+  const body = document.createElement("div");
+  body.className = "login-help-body";
+  const message = document.createElement("p");
+  message.textContent = messageText;
+  body.appendChild(message);
+
+  const footer = document.createElement("footer");
+  footer.className = "login-help-footer";
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn-content";
+  closeButton.textContent = "Close";
+  footer.appendChild(closeButton);
+
+  dialog.append(header, body, footer);
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+
+  const close = () => {
+    document.removeEventListener("keydown", handleKeydown);
+    overlay.remove();
+    trigger.focus();
+  };
+  const handleKeydown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  closeIcon.addEventListener("click", close);
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) close();
+  });
+  document.addEventListener("keydown", handleKeydown);
+  closeIcon.focus();
 }
 
 /* ----- Purchase Requisition page (requisition.html only)----- */

@@ -552,6 +552,70 @@ body {
   margin-top: 15px;
 }
 
+.popup-box.login-help-modal {
+  width: min(95vw, 820px);
+  max-width: 820px;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #cbd5df;
+  border-radius: 9px;
+}
+
+.login-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 22px;
+  background: linear-gradient(110deg, #003b70, #337ab7);
+  color: #ffffff;
+}
+
+.login-help-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 21px;
+}
+
+.login-help-x {
+  padding: 0 3px;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.login-help-body {
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  padding: 20px 28px;
+}
+
+.login-help-body p {
+  margin: 0;
+  color: #444444;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.login-help-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 22px;
+  border-top: 1px solid #e0e5ea;
+  background: #f7f8fa;
+}
+
+@media (max-width: 560px) {
+  .login-help-body { min-height: 100px; padding: 18px; }
+  .login-help-body p { font-size: 16px; }
+  .login-help-header h2 { font-size: 18px; }
+}
+
 /* PART 2 - PAGE-SPECIFIC STYLES */
 
 /* ----- 1 Login (index.html) ----- */
