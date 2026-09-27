@@ -1166,3 +1166,46 @@ function renderDeliveryLogTable() {
     tableBody.appendChild(row);
   });
 }
+
+/* ----- Dashboard page (dashboard.html only) ----- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.querySelector(".dashboard-stepper")) {
+    setupDashboardCounts();
+  }
+});
+
+function setupDashboardCounts() {
+  const requisitions = getRequisitions();
+  const purchaseOrders = getPurchaseOrders();
+
+  setCardCount(
+    "Purchase Requisition",
+    requisitions.filter((r) => r.status === "Pending").length,
+  );
+  setCardCount(
+    "Approvals",
+    requisitions.filter((r) => r.status === "Pending").length,
+  );
+  setCardCount(
+    "Purchase Orders",
+    requisitions.filter((r) => r.status === "Approved" && !r.poId).length,
+  );
+  setCardCount(
+    "Delivery Receipts",
+    purchaseOrders.filter((po) => po.status === "Active").length,
+  );
+}
+
+/* Finds the dashboard card whose <h3> matches cardTitle and updates its count. */
+function setCardCount(cardTitle, count) {
+  const cards = document.querySelectorAll(".card");
+  for (const card of cards) {
+    const heading = card.querySelector("h3");
+    if (heading && heading.textContent.trim() === cardTitle) {
+      const countSpan = card.querySelector(".card-count");
+      if (countSpan) countSpan.textContent = count;
+      return;
+    }
+  }
+}

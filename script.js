@@ -2,24 +2,23 @@
 
   SHARED FUNCTIONS (reusable on every page)
      1  Page Setup (DOMContentLoaded)
-     2  Highlight sidebar nav link for the current page
-     3  Header button elements
-     4  Show date on dashboard
-     5  Card menus
-     6  Popup notification - lower right corner
-     7  Generic popup screen - placeholder
+     2  Sidebar collapse/expand toggle
+     3  Dashboard workflow summary modal
+     4  Highlight sidebar nav link for the current page
+     5  Header button elements
+     6  Show date on dashboard
+     7  Card menus
+     8  Popup notification - lower right corner
+     9  Generic popup screen - placeholder
+    10  Help and Support menu and modal (every page's sidebar link)
 
   PAGE-SPECIFIC FUNCTIONS (only used on one page)
-     1  Login page (index.html only)
-     2  Purchase Requisition page (requisition.html only)
-     3  Approvals page (approvals.html only)
-     4  Purchase Orders page (purchase-order.html only)
-     5  Delivery Receipts page (delivery.html only)
-     6  Inventory and Asset Tagging page (inventory.html only)
-     7  Invoice Processing page (invoices.html only)
-     8  Vendor Management page (vendors.html only)
-     9  Reports page (reports.html only)
-    10 Purchase Order Detail page (purchase-order-detail.html only)
+     1  Login page links (index.html only - setupLoginForm itself lives in rbac.js)
+     2  Inventory and Asset Tagging page (inventory.html only)
+     3  Invoice Processing page (invoices.html only)
+     4  Vendor Management page (vendors.html only)
+     5  Reports page (reports.html only)
+     6  Purchase order total calculations (used by purchase-order-detail.html)
    ========================================================== */
 
 /* PART 1 - SHARED FUNCTIONS */
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
-    setupLoginForm();
     setupLoginLinks();
   }
 
@@ -346,6 +344,7 @@ function setupLoginLinks() {
   });
 }
 
+/* ----- Help and Support menu and modal (shared, every page) ----- */
 function setupHelpSupportMenu() {
   document.querySelectorAll(".navigation a").forEach((link) => {
     const label = link.textContent.trim().replace(/\s+/g, " ");
@@ -387,20 +386,40 @@ function showProcurementHelpModal(trigger) {
   const options = document.createElement("ul");
   options.className = "procurement-help-options";
   options.append(
-    createProcurementContact("Send an email to our IT Helpdesk ", "it.support@procureit.local"),
-    createProcurementContact("or ProcureIT System Administrator ", "admin@procureit.local"),
+    createProcurementContact(
+      "Send an email to our IT Helpdesk ",
+      "it.support@procureit.local",
+    ),
+    createProcurementContact(
+      "or ProcureIT System Administrator ",
+      "admin@procureit.local",
+    ),
   );
 
   const faq = document.createElement("li");
   const faqLabel = document.createElement("strong");
   faqLabel.textContent = "Procurement FAQ & Guides: ";
-  faq.append(faqLabel, document.createTextNode("Read quick answers about requisition steps and approvals."));
+  faq.append(
+    faqLabel,
+    document.createTextNode(
+      "Read quick answers about requisition steps and approvals.",
+    ),
+  );
   const faqList = document.createElement("div");
   faqList.className = "procurement-faq-list";
   faqList.append(
-    createProcurementFaq("How do I submit a requisition?", "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition."),
-    createProcurementFaq("What happens after I submit?", "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it."),
-    createProcurementFaq("Where can I check my request status?", "Open Purchase Requisition to view your submitted requests and their current status."),
+    createProcurementFaq(
+      "How do I submit a requisition?",
+      "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition.",
+    ),
+    createProcurementFaq(
+      "What happens after I submit?",
+      "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it.",
+    ),
+    createProcurementFaq(
+      "Where can I check my request status?",
+      "Open Purchase Requisition to view your submitted requests and their current status.",
+    ),
   );
   faq.appendChild(faqList);
   options.appendChild(faq);
@@ -512,181 +531,6 @@ function showLoginInfoModal(titleText, messageText, trigger) {
   });
   document.addEventListener("keydown", handleKeydown);
   closeIcon.focus();
-}
-
-/* ----- Purchase Requisition page (requisition.html only)----- */
-function setupRequisitionForm() {
-  const form = document.getElementById("requisition-form");
-  const viewBtn = document.getElementById("viewRequisitionBtn");
-  const submitBtn = document.getElementById("submitRequisitionBtn");
-
-  viewBtn.addEventListener("click", () => {
-    showPopup();
-  });
-
-  submitBtn.addEventListener("click", () => {
-    const requestedBy = document.getElementById("requestedBy").value;
-    const department = document.getElementById("department");
-    const itemInputs = document.querySelectorAll(".item-desc");
-
-    // Check if at least one item description was typed in
-    let hasItem = false;
-    itemInputs.forEach((input) => {
-      if (input.value.trim() !== "") {
-        hasItem = true;
-      }
-    });
-
-    // Stop at the first problem and tell the user what is missing
-    if (requestedBy.trim() === "") {
-      showMessage("Please enter who is requesting.");
-      return;
-    }
-
-    if (department.selectedIndex === 0) {
-      showMessage("Please select a department.");
-      return;
-    }
-
-    if (hasItem === false) {
-      showMessage("Please list at least one item.");
-      return;
-    }
-
-    showMessage("Requisition submitted for approval.");
-    form.reset(); // clear the form
-  });
-}
-
-/* ----- Buttons inside the Submitted Requisitions table ----- */
-function setupRequisitionTable() {
-  const viewButtons = document.querySelectorAll(".js-view");
-  const printButtons = document.querySelectorAll(".js-print");
-  const withdrawButtons = document.querySelectorAll(".js-withdraw");
-  const viewAllBtn = document.getElementById("viewAllBtn");
-
-  viewButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      showPopup();
-    });
-  });
-
-  printButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const id = row.cells[0].textContent.trim();
-      showMessage("Printing " + id + "...");
-    });
-  });
-
-  withdrawButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const id = row.cells[0].textContent.trim();
-      const statusCell = row.cells[5];
-      const status = statusCell.textContent.trim();
-
-      // Only a pending requisition can be withdrawn
-      if (status === "Pending") {
-        statusCell.textContent = "Withdrawn";
-        showMessage(id + " has been withdrawn.");
-      } else {
-        showMessage(id + " cannot be withdrawn (status: " + status + ").");
-      }
-    });
-  });
-
-  viewAllBtn.addEventListener("click", () => {
-    showPopup();
-  });
-}
-
-/* ----- Delivery Receipts page (delivery.html only) ----- */
-function setupDeliveryPage() {
-  const recordButtons = document.querySelectorAll(".js-record-delivery");
-  const form = document.getElementById("delivery-form");
-  const saveBtn = document.getElementById("saveDeliveryBtn");
-  const cancelBtn = document.getElementById("cancelDeliveryBtn");
-  const poSelect = document.getElementById("deliveryPO");
-  const drNumber = document.getElementById("drNumber");
-  const receivedBy = document.getElementById("receivedBy");
-  const condition = document.getElementById("deliveryCondition");
-  const viewLogButtons = document.querySelectorAll(".js-view-delivery-log");
-  const viewDeliveryHistoryBtn = document.getElementById(
-    "viewDeliveryHistoryBtn",
-  );
-  const viewCancelledOrdersBtn = document.getElementById(
-    "viewCancelledOrdersBtn",
-  );
-
-  // "Record Delivery" buttons in the Purchase Orders Awaiting Delivery table
-  recordButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const poNumber = row.cells[0].textContent.trim();
-      const statusSelect = row.querySelector(".delivery-status-select");
-
-      if (statusSelect.selectedIndex === 0) {
-        showMessage("Please select a status before recording.");
-        return;
-      }
-
-      showMessage(poNumber + " marked as " + statusSelect.value + ".");
-    });
-  });
-
-  // "Save Delivery Receipt" button
-  saveBtn.addEventListener("click", () => {
-    // Stop at the first problem and tell the user what is missing
-    if (poSelect.selectedIndex === 0) {
-      showMessage("Please select a purchase order.");
-      return;
-    }
-
-    if (drNumber.value.trim() === "") {
-      showMessage("Please enter the delivery receipt number.");
-      return;
-    }
-
-    if (receivedBy.value.trim() === "") {
-      showMessage("Please enter who received the delivery.");
-      return;
-    }
-
-    if (condition.selectedIndex === 0) {
-      showMessage("Please select the condition of goods.");
-      return;
-    }
-
-    showMessage("Delivery receipt saved.");
-    form.reset(); // clear the form
-  });
-
-  // "Cancel / Return Delivery" button
-  cancelBtn.addEventListener("click", () => {
-    showMessage("Delivery cancelled / returned.");
-    form.reset();
-  });
-
-  // "View" buttons inside the Delivery Receipt Log table
-  viewLogButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      showPopup();
-    });
-  });
-
-  // "View History" buttons (Delivery Receipt Log and Cancelled Orders each have their own)
-  if (viewDeliveryHistoryBtn) {
-    viewDeliveryHistoryBtn.addEventListener("click", () => {
-      showPopup();
-    });
-  }
-
-  if (viewCancelledOrdersBtn) {
-    viewCancelledOrdersBtn.addEventListener("click", () => {
-      showPopup();
-    });
-  }
 }
 
 /* ----- Inventory and Asset Tagging page (inventory.html only) ----- */
