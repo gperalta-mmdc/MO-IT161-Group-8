@@ -1,3 +1,16 @@
+/* ==========================================================
+
+  FUNCTIONS 
+     1  Storage Configuration and Base Data Helpers
+     2  ID Generation and Utility Functions
+     3  Requisition Module (requisition.html)
+     4  Approvals Module (approvals.html)
+     5  Purchase Orders Module (purchase-order.html)
+     6  Purchase Order Detail Module (purchase-order-detail.html)
+     7  Delivery Receipts Module (delivery.html)
+
+   ========================================================== */
+
 const STORAGE_KEYS = {
   requisitions: "procureit_requisitions",
   purchaseOrders: "procureit_purchaseOrders",
@@ -5,6 +18,7 @@ const STORAGE_KEYS = {
   counters: "procureit_counters",
 };
 
+/* ----- 1 Storage Configuration and Base Data Helpers ----- */
 /* ----- Generic get/save, shared by all three record types ----- */
 
 function getRecords(storageKey) {
@@ -47,6 +61,7 @@ function savePurchaseOrders(purchaseOrders) {
   return saveRecords(STORAGE_KEYS.purchaseOrders, purchaseOrders);
 }
 
+/* ----- 2 ID Generation & Utility Functions ----- */
 /* ----- Delivery Receipts (used in a later step) ----- */
 
 function getDeliveries() {
@@ -121,7 +136,7 @@ function getTodayIso() {
   return yyyy + "-" + mm + "-" + dd;
 }
 
-/* ----- Requisition page (requisition.html only) ----- */
+/* ----- 3 Requisition Module (requisition.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("requisition-form")) {
@@ -199,8 +214,7 @@ function setupRequisitionPage() {
     showMessage(requisition.id + " has been submitted.");
   });
 
-  // View / Print / Withdraw buttons in the Submitted Requisitions table
-  // (one listener on the table body, since rows are added dynamically)
+  //* View / Print / Withdraw buttons in the Submitted Requisitions table *//
   tableBody.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
@@ -234,15 +248,14 @@ function setupRequisitionPage() {
     }
   });
 
-  // "View All Requests" - generic placeholder, same as other pages' "View History" buttons
+  //* "View All Requests" - generic placeholder *//
   const viewAllBtn = document.getElementById("viewAllBtn");
   viewAllBtn.addEventListener("click", () => {
     showPopup();
   });
 }
 
-/* Reads the 5 item rows and returns an array of { description, quantity, unit }.
-   Returns null (and shows a message) if a partly-filled row is incomplete. */
+/* Reads the 5 item rows and returns an array of { description, quantity, unit } */
 function collectRequisitionItems() {
   const descInputs = document.querySelectorAll(".item-desc");
   const qtyInputs = document.querySelectorAll(".item-qty");
@@ -313,7 +326,7 @@ function renderRequisitionsTable() {
   });
 }
 
-/* ----- Approvals page (approvals.html only) ----- */
+/* ----- 4 Approvals Module (approvals.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("pending-approvals-table-body")) {
@@ -331,7 +344,6 @@ function setupApprovalsPage() {
   const viewHistoryBtn = document.getElementById("viewHistoryBtn");
 
   // View / Approve / Reject buttons in the awaiting-decision table
-  // (one listener on the table body, since rows are added dynamically)
   pendingTableBody.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
@@ -460,7 +472,7 @@ function renderApprovalHistoryTable() {
   });
 }
 
-/* ----- Purchase Orders page (purchase-order.html only) ----- */
+/* ----- 5 Purchase Orders Module (purchase-order.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("approved-requisitions-table-body")) {
@@ -537,7 +549,7 @@ function setupPurchaseOrderPage() {
   }
 }
 
-/* Rebuilds the Approved Requisitions table: Approved requisitions with no PO yet. */
+/* Rebuilds the Approved Requisitions table */
 function renderApprovedRequisitionsTable() {
   const tableBody = document.getElementById("approved-requisitions-table-body");
   const approved = getRequisitions().filter(
@@ -646,7 +658,7 @@ function renderCancelledPurchaseOrdersTable() {
   });
 }
 
-/* ----- Purchase Order Detail page (purchase-order-detail.html only) ----- */
+/* ----- 6 Purchase Order Detail Module (purchase-order-detail.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("po-form")) {
@@ -823,8 +835,7 @@ function setupPurchaseOrderDetailPage() {
   });
 }
 
-/* Fills the requisition dropdown with Approved requisitions that don't have a
-   purchase order yet. Optionally preselects one and prefills its details. */
+/* Fills the requisition dropdown with Approved requisitions */
 function populatePoRequisitionOptions(preselectId) {
   const select = document.getElementById("poRequisition");
   const eligible = getRequisitions().filter(
@@ -869,7 +880,6 @@ function applyRequisitionPrefill(requisitionId) {
   const lineTotals = document.querySelectorAll(".po-line-total");
 
   // Clear all 5 rows first, then fill in what the requisition listed.
-  // Unit price isn't part of a requisition, so those boxes stay blank for you to fill in.
   for (let i = 0; i < descInputs.length; i++) {
     itemNoInputs[i].value = "";
     descInputs[i].value = "";
@@ -921,7 +931,7 @@ function collectPoItemLines() {
   return items;
 }
 
-/* ----- Delivery Receipts page (delivery.html only) ----- */
+/* ----- 7 Delivery Receipts Module (delivery.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("pending-delivery-table-body")) {
