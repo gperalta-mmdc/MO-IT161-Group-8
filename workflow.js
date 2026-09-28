@@ -208,9 +208,9 @@ function setupRequisitionPage() {
     saveRequisitions(requisitions);
 
     renderRequisitionsTable();
+    form.reset();
     document.getElementById("requisitionIdPreview").value =
       peekNextId("requisition");
-    form.reset();
     showMessage(requisition.id + " has been submitted.");
   });
 
@@ -505,6 +505,7 @@ function setupPurchaseOrderPage() {
     requisition.status = "Cancelled";
     saveRequisitions(requisitions);
     renderApprovedRequisitionsTable();
+    renderCancelledPurchaseOrdersTable();
     showMessage(requisition.id + " has been cancelled.");
   });
 
@@ -590,7 +591,7 @@ function renderApprovedRequisitionsTable() {
 /* Rebuilds the active (non-cancelled) Purchase Orders table. */
 function renderActivePurchaseOrdersTable() {
   const tableBody = document.getElementById("active-pos-table-body");
-  const active = getPurchaseOrders().filter((po) => po.status !== "Cancelled");
+  const active = getPurchaseOrders().filter((po) => po.status === "Active");
 
   tableBody.innerHTML = "";
 
@@ -624,16 +625,19 @@ function renderActivePurchaseOrdersTable() {
   });
 }
 
-/* Rebuilds the Cancelled Orders table. */
-function renderCancelledPurchaseOrdersTable() {
+/* Rebuilds the Cancelled Orders table */
+function renderCancelledPurchaseOrdersTable(includeRequisitions = true) {
   const tableBody = document.getElementById("cancelled-pos-table-body");
-  const cancelled = getPurchaseOrders().filter(
+  const cancelledPOs = getPurchaseOrders().filter(
     (po) => po.status === "Cancelled",
+  );
+  const cancelledRequisitions = getRequisitions().filter(
+    (r) => r.status === "Cancelled",
   );
 
   tableBody.innerHTML = "";
 
-  cancelled.forEach((purchaseOrder) => {
+  cancelledPOs.forEach((purchaseOrder) => {
     const row = document.createElement("tr");
     row.innerHTML =
       "<td>" +
@@ -654,6 +658,29 @@ function renderCancelledPurchaseOrdersTable() {
       "<td>" +
       purchaseOrder.total +
       "</td>";
+    tableBody.appendChild(row);
+  });
+
+  if (!includeRequisitions) return;
+
+  // No PO was ever created for these, so vendor and total don't exist yet
+  cancelledRequisitions.forEach((requisition) => {
+    const row = document.createElement("tr");
+    row.innerHTML =
+      "<td>" +
+      requisition.id +
+      "</td>" +
+      "<td>—</td>" +
+      "<td>" +
+      requisition.dateSubmitted +
+      "</td>" +
+      "<td>" +
+      requisition.requestedBy +
+      "</td>" +
+      "<td>" +
+      requisition.status +
+      "</td>" +
+      "<td>—</td>";
     tableBody.appendChild(row);
   });
 }
@@ -942,7 +969,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function setupDeliveryPage() {
   renderPendingDeliveryTable();
   renderDeliveryLogTable();
-  renderCancelledPurchaseOrdersTable(); // same function purchase-order.html uses
+  renderCancelledPurchaseOrdersTable(false); // same function purchase-order.html uses
 
   populateDeliveryPoOptions();
   document.getElementById("drNumber").value = peekNextId("delivery");
@@ -962,15 +989,34 @@ function setupDeliveryPage() {
     "viewCancelledOrdersBtn",
   );
 
-  // "Record Delivery" button in the awaiting-delivery table: preselects that PO below
+  // Record Delivery / Cancel Order buttons in the awaiting-delivery table
   pendingTableBody.addEventListener("click", (event) => {
-    const button = event.target.closest(".js-record-delivery");
+    const button = event.target.closest("button");
     if (!button) return;
 
     const row = button.closest("tr");
     const poId = row.getAttribute("data-id");
-    deliveryPoSelect.value = poId;
-    document.getElementById("receivedBy").focus();
+
+    // "Record Delivery": preselects that PO in the form below
+    if (button.classList.contains("js-record-delivery")) {
+      deliveryPoSelect.value = poId;
+      document.getElementById("receivedBy").focus();
+      return;
+    }
+
+    // "Cancel Order": moves the PO to the Cancelled Orders table
+    if (button.classList.contains("js-cancel-delivery-po")) {
+      const purchaseOrders = getPurchaseOrders();
+      const purchaseOrder = purchaseOrders.find((po) => po.id === poId);
+      if (!purchaseOrder) return;
+
+      purchaseOrder.status = "Cancelled";
+      savePurchaseOrders(purchaseOrders);
+      renderPendingDeliveryTable();
+      renderCancelledPurchaseOrdersTable(false);
+      populateDeliveryPoOptions();
+      showMessage(purchaseOrder.id + " has been cancelled.");
+    }
   });
 
   // "View" buttons inside the Delivery Receipt Log table
@@ -1003,7 +1049,7 @@ function setupDeliveryPage() {
     const condition = document.getElementById("deliveryCondition");
     const remarksInput = document.getElementById("deliveryRemarks");
 
-    if (!poId) {
+    if (deliveryPoSelect.selectedIndex === 0) {
       showMessage("Please select a purchase order.");
       return;
     }
@@ -1103,6 +1149,7 @@ function renderPendingDeliveryTable() {
       "<option>Cancelled</option></select></td>" +
       '<td><div class="btn-action">' +
       '<button type="button" class="btn-content js-record-delivery">Record Delivery</button>' +
+      '<button type="button" class="reject-btn js-cancel-delivery-po">Cancel Order</button>' +
       "</div></td>";
     tableBody.appendChild(row);
   });
