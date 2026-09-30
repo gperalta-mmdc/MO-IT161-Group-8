@@ -166,16 +166,6 @@ function setupRoleAccess() {
           delete link.dataset.roleBlocked;
         });
     }
-
-    const requisitionRows = document.querySelectorAll(
-      "#requisition-form ~ fieldset .content-table tbody tr",
-    );
-    const loggedInName = localStorage.getItem("procureit-name");
-    requisitionRows.forEach((row) => {
-      row.hidden =
-        selectedRole === "requisitioner" &&
-        row.cells[1]?.textContent.trim() !== loggedInName;
-    });
   };
 
   applyRole(role);

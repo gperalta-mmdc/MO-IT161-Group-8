@@ -313,6 +313,80 @@ function closePopup() {
     overlay.remove();
   }
 }
+
+/* ----- Popup screen with a table (used by History views) ----- */
+function showTablePopup(
+  titleText,
+  headers,
+  rows,
+  details = [],
+  emptyText = "No records to show yet.",
+) {
+  closePopup();
+
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
+
+  const box = document.createElement("div");
+  box.className = "popup-box history-popup";
+
+  const title = document.createElement("h2");
+  title.textContent = titleText;
+  box.appendChild(title);
+
+  // Optional "Label: value" lines shown above the table
+  details.forEach(([label, value]) => {
+    const line = document.createElement("p");
+    line.className = "popup-detail";
+    const strong = document.createElement("strong");
+    strong.textContent = label + ": ";
+    line.appendChild(strong);
+    line.appendChild(document.createTextNode(value));
+    box.appendChild(line);
+  });
+
+  if (rows.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = emptyText;
+    box.appendChild(empty);
+  } else {
+    const table = document.createElement("table");
+    table.className = "content-table";
+    table.border = "1";
+
+    const headRow = table.createTHead().insertRow();
+    headers.forEach((text) => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      headRow.appendChild(th);
+    });
+
+    const body = table.createTBody();
+    rows.forEach((cells) => {
+      const tr = body.insertRow();
+      cells.forEach((text) => {
+        tr.insertCell().textContent = text;
+      });
+    });
+    box.appendChild(table);
+  }
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "btn-content";
+  closeBtn.textContent = "Close";
+  closeBtn.addEventListener("click", closePopup);
+  box.appendChild(closeBtn);
+
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closePopup();
+  });
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */
