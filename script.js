@@ -2,24 +2,23 @@
 
   SHARED FUNCTIONS (reusable on every page)
      1  Page Setup (DOMContentLoaded)
-     2  Highlight sidebar nav link for the current page
-     3  Header button elements
-     4  Show date on dashboard
-     5  Card menus
-     6  Popup notification - lower right corner
-     7  Generic popup screen - placeholder
+     2  Sidebar collapse/expand toggle
+     3  Dashboard workflow summary modal
+     4  Highlight sidebar nav link for the current page
+     5  Header button elements
+     6  Show date on dashboard
+     7  Card menus
+     8  Popup notification - lower right corner
+     9  Generic popup screen - placeholder
+    10  Help and Support menu and modal (every page's sidebar link)
 
   PAGE-SPECIFIC FUNCTIONS (only used on one page)
-     1  Login page (index.html only)
-     2  Purchase Requisition page (requisition.html only)
-     3  Approvals page (approvals.html only)
-     4  Purchase Orders page (purchase-order.html only)
-     5  Delivery Receipts page (delivery.html only)
-     6  Inventory and Asset Tagging page (inventory.html only)
-     7  Invoice Processing page (invoices.html only)
-     8  Vendor Management page (vendors.html only)
-     9  Reports page (reports.html only)
-    10 Purchase Order Detail page (purchase-order-detail.html only)
+     1  Login page links (index.html only - setupLoginForm itself lives in rbac.js)
+     2  Inventory and Asset Tagging page (inventory.html only)
+     3  Invoice Processing page (invoices.html only)
+     4  Vendor Management page (vendors.html only)
+     5  Reports page (reports.html only)
+     6  Purchase order total calculations (used by purchase-order-detail.html)
    ========================================================== */
 
 /* PART 1 - SHARED FUNCTIONS */
@@ -34,10 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupLogout();
   setupWorkflowSummary();
   setupSidebarToggle();
+  setupHelpSupportMenu();
 
   /* ----- index.html only -----*/
   if (document.getElementById("login-form")) {
-    setupLoginForm();
     setupLoginLinks();
   }
 
@@ -313,8 +312,7 @@ function closePopup() {
     overlay.remove();
   }
 }
-
-/* ----- Popup screen with a table (used by History views) ----- */
+/* ----- Popup screen with a table ----- */
 function showTablePopup(
   titleText,
   headers,
@@ -330,30 +328,67 @@ function showTablePopup(
 
   const box = document.createElement("div");
   box.className = "popup-box history-popup";
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+  box.setAttribute("aria-labelledby", "history-popup-title");
+
+  // Header: title on the left, X button on the right
+  const header = document.createElement("div");
+  header.className = "history-popup-header";
 
   const title = document.createElement("h2");
+  title.id = "history-popup-title";
   title.textContent = titleText;
-  box.appendChild(title);
+  header.appendChild(title);
 
-  // Optional "Label: value" lines shown above the table
-  details.forEach(([label, value]) => {
-    const line = document.createElement("p");
-    line.className = "popup-detail";
-    const strong = document.createElement("strong");
-    strong.textContent = label + ": ";
-    line.appendChild(strong);
-    line.appendChild(document.createTextNode(value));
-    box.appendChild(line);
-  });
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "history-popup-x";
+  closeIcon.setAttribute("aria-label", "Close");
+  closeIcon.textContent = "\u00d7";
+  closeIcon.addEventListener("click", closePopup);
+  header.appendChild(closeIcon);
+
+  // Body: detail cards, then the table
+  const body = document.createElement("div");
+  body.className = "history-popup-body";
+
+  if (details.length > 0) {
+    const grid = document.createElement("div");
+    grid.className = "popup-details";
+
+    details.forEach(([label, value]) => {
+      const text = String(value);
+      const item = document.createElement("div");
+      item.className = "popup-detail";
+      // Long values (reason, notes, address) get a full-width card
+      if (text.length > 40 || text.includes("\n")) {
+        item.classList.add("popup-detail-wide");
+      }
+
+      const labelEl = document.createElement("span");
+      labelEl.className = "popup-detail-label";
+      labelEl.textContent = label;
+
+      const valueEl = document.createElement("strong");
+      valueEl.className = "popup-detail-value";
+      valueEl.textContent = text;
+
+      item.appendChild(labelEl);
+      item.appendChild(valueEl);
+      grid.appendChild(item);
+    });
+    body.appendChild(grid);
+  }
 
   if (rows.length === 0) {
     const empty = document.createElement("p");
+    empty.className = "popup-empty";
     empty.textContent = emptyText;
-    box.appendChild(empty);
+    body.appendChild(empty);
   } else {
     const table = document.createElement("table");
     table.className = "content-table";
-    table.border = "1";
 
     const headRow = table.createTHead().insertRow();
     headers.forEach((text) => {
@@ -362,22 +397,30 @@ function showTablePopup(
       headRow.appendChild(th);
     });
 
-    const body = table.createTBody();
+    const tbody = table.createTBody();
     rows.forEach((cells) => {
-      const tr = body.insertRow();
+      const tr = tbody.insertRow();
       cells.forEach((text) => {
         tr.insertCell().textContent = text;
       });
     });
-    box.appendChild(table);
+    body.appendChild(table);
   }
+
+  // Footer: Close button
+  const footer = document.createElement("div");
+  footer.className = "history-popup-footer";
 
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "btn-content";
   closeBtn.textContent = "Close";
   closeBtn.addEventListener("click", closePopup);
-  box.appendChild(closeBtn);
+  footer.appendChild(closeBtn);
+
+  box.appendChild(header);
+  box.appendChild(body);
+  box.appendChild(footer);
 
   overlay.addEventListener("click", (event) => {
     if (event.target === overlay) closePopup();
@@ -393,191 +436,219 @@ function showTablePopup(
 function setupLoginLinks() {
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   const contactAdminLink = document.getElementById("contactAdminLink");
+  const procurementHelpLink = document.getElementById("procurementHelpLink");
 
   forgotPasswordLink.addEventListener("click", (event) => {
     event.preventDefault(); // href="#" would otherwise jump to the top of the page
-    showMessage("Password reset is not implemented yet.");
+    showLoginInfoModal(
+      "Password Assistance",
+      "For password reset, please contact the IT Helpdesk or email at it.support@procureit.local with your Employee ID.",
+      forgotPasswordLink,
+    );
   });
 
   contactAdminLink.addEventListener("click", (event) => {
     event.preventDefault();
-    showMessage("Contact your administrator screen not implemented yet.");
+    showLoginInfoModal(
+      "Administrator Contact",
+      "ProcureIT System Administrator Email: admin@procureit.local | IT Operations Dept.",
+      contactAdminLink,
+    );
+  });
+
+  procurementHelpLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    showProcurementHelpModal(procurementHelpLink);
   });
 }
 
-/* ----- Purchase Requisition page (requisition.html only)----- */
-function setupRequisitionForm() {
-  const form = document.getElementById("requisition-form");
-  const viewBtn = document.getElementById("viewRequisitionBtn");
-  const submitBtn = document.getElementById("submitRequisitionBtn");
-
-  viewBtn.addEventListener("click", () => {
-    showPopup();
-  });
-
-  submitBtn.addEventListener("click", () => {
-    const requestedBy = document.getElementById("requestedBy").value;
-    const department = document.getElementById("department");
-    const itemInputs = document.querySelectorAll(".item-desc");
-
-    // Check if at least one item description was typed in
-    let hasItem = false;
-    itemInputs.forEach((input) => {
-      if (input.value.trim() !== "") {
-        hasItem = true;
-      }
+/* ----- Help and Support menu and modal (shared, every page) ----- */
+function setupHelpSupportMenu() {
+  document.querySelectorAll(".navigation a").forEach((link) => {
+    const label = link.textContent.trim().replace(/\s+/g, " ");
+    if (!label.includes("Help and Support")) return;
+    link.setAttribute("aria-haspopup", "dialog");
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      showProcurementHelpModal(link);
     });
-
-    // Stop at the first problem and tell the user what is missing
-    if (requestedBy.trim() === "") {
-      showMessage("Please enter who is requesting.");
-      return;
-    }
-
-    if (department.selectedIndex === 0) {
-      showMessage("Please select a department.");
-      return;
-    }
-
-    if (hasItem === false) {
-      showMessage("Please list at least one item.");
-      return;
-    }
-
-    showMessage("Requisition submitted for approval.");
-    form.reset(); // clear the form
   });
 }
 
-/* ----- Buttons inside the Submitted Requisitions table ----- */
-function setupRequisitionTable() {
-  const viewButtons = document.querySelectorAll(".js-view");
-  const printButtons = document.querySelectorAll(".js-print");
-  const withdrawButtons = document.querySelectorAll(".js-withdraw");
-  const viewAllBtn = document.getElementById("viewAllBtn");
+function showProcurementHelpModal(trigger) {
+  closePopup();
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
 
-  viewButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      showPopup();
-    });
-  });
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box login-help-modal";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "procurement-help-title");
 
-  printButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const id = row.cells[0].textContent.trim();
-      showMessage("Printing " + id + "...");
-    });
-  });
+  const header = document.createElement("header");
+  header.className = "login-help-header";
+  const title = document.createElement("h2");
+  title.id = "procurement-help-title";
+  title.textContent = "Need Help with IT Procurement?";
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "login-help-x";
+  closeIcon.setAttribute("aria-label", "Close dialog");
+  closeIcon.textContent = "×";
+  header.append(title, closeIcon);
 
-  withdrawButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const id = row.cells[0].textContent.trim();
-      const statusCell = row.cells[5];
-      const status = statusCell.textContent.trim();
-
-      // Only a pending requisition can be withdrawn
-      if (status === "Pending") {
-        statusCell.textContent = "Withdrawn";
-        showMessage(id + " has been withdrawn.");
-      } else {
-        showMessage(id + " cannot be withdrawn (status: " + status + ").");
-      }
-    });
-  });
-
-  viewAllBtn.addEventListener("click", () => {
-    showPopup();
-  });
-}
-
-/* ----- Delivery Receipts page (delivery.html only) ----- */
-function setupDeliveryPage() {
-  const recordButtons = document.querySelectorAll(".js-record-delivery");
-  const form = document.getElementById("delivery-form");
-  const saveBtn = document.getElementById("saveDeliveryBtn");
-  const cancelBtn = document.getElementById("cancelDeliveryBtn");
-  const poSelect = document.getElementById("deliveryPO");
-  const drNumber = document.getElementById("drNumber");
-  const receivedBy = document.getElementById("receivedBy");
-  const condition = document.getElementById("deliveryCondition");
-  const viewLogButtons = document.querySelectorAll(".js-view-delivery-log");
-  const viewDeliveryHistoryBtn = document.getElementById(
-    "viewDeliveryHistoryBtn",
-  );
-  const viewCancelledOrdersBtn = document.getElementById(
-    "viewCancelledOrdersBtn",
+  const body = document.createElement("div");
+  body.className = "login-help-body procurement-help-body";
+  const options = document.createElement("ul");
+  options.className = "procurement-help-options";
+  options.append(
+    createProcurementContact(
+      "Send an email to our IT Helpdesk ",
+      "it.support@procureit.local",
+    ),
+    createProcurementContact(
+      "or ProcureIT System Administrator ",
+      "admin@procureit.local",
+    ),
   );
 
-  // "Record Delivery" buttons in the Purchase Orders Awaiting Delivery table
-  recordButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const poNumber = row.cells[0].textContent.trim();
-      const statusSelect = row.querySelector(".delivery-status-select");
+  const faq = document.createElement("li");
+  const faqLabel = document.createElement("strong");
+  faqLabel.textContent = "Procurement FAQ & Guides: ";
+  faq.append(
+    faqLabel,
+    document.createTextNode(
+      "Read quick answers about requisition steps and approvals.",
+    ),
+  );
+  const faqList = document.createElement("div");
+  faqList.className = "procurement-faq-list";
+  faqList.append(
+    createProcurementFaq(
+      "How do I submit a requisition?",
+      "Open Purchase Requisition, enter your department and requested items, add the reason for the request, then select Submit Requisition.",
+    ),
+    createProcurementFaq(
+      "What happens after I submit?",
+      "An Approver or Purchasing Manager reviews the request. They can approve it to move forward or reject it.",
+    ),
+    createProcurementFaq(
+      "Where can I check my request status?",
+      "Open Purchase Requisition to view your submitted requests and their current status.",
+    ),
+  );
+  faq.appendChild(faqList);
+  options.appendChild(faq);
+  body.appendChild(options);
 
-      if (statusSelect.selectedIndex === 0) {
-        showMessage("Please select a status before recording.");
-        return;
-      }
+  const footer = document.createElement("footer");
+  footer.className = "login-help-footer";
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn-content";
+  closeButton.textContent = "Close";
+  footer.appendChild(closeButton);
+  dialog.append(header, body, footer);
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
 
-      showMessage(poNumber + " marked as " + statusSelect.value + ".");
-    });
+  const close = () => {
+    document.removeEventListener("keydown", handleKeydown);
+    overlay.remove();
+    trigger.focus();
+  };
+  const handleKeydown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  closeIcon.addEventListener("click", close);
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) close();
   });
+  document.addEventListener("keydown", handleKeydown);
+  closeIcon.focus();
+}
 
-  // "Save Delivery Receipt" button
-  saveBtn.addEventListener("click", () => {
-    // Stop at the first problem and tell the user what is missing
-    if (poSelect.selectedIndex === 0) {
-      showMessage("Please select a purchase order.");
-      return;
-    }
+function createProcurementContact(prefix, email) {
+  const item = document.createElement("li");
+  item.appendChild(document.createTextNode(prefix));
+  const emailLink = document.createElement("a");
+  emailLink.href = `mailto:${email}`;
+  emailLink.textContent = email;
+  item.appendChild(emailLink);
+  return item;
+}
 
-    if (drNumber.value.trim() === "") {
-      showMessage("Please enter the delivery receipt number.");
-      return;
-    }
+function createProcurementFaq(question, answer) {
+  const details = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.textContent = question;
+  const response = document.createElement("p");
+  response.textContent = answer;
+  details.append(summary, response);
+  return details;
+}
 
-    if (receivedBy.value.trim() === "") {
-      showMessage("Please enter who received the delivery.");
-      return;
-    }
+function showLoginInfoModal(titleText, messageText, trigger) {
+  closePopup();
 
-    if (condition.selectedIndex === 0) {
-      showMessage("Please select the condition of goods.");
-      return;
-    }
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
 
-    showMessage("Delivery receipt saved.");
-    form.reset(); // clear the form
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box login-help-modal";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "login-help-title");
+
+  const header = document.createElement("header");
+  header.className = "login-help-header";
+  const title = document.createElement("h2");
+  title.id = "login-help-title";
+  title.textContent = titleText;
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "login-help-x";
+  closeIcon.setAttribute("aria-label", "Close dialog");
+  closeIcon.textContent = "×";
+  header.append(title, closeIcon);
+
+  const body = document.createElement("div");
+  body.className = "login-help-body";
+  const message = document.createElement("p");
+  message.textContent = messageText;
+  body.appendChild(message);
+
+  const footer = document.createElement("footer");
+  footer.className = "login-help-footer";
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn-content";
+  closeButton.textContent = "Close";
+  footer.appendChild(closeButton);
+
+  dialog.append(header, body, footer);
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+
+  const close = () => {
+    document.removeEventListener("keydown", handleKeydown);
+    overlay.remove();
+    trigger.focus();
+  };
+  const handleKeydown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  closeIcon.addEventListener("click", close);
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) close();
   });
-
-  // "Cancel / Return Delivery" button
-  cancelBtn.addEventListener("click", () => {
-    showMessage("Delivery cancelled / returned.");
-    form.reset();
-  });
-
-  // "View" buttons inside the Delivery Receipt Log table
-  viewLogButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      showPopup();
-    });
-  });
-
-  // "View History" buttons (Delivery Receipt Log and Cancelled Orders each have their own)
-  if (viewDeliveryHistoryBtn) {
-    viewDeliveryHistoryBtn.addEventListener("click", () => {
-      showPopup();
-    });
-  }
-
-  if (viewCancelledOrdersBtn) {
-    viewCancelledOrdersBtn.addEventListener("click", () => {
-      showPopup();
-    });
-  }
+  document.addEventListener("keydown", handleKeydown);
+  closeIcon.focus();
 }
 
 /* ----- Inventory and Asset Tagging page (inventory.html only) ----- */

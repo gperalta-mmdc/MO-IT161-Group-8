@@ -86,18 +86,7 @@ function setupRequisitionPage() {
     if (!requisition) return;
 
     if (button.classList.contains("js-view")) {
-      showMessage(
-        requisition.id +
-          " — " +
-          requisition.requestedBy +
-          " (" +
-          requisition.department +
-          "), " +
-          requisition.items.length +
-          " item(s), " +
-          requisition.status +
-          ".",
-      );
+      showRequisitionDetails(requisition);
     } else if (button.classList.contains("js-print")) {
       showMessage("Printing " + requisition.id + "...");
     } else if (button.classList.contains("js-withdraw")) {

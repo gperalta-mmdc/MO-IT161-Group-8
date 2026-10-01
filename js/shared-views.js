@@ -206,3 +206,136 @@ function renderCancelledPurchaseOrdersTable(includeRequisitions = true) {
     tableBody.appendChild(row);
   });
 }
+
+/* Popup with the full details of one requisition (Requisition and Approvals pages). */
+function showRequisitionDetails(requisition) {
+  const details = [
+    ["Requisition ID", requisition.id],
+    ["Requested By", requisition.requestedBy],
+    ["Department", requisition.department],
+    ["Date Submitted", requisition.dateSubmitted],
+    ["Status", requisition.status],
+    ["Reason for Request", requisition.reason || "—"],
+  ];
+
+  // Decision details only exist once someone has approved or rejected it
+  if (requisition.decidedBy) {
+    details.push(
+      ["Decided By", requisition.decidedBy],
+      ["Date Decided", requisition.dateDecided || "—"],
+      ["Approver Remarks", requisition.remarks || "—"],
+    );
+  }
+
+  if (requisition.poId) {
+    details.push(["Purchase Order", requisition.poId]);
+  }
+
+  const rows = requisition.items.map((item, i) => [
+    i + 1,
+    item.description,
+    item.quantity,
+    item.unit,
+  ]);
+
+  showTablePopup(
+    "Requisition Details",
+    ["#", "Item / Description", "Quantity", "Unit"],
+    rows,
+    details,
+    "No items listed.",
+  );
+}
+
+/* Popup with the full details of one purchase order (Purchase Orders page). */
+function showPurchaseOrderDetails(purchaseOrder) {
+  const shipTo =
+    [purchaseOrder.shipToName, purchaseOrder.shipToAddress]
+      .filter(Boolean)
+      .join(", ") || "—";
+
+  const details = [
+    ["PO Number", purchaseOrder.id],
+    ["Requisition", purchaseOrder.requisitionId || "—"],
+    ["Vendor", purchaseOrder.vendor],
+    ["Order Date", purchaseOrder.dateCreated],
+    ["Expected Delivery", purchaseOrder.expectedDelivery || "—"],
+    ["Requisitioner", purchaseOrder.requisitioner],
+    ["Department", purchaseOrder.department || "—"],
+    ["Status", purchaseOrder.status],
+    ["Ship To", shipTo],
+    ["Ship-To Phone", purchaseOrder.shipToPhone || "—"],
+    ["Ship Via", purchaseOrder.shipVia || "—"],
+    ["F.O.B.", purchaseOrder.fob || "—"],
+    ["Shipping Terms", purchaseOrder.shippingTerms || "—"],
+    ["Notes", purchaseOrder.notes || "—"],
+  ];
+
+  const rows = (purchaseOrder.items || []).map((item, i) => [
+    item.itemNo || i + 1,
+    item.description,
+    item.quantity,
+    formatPeso(item.unitPrice),
+    formatPeso(item.lineTotal),
+  ]);
+
+  // Totals go at the bottom of the table, like an invoice
+  rows.push(["", "", "", "Subtotal", formatPeso(purchaseOrder.subtotal)]);
+  rows.push([
+    "",
+    "",
+    "",
+    "Tax (" + (purchaseOrder.taxRate || 0) + "%)",
+    formatPeso(purchaseOrder.tax),
+  ]);
+  rows.push(["", "", "", "Shipping", formatPeso(purchaseOrder.shipping)]);
+  rows.push(["", "", "", "Total", formatPeso(purchaseOrder.total)]);
+
+  showTablePopup(
+    "Purchase Order Details",
+    ["Item No.", "Item / Description", "Qty", "Unit Price", "Line Total"],
+    rows,
+    details,
+  );
+}
+
+/* Popup with the details of one delivery receipt (Delivery Receipt Log). */
+function showDeliveryDetails(delivery) {
+  const purchaseOrder = getPurchaseOrders().find(
+    (po) => po.id === delivery.poId,
+  );
+
+  const details = [
+    ["DR Number", delivery.id],
+    ["PO Number", delivery.poId],
+    ["Vendor", purchaseOrder ? purchaseOrder.vendor : "—"],
+    ["Date Received", delivery.dateReceived],
+    ["Received By", delivery.receivedBy],
+    ["Condition", delivery.condition],
+    ["Remarks", delivery.remarks || "—"],
+    [
+      "Proof of Delivery",
+      delivery.proofFileName
+        ? delivery.proofFileName + " (file name only)"
+        : "None attached",
+    ],
+  ];
+
+  // What was ordered on the PO, for checking against what arrived
+  const rows =
+    purchaseOrder && purchaseOrder.items
+      ? purchaseOrder.items.map((item, i) => [
+          item.itemNo || i + 1,
+          item.description,
+          item.quantity,
+        ])
+      : [];
+
+  showTablePopup(
+    "Delivery Receipt Details",
+    ["Item No.", "Item / Description (as ordered)", "Qty Ordered"],
+    rows,
+    details,
+    "No item list found for this purchase order.",
+  );
+}

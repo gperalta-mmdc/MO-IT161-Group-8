@@ -70,16 +70,7 @@ function setupDeliveryPage() {
     const delivery = getDeliveries().find((d) => d.id === id);
     if (!delivery) return;
 
-    showMessage(
-      delivery.id +
-        " — " +
-        delivery.condition +
-        ", received by " +
-        delivery.receivedBy +
-        " on " +
-        delivery.dateReceived +
-        ".",
-    );
+    showDeliveryDetails(delivery);
   });
 
   // "Save Delivery Receipt" button
@@ -89,6 +80,7 @@ function setupDeliveryPage() {
     const receivedBy = document.getElementById("receivedBy");
     const condition = document.getElementById("deliveryCondition");
     const remarksInput = document.getElementById("deliveryRemarks");
+    const proofInput = document.getElementById("deliveryProof");
 
     if (deliveryPoSelect.selectedIndex === 0) {
       showMessage("Please select a purchase order.");
@@ -125,6 +117,7 @@ function setupDeliveryPage() {
       receivedBy: receivedBy.value.trim(),
       condition: condition.value,
       remarks: remarksInput.value.trim(),
+      proofFileName: proofInput.files.length ? proofInput.files[0].name : "",
     };
 
     // Only a complete, good-condition delivery closes the PO.

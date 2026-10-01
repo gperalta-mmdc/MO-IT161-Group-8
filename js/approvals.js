@@ -27,18 +27,7 @@ function setupApprovalsPage() {
     if (!requisition) return;
 
     if (button.classList.contains("js-view-approval")) {
-      showMessage(
-        requisition.id +
-          " — " +
-          requisition.requestedBy +
-          " (" +
-          requisition.department +
-          "), " +
-          requisition.items.length +
-          " item(s), " +
-          requisition.status +
-          ".",
-      );
+      showRequisitionDetails(requisition);
       return;
     }
 

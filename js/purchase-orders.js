@@ -47,16 +47,7 @@ function setupPurchaseOrderPage() {
     if (!purchaseOrder) return;
 
     if (button.classList.contains("js-view-po")) {
-      showMessage(
-        purchaseOrder.id +
-          " — " +
-          purchaseOrder.vendor +
-          ", total " +
-          formatPeso(purchaseOrder.total) +
-          ", status " +
-          purchaseOrder.status +
-          ".",
-      );
+      showPurchaseOrderDetails(purchaseOrder);
       return;
     }
 
