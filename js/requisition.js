@@ -90,8 +90,8 @@ function setupRequisitionPage() {
     } else if (button.classList.contains("js-print")) {
       showMessage("Printing " + requisition.id + "...");
     } else if (button.classList.contains("js-withdraw")) {
-      const remaining = requisitions.filter((r) => r.id !== id);
-      saveRequisitions(remaining);
+      requisition.status = "Withdrawn";
+      saveRequisitions(requisitions);
       renderRequisitionsTable();
       showMessage(requisition.id + " has been withdrawn.");
     }
