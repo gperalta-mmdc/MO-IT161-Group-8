@@ -2,7 +2,7 @@
 function showRequisitionHistory() {
   const role = localStorage.getItem("procureit-role");
   const loggedInName = localStorage.getItem("procureit-name");
-  const shownStatuses = ["Pending", "Approved", "Rejected"];
+  const shownStatuses = ["Pending", "Approved", "Rejected", "Withdrawn"];
 
   const rows = getRequisitions()
     .filter((r) => shownStatuses.includes(r.status))

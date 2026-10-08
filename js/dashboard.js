@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupDashboardCounts() {
-  const requisitions = getRequisitions();
+  const requisitions = getRequisitions().filter(
+    (r) => r.status !== "Withdrawn",
+  );
   const purchaseOrders = getPurchaseOrders();
 
   const pending = requisitions.filter((r) => r.status === "Pending").length;
