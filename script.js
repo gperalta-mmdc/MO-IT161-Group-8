@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ----- for inventory.html only -----*/
-  if (document.getElementById("asset-table")) {
-    setupInventoryPage();
-  }
+  /*--- Moved to inventory.js---*/
+
+  
 
   /* ----- for invoices.html only -----*/
   if (document.getElementById("invoice-form")) {
@@ -652,44 +652,7 @@ function showLoginInfoModal(titleText, messageText, trigger) {
 }
 
 /* ----- Inventory and Asset Tagging page (inventory.html only) ----- */
-function setupInventoryPage() {
-  const addAssetBtn = document.getElementById("add-asset-btn");
-  const addRequestBtn = document.getElementById("add-request-btn");
-  const assignButtons = document.querySelectorAll(".js-assign-asset");
-  const unassignButtons = document.querySelectorAll(".js-unassign-asset");
-
-  if (addAssetBtn) {
-    addAssetBtn.addEventListener("click", () => {
-      showPopup("Add Assets", "Add New Equipment / Company Assets Here.");
-    });
-  }
-
-  if (addRequestBtn) {
-    addRequestBtn.addEventListener("click", () => {
-      showPopup(
-        "Delete Asset",
-        "Remove Equipment / Company Asset from Distribution.",
-      );
-    });
-  }
-
-  // "Assign to User" buttons in the Inventory table
-  assignButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      showPopup();
-    });
-  });
-
-  // "Unassign Equipment" buttons in the Assignments table
-  unassignButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const row = button.closest("tr");
-      const equipment = row.cells[2].textContent.trim();
-      const assignedTo = row.cells[4].textContent.trim();
-      showMessage(equipment + " has been unassigned from " + assignedTo + ".");
-    });
-  });
-}
+/*--- Moved to inventory.js---*/
 
 /* ----- Invoice Processing page (invoices.html only) ----- */
 function setupInvoiceForm() {
