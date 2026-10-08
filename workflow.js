@@ -209,6 +209,8 @@ function setupRequisitionPage() {
     saveRequisitions(requisitions);
 
     renderRequisitionsTable();
+    form.reset();
+    fillRequestedBy();
     document.getElementById("requisitionIdPreview").value =
       peekNextId("requisition");
     showMessage(requisition.id + " has been submitted.");
@@ -248,7 +250,7 @@ function setupRequisitionPage() {
     }
   });
 
-  // "View All Requests" - generic placeholder, same as other pages' "View History" buttons
+  //* "View History Button*//
   const viewAllBtn = document.getElementById("viewAllBtn");
   viewAllBtn.addEventListener("click", () => {
     showRequisitionHistory();
@@ -341,7 +343,176 @@ function renderRequisitionsTable() {
   });
 }
 
-/* ----- Approvals page (approvals.html only) ----- */
+/* Fills "Requested By" with the logged-in user.*/
+function fillRequestedBy() {
+  const input = document.getElementById("requestedBy");
+  const name = localStorage.getItem("procureit-name");
+  if (!input || !name) return;
+  input.value = name;
+  input.readOnly = localStorage.getItem("procureit-role") === "requisitioner";
+}
+
+/* Shows every Pending, Approved and Rejected requisition in a popup. */
+function showRequisitionHistory() {
+  const role = localStorage.getItem("procureit-role");
+  const loggedInName = localStorage.getItem("procureit-name");
+  const shownStatuses = ["Pending", "Approved", "Rejected"];
+
+  const rows = getRequisitions()
+    .filter((r) => shownStatuses.includes(r.status))
+    // same rule rbac.js uses: requisitioners only see their own requests
+    .filter((r) => role !== "requisitioner" || r.requestedBy === loggedInName)
+    .map((r) => [
+      r.id,
+      r.requestedBy,
+      r.department,
+      r.dateSubmitted,
+      r.status,
+      r.decidedBy || "—",
+      r.dateDecided || "—",
+    ])
+    .reverse(); // newest first
+
+  showTablePopup(
+    "Requisition History",
+    [
+      "Requisition ID",
+      "Requested By",
+      "Department",
+      "Date Submitted",
+      "Status",
+      "Decided By",
+      "Date Decided",
+    ],
+    rows,
+  );
+}
+
+/* Formats a number as pesos, e.g. 12345.6 -> "₱ 12,345.60" */
+function formatPeso(value) {
+  return (
+    "₱ " +
+    Number(value || 0).toLocaleString("en-PH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  );
+}
+
+/* Approvals page: every Approved / Rejected requisition, with remarks. */
+function showApprovalHistory() {
+  const rows = getRequisitions()
+    .filter((r) => r.status === "Approved" || r.status === "Rejected")
+    .sort((a, b) => (b.dateDecided || "").localeCompare(a.dateDecided || ""))
+    .map((r) => [
+      r.id,
+      r.requestedBy,
+      r.department,
+      r.status,
+      r.decidedBy || "—",
+      r.dateDecided || "—",
+      r.remarks || "—",
+    ]);
+
+  showTablePopup(
+    "Approval History",
+    [
+      "Requisition ID",
+      "Requested By",
+      "Department",
+      "Decision",
+      "Decided By",
+      "Date Decided",
+      "Remarks",
+    ],
+    rows,
+  );
+}
+
+/* Purchase Orders page: every PO whatever its status (Active, Delivered, Cancelled). */
+function showPurchaseOrderHistory() {
+  const rows = getPurchaseOrders()
+    .map((po) => [
+      po.id,
+      po.requisitionId || "—",
+      po.vendor,
+      po.dateCreated,
+      po.requisitioner,
+      po.status,
+      formatPeso(po.total),
+    ])
+    .reverse(); // newest first
+
+  showTablePopup(
+    "Purchase Order History",
+    [
+      "PO #",
+      "Requisition ID",
+      "Vendor",
+      "Date",
+      "Requisitioner",
+      "Status",
+      "Total",
+    ],
+    rows,
+  );
+}
+
+/* Delivery page: every delivery receipt recorded so far. */
+function showDeliveryHistory() {
+  const purchaseOrders = getPurchaseOrders();
+  const rows = getDeliveries()
+    .map((d) => {
+      const po = purchaseOrders.find((p) => p.id === d.poId);
+      return [
+        d.id,
+        d.poId,
+        po ? po.vendor : "—",
+        d.dateReceived,
+        d.condition,
+        d.receivedBy,
+        d.remarks || "—",
+      ];
+    })
+    .reverse(); // newest first
+
+  showTablePopup(
+    "Delivery Receipt History",
+    [
+      "DR Number",
+      "PO Number",
+      "Vendor",
+      "Date Received",
+      "Condition",
+      "Received By",
+      "Remarks",
+    ],
+    rows,
+  );
+}
+
+/* Delivery page: cancelled purchase orders only. */
+function showCancelledOrdersHistory() {
+  const rows = getPurchaseOrders()
+    .filter((po) => po.status === "Cancelled")
+    .map((po) => [
+      po.id,
+      po.requisitionId || "—",
+      po.vendor,
+      po.dateCreated,
+      po.requisitioner,
+      formatPeso(po.total),
+    ])
+    .reverse();
+
+  showTablePopup(
+    "Cancelled Orders History",
+    ["PO #", "Requisition ID", "Vendor", "Date", "Requisitioner", "Total"],
+    rows,
+  );
+}
+
+/* ----- 4 Approvals Module (approvals.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("pending-approvals-table-body")) {
@@ -567,7 +738,16 @@ function setupPurchaseOrderPage() {
   }
 }
 
-/* Rebuilds the Approved Requisitions table: Approved requisitions with no PO yet. */
+/* Frees the requisition behind a cancelled PO so a new PO can be made for it. */
+function releaseRequisitionFromPo(purchaseOrder) {
+  const requisitions = getRequisitions();
+  const requisition = requisitions.find((r) => r.poId === purchaseOrder.id);
+  if (!requisition) return;
+  delete requisition.poId;
+  saveRequisitions(requisitions);
+}
+
+/* Rebuilds the Approved Requisitions table */
 function renderApprovedRequisitionsTable() {
   const tableBody = document.getElementById("approved-requisitions-table-body");
   const approved = getRequisitions().filter(
@@ -1028,8 +1208,28 @@ function setupDeliveryPage() {
 
     const row = button.closest("tr");
     const poId = row.getAttribute("data-id");
-    deliveryPoSelect.value = poId;
-    document.getElementById("receivedBy").focus();
+
+    // "Record Delivery": preselects that PO in the form below
+    if (button.classList.contains("js-record-delivery")) {
+      deliveryPoSelect.value = poId;
+      document.getElementById("receivedBy").focus();
+      return;
+    }
+
+    // "Cancel Order": moves the PO to the Cancelled Orders table
+    if (button.classList.contains("js-cancel-delivery-po")) {
+      const purchaseOrders = getPurchaseOrders();
+      const purchaseOrder = purchaseOrders.find((po) => po.id === poId);
+      if (!purchaseOrder) return;
+
+      purchaseOrder.status = "Cancelled";
+      savePurchaseOrders(purchaseOrders);
+      releaseRequisitionFromPo(purchaseOrder);
+      renderPendingDeliveryTable();
+      renderCancelledPurchaseOrdersTable(false);
+      populateDeliveryPoOptions();
+      showMessage(purchaseOrder.id + " has been cancelled.");
+    }
   });
 
   // "View" buttons inside the Delivery Receipt Log table
@@ -1234,4 +1434,73 @@ function renderDeliveryLogTable() {
       "</div></td>";
     tableBody.appendChild(row);
   });
+}
+
+/* ----- Dashboard page (dashboard.html only) ----- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.querySelector(".dashboard-stepper")) {
+    setupDashboardCounts();
+  }
+});
+
+function setupDashboardCounts() {
+  const requisitions = getRequisitions();
+  const purchaseOrders = getPurchaseOrders();
+
+  const pending = requisitions.filter((r) => r.status === "Pending").length;
+  const approved = requisitions.filter((r) => r.status === "Approved");
+  const awaitingPo = approved.filter((r) => !r.poId).length;
+  const activePOs = purchaseOrders.filter((po) => po.status === "Active");
+  const poVolume = purchaseOrders
+    .filter((po) => po.status !== "Cancelled")
+    .reduce((sum, po) => sum + Number(po.total || 0), 0);
+
+  // Dashboard cards
+  setCardCount("Purchase Requisition", requisitions.length);
+  setCardCount("Approvals", pending);
+  setCardCount("Purchase Orders", awaitingPo);
+  setCardCount("Delivery Receipts", activePOs.length);
+
+  // Workflow Summary modal
+  setSummaryMetric(
+    "Total Requisitions",
+    requisitions.length,
+    pending + " pending review",
+  );
+  setSummaryMetric(
+    "Approved Requisitions",
+    approved.length,
+    awaitingPo + " ready for PO creation",
+  );
+  setSummaryMetric("Active Purchase Orders", activePOs.length);
+  setSummaryMetric("Total PO Volume", formatPeso(poVolume));
+}
+
+/* Finds the dashboard card whose <h3> matches cardTitle and updates its count. */
+function setCardCount(cardTitle, count) {
+  const cards = document.querySelectorAll(".card");
+  for (const card of cards) {
+    const heading = card.querySelector("h3");
+    if (heading && heading.textContent.trim() === cardTitle) {
+      const countSpan = card.querySelector(".card-count");
+      if (countSpan) countSpan.textContent = count;
+      return;
+    }
+  }
+}
+
+/* Finds the Workflow Summary metric by its label and updates value (and note). */
+function setSummaryMetric(label, value, note) {
+  const metrics = document.querySelectorAll(".workflow-metric");
+  for (const metric of metrics) {
+    const labelEl = metric.querySelector(".workflow-metric-label");
+    if (labelEl && labelEl.textContent.trim() === label) {
+      metric.querySelector("strong").textContent = value;
+      if (note !== undefined) {
+        metric.querySelector(".workflow-metric-note").textContent = note;
+      }
+      return;
+    }
+  }
 }
