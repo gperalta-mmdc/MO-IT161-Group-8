@@ -312,6 +312,124 @@ function closePopup() {
     overlay.remove();
   }
 }
+/* ----- Popup screen with a table ----- */
+function showTablePopup(
+  titleText,
+  headers,
+  rows,
+  details = [],
+  emptyText = "No records to show yet.",
+) {
+  closePopup();
+
+  const overlay = document.createElement("div");
+  overlay.id = "popup-overlay";
+  overlay.className = "popup-overlay";
+
+  const box = document.createElement("div");
+  box.className = "popup-box history-popup";
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+  box.setAttribute("aria-labelledby", "history-popup-title");
+
+  // Header: title on the left, X button on the right
+  const header = document.createElement("div");
+  header.className = "history-popup-header";
+
+  const title = document.createElement("h2");
+  title.id = "history-popup-title";
+  title.textContent = titleText;
+  header.appendChild(title);
+
+  const closeIcon = document.createElement("button");
+  closeIcon.type = "button";
+  closeIcon.className = "history-popup-x";
+  closeIcon.setAttribute("aria-label", "Close");
+  closeIcon.textContent = "\u00d7";
+  closeIcon.addEventListener("click", closePopup);
+  header.appendChild(closeIcon);
+
+  // Body: detail cards, then the table
+  const body = document.createElement("div");
+  body.className = "history-popup-body";
+
+  if (details.length > 0) {
+    const grid = document.createElement("div");
+    grid.className = "popup-details";
+
+    details.forEach(([label, value]) => {
+      const text = String(value);
+      const item = document.createElement("div");
+      item.className = "popup-detail";
+      // Long values (reason, notes, address) get a full-width card
+      if (text.length > 40 || text.includes("\n")) {
+        item.classList.add("popup-detail-wide");
+      }
+
+      const labelEl = document.createElement("span");
+      labelEl.className = "popup-detail-label";
+      labelEl.textContent = label;
+
+      const valueEl = document.createElement("strong");
+      valueEl.className = "popup-detail-value";
+      valueEl.textContent = text;
+
+      item.appendChild(labelEl);
+      item.appendChild(valueEl);
+      grid.appendChild(item);
+    });
+    body.appendChild(grid);
+  }
+
+  if (rows.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "popup-empty";
+    empty.textContent = emptyText;
+    body.appendChild(empty);
+  } else {
+    const table = document.createElement("table");
+    table.className = "content-table";
+
+    const headRow = table.createTHead().insertRow();
+    headers.forEach((text) => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      headRow.appendChild(th);
+    });
+
+    const tbody = table.createTBody();
+    rows.forEach((cells) => {
+      const tr = tbody.insertRow();
+      cells.forEach((text) => {
+        tr.insertCell().textContent = text;
+      });
+    });
+    body.appendChild(table);
+  }
+
+  // Footer: Close button
+  const footer = document.createElement("div");
+  footer.className = "history-popup-footer";
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "btn-content";
+  closeBtn.textContent = "Close";
+  closeBtn.addEventListener("click", closePopup);
+  footer.appendChild(closeBtn);
+
+  box.appendChild(header);
+  box.appendChild(body);
+  box.appendChild(footer);
+
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closePopup();
+  });
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
 /* PART 2 - PAGE-SPECIFIC FUNCTIONS */
 
 /* ----- Login page (index.html only) ----- */

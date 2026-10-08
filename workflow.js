@@ -146,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setupRequisitionPage() {
   renderRequisitionsTable(); // shows anything saved from a previous visit
+  fillRequestedBy();
 
   document.getElementById("requisitionIdPreview").value =
     peekNextId("requisition");
@@ -208,7 +209,6 @@ function setupRequisitionPage() {
     saveRequisitions(requisitions);
 
     renderRequisitionsTable();
-    form.reset();
     document.getElementById("requisitionIdPreview").value =
       peekNextId("requisition");
     showMessage(requisition.id + " has been submitted.");
@@ -248,10 +248,10 @@ function setupRequisitionPage() {
     }
   });
 
-  //* "View All Requests" - generic placeholder *//
+  // "View All Requests" - generic placeholder, same as other pages' "View History" buttons
   const viewAllBtn = document.getElementById("viewAllBtn");
   viewAllBtn.addEventListener("click", () => {
-    showPopup();
+    showRequisitionHistory();
   });
 }
 
@@ -277,9 +277,20 @@ function collectRequisitionItems() {
         );
         return null;
       }
+
+      const quantityNumber = Number(quantity);
+      if (!Number.isInteger(quantityNumber) || quantityNumber < 1) {
+        showMessage(
+          "Quantity for item " +
+            (i + 1) +
+            " must be a whole number of 1 or more.",
+        );
+        return null;
+      }
+
       items.push({
         description: description,
-        quantity: Number(quantity),
+        quantity: quantityNumber,
         unit: unit,
       });
     }
@@ -291,7 +302,11 @@ function collectRequisitionItems() {
 /* Rebuilds the Submitted Requisitions table from what's in storage. */
 function renderRequisitionsTable() {
   const tableBody = document.getElementById("requisitions-table-body");
-  const requisitions = getRequisitions().filter((r) => r.status === "Pending");
+  const role = localStorage.getItem("procureit-role");
+  const loggedInName = localStorage.getItem("procureit-name");
+  const requisitions = getRequisitions()
+    .filter((r) => r.status === "Pending")
+    .filter((r) => role !== "requisitioner" || r.requestedBy === loggedInName);
 
   tableBody.innerHTML = "";
 
@@ -326,7 +341,7 @@ function renderRequisitionsTable() {
   });
 }
 
-/* ----- 4 Approvals Module (approvals.html only) ----- */
+/* ----- Approvals page (approvals.html only) ----- */
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("pending-approvals-table-body")) {
@@ -399,7 +414,7 @@ function setupApprovalsPage() {
   // "View History" button above the Approval History table
   if (viewHistoryBtn) {
     viewHistoryBtn.addEventListener("click", () => {
-      showPopup();
+      showApprovalHistory();
     });
   }
 }
@@ -537,6 +552,8 @@ function setupPurchaseOrderPage() {
     if (button.classList.contains("js-cancel-po")) {
       purchaseOrder.status = "Cancelled";
       savePurchaseOrders(purchaseOrders);
+      releaseRequisitionFromPo(purchaseOrder);
+      renderApprovedRequisitionsTable();
       renderActivePurchaseOrdersTable();
       renderCancelledPurchaseOrdersTable();
       showMessage(purchaseOrder.id + " has been cancelled.");
@@ -545,12 +562,12 @@ function setupPurchaseOrderPage() {
 
   if (viewHistoryBtn) {
     viewHistoryBtn.addEventListener("click", () => {
-      showPopup();
+      showPurchaseOrderHistory();
     });
   }
 }
 
-/* Rebuilds the Approved Requisitions table */
+/* Rebuilds the Approved Requisitions table: Approved requisitions with no PO yet. */
 function renderApprovedRequisitionsTable() {
   const tableBody = document.getElementById("approved-requisitions-table-body");
   const approved = getRequisitions().filter(
@@ -760,6 +777,21 @@ function setupPurchaseOrderDetailPage() {
 
     if (shipToAddress.value.trim() === "") {
       showMessage("Please enter the ship-to address.");
+      return;
+    }
+
+    if (document.getElementById("shipVia").selectedIndex === 0) {
+      showMessage("Please select a Ship Via option.");
+      return;
+    }
+
+    if (document.getElementById("fob").selectedIndex === 0) {
+      showMessage("Please select an F.O.B. option.");
+      return;
+    }
+
+    if (document.getElementById("shippingTerms").selectedIndex === 0) {
+      showMessage("Please select the shipping terms.");
       return;
     }
 
@@ -996,27 +1028,8 @@ function setupDeliveryPage() {
 
     const row = button.closest("tr");
     const poId = row.getAttribute("data-id");
-
-    // "Record Delivery": preselects that PO in the form below
-    if (button.classList.contains("js-record-delivery")) {
-      deliveryPoSelect.value = poId;
-      document.getElementById("receivedBy").focus();
-      return;
-    }
-
-    // "Cancel Order": moves the PO to the Cancelled Orders table
-    if (button.classList.contains("js-cancel-delivery-po")) {
-      const purchaseOrders = getPurchaseOrders();
-      const purchaseOrder = purchaseOrders.find((po) => po.id === poId);
-      if (!purchaseOrder) return;
-
-      purchaseOrder.status = "Cancelled";
-      savePurchaseOrders(purchaseOrders);
-      renderPendingDeliveryTable();
-      renderCancelledPurchaseOrdersTable(false);
-      populateDeliveryPoOptions();
-      showMessage(purchaseOrder.id + " has been cancelled.");
-    }
+    deliveryPoSelect.value = poId;
+    document.getElementById("receivedBy").focus();
   });
 
   // "View" buttons inside the Delivery Receipt Log table
@@ -1086,14 +1099,24 @@ function setupDeliveryPage() {
       remarks: remarksInput.value.trim(),
     };
 
-    purchaseOrder.status = "Delivered";
-    savePurchaseOrders(purchaseOrders);
+    // Only a complete, good-condition delivery closes the PO.
+    const isComplete = condition.value.startsWith("Complete");
+    if (isComplete) {
+      purchaseOrder.status = "Delivered";
+      savePurchaseOrders(purchaseOrders);
+    }
 
     const deliveries = getDeliveries();
     deliveries.push(delivery);
     saveDeliveries(deliveries);
 
-    showMessage(delivery.id + " recorded for " + purchaseOrder.id + ".");
+    showMessage(
+      delivery.id +
+        " recorded for " +
+        purchaseOrder.id +
+        (isComplete ? "." : ". The order stays open for the remaining items."),
+    );
+
     deliveryForm.reset();
     document.getElementById("drNumber").value = peekNextId("delivery");
     renderPendingDeliveryTable();
@@ -1111,13 +1134,13 @@ function setupDeliveryPage() {
 
   if (viewDeliveryHistoryBtn) {
     viewDeliveryHistoryBtn.addEventListener("click", () => {
-      showPopup();
+      showDeliveryHistory();
     });
   }
 
   if (viewCancelledOrdersBtn) {
     viewCancelledOrdersBtn.addEventListener("click", () => {
-      showPopup();
+      showCancelledOrdersHistory();
     });
   }
 }
@@ -1143,10 +1166,9 @@ function renderPendingDeliveryTable() {
       (purchaseOrder.expectedDelivery || "—") +
       "</td>" +
       '<td><select class="delivery-status-select">' +
-      "<option>-- Status --</option><option>Open</option>" +
-      "<option>Sent to Vendor</option><option>Acknowledged</option>" +
-      "<option>In Transit</option><option>Received</option>" +
-      "<option>Cancelled</option></select></td>" +
+      "<option>Open</option><option>Sent to Vendor</option>" +
+      "<option>Acknowledged</option><option>In Transit</option>" +
+      "</select></td>" +
       '<td><div class="btn-action">' +
       '<button type="button" class="btn-content js-record-delivery">Record Delivery</button>' +
       '<button type="button" class="reject-btn js-cancel-delivery-po">Cancel Order</button>' +
@@ -1212,47 +1234,4 @@ function renderDeliveryLogTable() {
       "</div></td>";
     tableBody.appendChild(row);
   });
-}
-
-/* ----- Dashboard page (dashboard.html only) ----- */
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.querySelector(".dashboard-stepper")) {
-    setupDashboardCounts();
-  }
-});
-
-function setupDashboardCounts() {
-  const requisitions = getRequisitions();
-  const purchaseOrders = getPurchaseOrders();
-
-  setCardCount(
-    "Purchase Requisition",
-    requisitions.filter((r) => r.status === "Pending").length,
-  );
-  setCardCount(
-    "Approvals",
-    requisitions.filter((r) => r.status === "Pending").length,
-  );
-  setCardCount(
-    "Purchase Orders",
-    requisitions.filter((r) => r.status === "Approved" && !r.poId).length,
-  );
-  setCardCount(
-    "Delivery Receipts",
-    purchaseOrders.filter((po) => po.status === "Active").length,
-  );
-}
-
-/* Finds the dashboard card whose <h3> matches cardTitle and updates its count. */
-function setCardCount(cardTitle, count) {
-  const cards = document.querySelectorAll(".card");
-  for (const card of cards) {
-    const heading = card.querySelector("h3");
-    if (heading && heading.textContent.trim() === cardTitle) {
-      const countSpan = card.querySelector(".card-count");
-      if (countSpan) countSpan.textContent = count;
-      return;
-    }
-  }
 }
