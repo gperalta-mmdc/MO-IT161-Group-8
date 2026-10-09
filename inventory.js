@@ -86,7 +86,7 @@ function showAssignform(row) {
     title.textContent = "Assign " + equipment;
     box.appendChild(title);
 
-    /*---Employee Nmea---*/
+    /*---Employee Name---*/
 
     const nameLabel = document.createElement("label");
     nameLabel.className = "content-label";
@@ -133,11 +133,11 @@ cancelBtn.addEventListener("click", closePopup);
 const assignBtn = document.createElement("button");
 assignBtn.type = "button";
 assignBtn.className = "approve-btn";
-assignBtn.textContent = "assign";
+assignBtn.textContent = "Assign";
 assignBtn.addEventListener("click", () => {
     const employeeName = nameInput.value.trim();
 
-    /*Kapag kulang*/
+    /*Kapag kulang input*/
 
     if (employeeName === "") {
         showMessage("Please enter the employee name.")
@@ -148,7 +148,7 @@ assignBtn.addEventListener("click", () => {
         return;
     }
 
-    /*dagdag table row*/
+    /*dagdag table row sa assignments*/
 
     const assignmentsBody = document.querySelector("#assignments-table tbody");
     const newRow = assignmentsBody.insertRow();
