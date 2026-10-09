@@ -124,7 +124,7 @@
             <button type="button" id="add-asset-btn" class="approve-btn">
               Add Asset
             </button>
-            <button type="button" id="add-request-btn" class="reject-btn">
+            <button type="button" id="remove-asset-btn" class="reject-btn">
               Remove Asset
             </button>
           </div>
@@ -188,10 +188,9 @@
                       <td>5Qy348DO44</td>
                       <td>
                         <select>
-                          <option>New</option>
-                          <option>Refurbished</option>
-                          <option>For Repair</option>
-                          <option>For Disposal</option>
+                          <option value="available">Available</option>
+                          <option value="repair">Repair</option>
+                          <option value="retired">Retire</option>
                         </select>
                       </td>
                       <td>
@@ -212,10 +211,9 @@
                       <td>7Rz558YL64</td>
                       <td>
                         <select>
-                          <option>New</option>
-                          <option>Refurbished</option>
-                          <option>For Repair</option>
-                          <option>For Disposal</option>
+                          <option value="available">Available</option>
+                          <option value="repair">Repair</option>
+                          <option value="retired">Retire</option>
                         </select>
                       </td>
                       <td>
@@ -295,7 +293,7 @@
     </footer>
     <script src="rbac.js"></script>
     <script src="script.js" defer></script>
-    <script src="inventory.js" defer></script>
+    <script src="js/inventory.js" defer></script>
     <script src="workflow.js"></script>
   </body>
 </html>
