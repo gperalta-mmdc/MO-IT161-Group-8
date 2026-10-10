@@ -76,14 +76,31 @@ function setupSidebarToggle() {
   toggle.className = "sidebar-toggle";
   toggle.setAttribute("aria-controls", "primary-navigation");
   navigation.id = "primary-navigation";
-  sidebar.insertBefore(toggle, sidebar.firstChild);
+  const isDashboard = document.body.classList.contains("dashboard-page");
+  const headerActions = document.querySelector(".header-buttons");
+  if (isDashboard && headerActions) {
+    toggle.classList.add("dashboard-nav-toggle");
+    headerActions.insertBefore(toggle, headerActions.firstChild);
+  } else {
+    sidebar.insertBefore(toggle, sidebar.firstChild);
+  }
 
   const collapsedPreference =
     localStorage.getItem("procureit-sidebar-collapsed") === "true";
   document.body.classList.toggle("sidebar-collapsed", collapsedPreference);
 
   const updateToggle = () => {
-    const collapsed = document.body.classList.contains("sidebar-collapsed");
+    const mobile = isDashboard && window.matchMedia("(max-width: 760px)").matches;
+    const collapsed = mobile
+      ? !document.body.classList.contains("dashboard-mobile-nav-open")
+      : document.body.classList.contains("sidebar-collapsed");
+    if (mobile) {
+      toggle.textContent = collapsed ? "☰  Menu" : "×  Close menu";
+      toggle.setAttribute("aria-label", collapsed ? "Open navigation menu" : "Close navigation menu");
+      toggle.title = collapsed ? "Open navigation menu" : "Close navigation menu";
+      toggle.setAttribute("aria-expanded", String(!collapsed));
+      return;
+    }
     toggle.textContent = collapsed ? "»" : "☰  Hide menu";
     toggle.setAttribute(
       "aria-label",
@@ -102,11 +119,21 @@ function setupSidebarToggle() {
   };
 
   toggle.addEventListener("click", () => {
+    if (isDashboard && window.matchMedia("(max-width: 760px)").matches) {
+      const open = !document.body.classList.contains("dashboard-mobile-nav-open");
+      document.body.classList.toggle("dashboard-mobile-nav-open", open);
+      updateToggle();
+      return;
+    }
     const collapsed = !document.body.classList.contains("sidebar-collapsed");
     document.body.classList.toggle("sidebar-collapsed", collapsed);
     localStorage.setItem("procureit-sidebar-collapsed", String(collapsed));
     updateToggle();
   });
+  if (isDashboard) {
+    window.addEventListener("resize", updateToggle);
+    document.body.classList.remove("dashboard-mobile-nav-open");
+  }
   updateToggle();
 }
 
@@ -118,13 +145,19 @@ function setupWorkflowSummary() {
   const closeButtons = modal.querySelectorAll(
     ".workflow-summary-x, .workflow-summary-close",
   );
+  const focusableSelector =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  let previousBodyOverflow = "";
   const close = () => {
     modal.hidden = true;
+    document.body.style.overflow = previousBodyOverflow;
     openButton.focus();
   };
 
   openButton.addEventListener("click", () => {
+    previousBodyOverflow = document.body.style.overflow;
     modal.hidden = false;
+    document.body.style.overflow = "hidden";
     modal.querySelector(".workflow-summary-x").focus();
   });
   closeButtons.forEach((button) => button.addEventListener("click", close));
@@ -132,7 +165,26 @@ function setupWorkflowSummary() {
     if (event.target === modal) close();
   });
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !modal.hidden) close();
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      close();
+      return;
+    }
+    if (event.key !== "Tab") return;
+
+    const focusable = [...modal.querySelectorAll(focusableSelector)].filter(
+      (element) => element.getClientRects().length > 0,
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
 }
 
@@ -211,15 +263,25 @@ function setupCardMenus() {
   const menuButtons = document.querySelectorAll(".card-menu-btn");
   const dismissButtons = document.querySelectorAll(".dismiss-btn");
 
-  menuButtons.forEach((button) => {
+  menuButtons.forEach((button, index) => {
+    const card = button.closest(".card");
+    const menu = card?.querySelector(".card-menu");
+    const title = card?.querySelector("h3")?.textContent.trim() || "summary card";
+    if (menu) {
+      if (!menu.id) menu.id = `dashboard-card-menu-${index + 1}`;
+      button.setAttribute("aria-label", `More options for ${title}`);
+      button.setAttribute("aria-controls", menu.id);
+      button.setAttribute("aria-expanded", "false");
+    }
     button.addEventListener("click", () => {
-      const card = button.closest(".card");
-      const menu = card.querySelector(".card-menu");
+      const menu = button.closest(".card")?.querySelector(".card-menu");
+      if (!menu) return;
       const wasOpen = menu.classList.contains("show");
 
       closeAllMenus(); // close any menu that is open
       if (!wasOpen) {
         menu.classList.add("show"); // open this one (unless it was just closed)
+        button.setAttribute("aria-expanded", "true");
       }
     });
   });
@@ -246,6 +308,9 @@ function closeAllMenus() {
   const menus = document.querySelectorAll(".card-menu");
   menus.forEach((menu) => {
     menu.classList.remove("show");
+    document
+      .querySelector(`[aria-controls="${menu.id}"]`)
+      ?.setAttribute("aria-expanded", "false");
   });
 }
 
@@ -483,12 +548,18 @@ function showProcurementHelpModal(trigger) {
 
   const dialog = document.createElement("section");
   dialog.className = "popup-box login-help-modal";
+  if (document.body.classList.contains("dashboard-page")) {
+    dialog.classList.add("modal-content", "shadow-lg");
+  }
   dialog.setAttribute("role", "dialog");
   dialog.setAttribute("aria-modal", "true");
   dialog.setAttribute("aria-labelledby", "procurement-help-title");
 
   const header = document.createElement("header");
   header.className = "login-help-header";
+  if (document.body.classList.contains("dashboard-page")) {
+    header.classList.add("modal-header");
+  }
   const title = document.createElement("h2");
   title.id = "procurement-help-title";
   title.textContent = "Need Help with IT Procurement?";
@@ -501,6 +572,9 @@ function showProcurementHelpModal(trigger) {
 
   const body = document.createElement("div");
   body.className = "login-help-body procurement-help-body";
+  if (document.body.classList.contains("dashboard-page")) {
+    body.classList.add("modal-body");
+  }
   const options = document.createElement("ul");
   options.className = "procurement-help-options";
   options.append(
@@ -545,9 +619,15 @@ function showProcurementHelpModal(trigger) {
 
   const footer = document.createElement("footer");
   footer.className = "login-help-footer";
+  if (document.body.classList.contains("dashboard-page")) {
+    footer.classList.add("modal-footer");
+  }
   const closeButton = document.createElement("button");
   closeButton.type = "button";
   closeButton.className = "btn-content";
+  if (document.body.classList.contains("dashboard-page")) {
+    closeButton.classList.add("btn", "btn-outline-primary");
+  }
   closeButton.textContent = "Close";
   footer.appendChild(closeButton);
   dialog.append(header, body, footer);

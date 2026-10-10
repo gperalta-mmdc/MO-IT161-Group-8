@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - ProcureIT - Procurement and Inventory System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
+  <body class="dashboard-page">
     <div class="header-bar">
       <div class="header-image">
         <img src="./resources/pit-header.png" alt="ProcureIT" />
@@ -41,10 +47,10 @@
           <h4 class="profile-department">IT Department - Head</h4>
           <hr />
           <br />
-          <nav class="navigation">
-            <ul>
+          <nav class="navigation" aria-label="Main navigation">
+            <ul class="nav flex-column">
               <li>
-                <a href="dashboard.html"
+                <a class="nav-link" href="dashboard.html"
                   ><img
                     src="./resources/icons/dashboard.png"
                     alt=""
@@ -52,7 +58,7 @@
                 >
               </li>
               <li>
-                <a href="requisition.html"
+                <a class="nav-link" href="requisition.html"
                   ><img
                     src="./resources/icons/requisition.png"
                     alt=""
@@ -62,6 +68,7 @@
               <li>
                 <a
                   href="approvals.html"
+                  class="nav-link"
                   data-role-access="approver purchasing"
                   aria-label="Approvals (Approver or Purchasing Manager)"
                   ><img
@@ -73,6 +80,7 @@
               <li>
                 <a
                   href="purchase-order.html"
+                  class="nav-link"
                   data-role-access="purchasing"
                   aria-label="Purchase Orders (Purchasing Manager only)"
                   ><img
@@ -82,31 +90,31 @@
                 >
               </li>
               <li>
-                <a href="delivery.html"
+                <a class="nav-link" href="delivery.html"
                   ><img src="./resources/icons/delivery.png" alt="" />Delivery
                   Receipts</a
                 >
               </li>
               <li>
-                <a href="invoices.html"
+                <a class="nav-link" href="invoices.html"
                   ><img src="./resources/icons/invoices.png" alt="" />Invoice
                   Processing</a
                 >
               </li>
               <li>
-                <a href="vendors.html"
+                <a class="nav-link" href="vendors.html"
                   ><img src="./resources/icons/vendors.png" alt="" />Vendor
                   Management</a
                 >
               </li>
               <li>
-                <a href="inventory.html"
+                <a class="nav-link" href="inventory.html"
                   ><img src="./resources/icons/inventory.png" alt="" />Inventory
                   and Asset Tagging</a
                 >
               </li>
               <li>
-                <a href="reports.html"
+                <a class="nav-link" href="reports.html"
                   ><img src="./resources/icons/reports.png" alt="" />Reports</a
                 >
               </li>
@@ -114,7 +122,7 @@
               <hr />
               <br />
               <li>
-                <a href="#"
+                <a class="nav-link" href="#"
                   ><img src="./resources/icons/support.png" alt="" />Help and
                   Support</a
                 >
@@ -141,30 +149,30 @@
           </div>
           <hr />
           <nav
-            class="workflow-stepper dashboard-stepper"
+            class="workflow-stepper dashboard-stepper card border-0 shadow-sm"
             aria-label="Procurement workflow"
           >
-            <ol>
-              <li class="is-current" aria-current="step">
+            <ol class="row g-0">
+              <li class="is-current col-6 col-lg-3" aria-current="step">
                 <a href="requisition.html"
                   ><span class="workflow-step-number">1</span
                   ><span>Requisition</span><small>Create requests</small></a
                 >
               </li>
-              <li data-role-access="approver purchasing">
+              <li class="col-6 col-lg-3" data-role-access="approver purchasing">
                 <a href="approvals.html"
                   ><span class="workflow-step-number">2</span
                   ><span>Approval</span><small>Department review</small></a
                 >
               </li>
-              <li data-role-access="purchasing">
+              <li class="col-6 col-lg-3" data-role-access="purchasing">
                 <a href="purchase-order.html"
                   ><span class="workflow-step-number">3</span
                   ><span>Purchase Order</span
                   ><small>Generate and issue</small></a
                 >
               </li>
-              <li>
+              <li class="col-6 col-lg-3">
                 <a href="delivery.html"
                   ><span class="workflow-step-number">4</span
                   ><span>Fulfillment</span><small>Receive and invoice</small></a
@@ -172,23 +180,23 @@
               </li>
             </ol>
           </nav>
-          <div class="dashboard-actions">
-            <a class="btn-content" href="requisition.html">+ New Requisition</a>
+          <div class="dashboard-actions d-flex flex-wrap gap-2">
+            <a class="btn btn-primary" href="requisition.html">+ New Requisition</a>
             <a
-              class="btn-content role-restricted-action"
+              class="btn btn-outline-primary role-restricted-action"
               href="approvals.html"
               data-role-access="approver purchasing"
               >Review Approval</a
             >
             <a
-              class="btn-content role-restricted-action"
+              class="btn btn-outline-primary role-restricted-action"
               href="purchase-order.html"
               data-role-access="purchasing"
               >Generate PO</a
             >
             <button
               type="button"
-              class="btn-content"
+              class="btn btn-outline-primary"
               id="workflowSummaryBtn"
               aria-haspopup="dialog"
               aria-controls="workflow-summary-modal"
@@ -197,7 +205,9 @@
             </button>
           </div>
 
-          <article class="card">
+          <section class="dashboard-card-grid row g-3" aria-label="Procurement workflow status">
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="requisition.html">View Details</a>
@@ -206,7 +216,9 @@
             <h3>Purchase Requisition</h3>
             <p><span class="card-count">3</span> Requisitions submitted</p>
           </article>
-          <article class="card">
+          </div>
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="approvals.html" data-role-access="approver purchasing"
@@ -220,7 +232,9 @@
               decision
             </p>
           </article>
-          <article class="card">
+          </div>
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="purchase-order.html" data-role-access="purchasing"
@@ -234,7 +248,9 @@
               purchase order
             </p>
           </article>
-          <article class="card">
+          </div>
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="delivery.html">View Details</a>
@@ -246,7 +262,9 @@
               delivery
             </p>
           </article>
-          <article class="card">
+          </div>
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="invoices.html">View Details</a>
@@ -258,9 +276,13 @@
               payment
             </p>
           </article>
+          </div>
+          </section>
 
-          <h4 class="card-group-title">Supporting records</h4>
-          <article class="card">
+          <h3 class="card-group-title">Supporting records</h3>
+          <section class="dashboard-card-grid row g-3" aria-label="Supporting records">
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="vendors.html">View Details</a>
@@ -272,7 +294,9 @@
               month
             </p>
           </article>
-          <article class="card">
+          </div>
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="inventory.html">View Details</a>
@@ -281,7 +305,9 @@
             <h3>Inventory and Asset Tagging</h3>
             <p><span class="card-count">3</span> Items below reorder level</p>
           </article>
-          <article class="card">
+          </div>
+          <div class="col-12 col-md-6 col-xl-4">
+          <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
               <a href="reports.html">View Details</a>
@@ -290,6 +316,8 @@
             <h3>Reports</h3>
             <p><span class="card-count">3</span> Reports generated recently</p>
           </article>
+          </div>
+          </section>
         </td>
       </tr>
     </table>
@@ -303,8 +331,8 @@
       aria-describedby="workflow-summary-impact"
       hidden
     >
-      <div class="workflow-summary-dialog">
-        <header class="workflow-summary-header">
+      <div class="workflow-summary-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header">
           <h2 id="workflow-summary-title">Procurement Workflow Summary</h2>
           <button
             type="button"
@@ -314,7 +342,7 @@
             &times;
           </button>
         </header>
-        <div class="workflow-summary-body">
+        <div class="workflow-summary-body modal-body">
           <h3>Workplace Zero Paper Workflow Status</h3>
           <div class="workflow-summary-grid">
             <article class="workflow-metric">
@@ -344,8 +372,8 @@
             eliminates printing delays and saves physical archive space.
           </p>
         </div>
-        <footer class="workflow-summary-footer">
-          <button type="button" class="btn-content workflow-summary-close">
+        <footer class="workflow-summary-footer modal-footer">
+          <button type="button" class="btn btn-outline-primary workflow-summary-close">
             Close
           </button>
         </footer>
@@ -360,5 +388,11 @@
     <script src="js/storage.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/dashboard.js"></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
