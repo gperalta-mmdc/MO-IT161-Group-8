@@ -1,7 +1,6 @@
 const STORAGE_KEYS = {
   requisitions: "procureit_requisitions",
   purchaseOrders: "procureit_purchaseOrders",
-  deliveries: "procureit_deliveries",
   counters: "procureit_counters",
 };
 
@@ -48,16 +47,42 @@ function savePurchaseOrders(purchaseOrders) {
   return saveRecords(STORAGE_KEYS.purchaseOrders, purchaseOrders);
 }
 
-/* ----- Delivery Receipts ----- */
+/* ----- Delivery Receipts (stored in MongoDB) ----- */
 
+let deliveriesCache = [];
+
+/* Retrieves every saved delivery receipt from the server */
+async function loadDeliveries() {
+  const response = await fetch("/api/deliveries");
+  if (!response.ok) throw new Error("Server responded " + response.status);
+  deliveriesCache = await response.json();
+  return deliveriesCache;
+}
+
+/* The receipts loaded so far (a copy), so the rest of the code keeps working as before */
 function getDeliveries() {
-  return getRecords(STORAGE_KEYS.deliveries);
+  return JSON.parse(JSON.stringify(deliveriesCache));
 }
 
-function saveDeliveries(deliveries) {
-  return saveRecords(STORAGE_KEYS.deliveries, deliveries);
-}
+/* Sends one new delivery receipt to the server to be stored; resolves with the saved record */
+async function createDelivery(delivery) {
+  let response;
+  try {
+    response = await fetch("/api/deliveries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(delivery),
+    });
+  } catch (error) {
+    throw new Error("Cannot reach the server. Is it running?");
+  }
 
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.error || "Could not save the delivery receipt.");
+  }
+  return result;
+}
 /* Frees the requisition behind a cancelled PO so a new PO can be made for it. */
 function releaseRequisitionFromPo(purchaseOrder) {
   const requisitions = getRequisitions();

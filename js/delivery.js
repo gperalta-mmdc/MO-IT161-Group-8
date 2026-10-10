@@ -6,13 +6,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+const DR_PLACEHOLDER = "Assigned on save"; // the server assigns the real DR number
+
+async function refreshDeliveryLog() {
+  try {
+    await loadDeliveries();
+    renderDeliveryLogTable();
+    setupRoleAccess();
+  } catch (error) {
+    console.error("Could not load delivery receipts:", error);
+    showMessage("Could not load delivery receipts from the server.");
+  }
+}
+
 function setupDeliveryPage() {
   renderPendingDeliveryTable();
-  renderDeliveryLogTable();
-  renderCancelledPurchaseOrdersTable(false); // same function purchase-order.html uses
+  refreshDeliveryLog();
+  renderCancelledPurchaseOrdersTable(false);
 
   populateDeliveryPoOptions();
-  document.getElementById("drNumber").value = peekNextId("delivery");
+  document.getElementById("drNumber").value = DR_PLACEHOLDER;
 
   const pendingTableBody = document.getElementById(
     "pending-delivery-table-body",
@@ -74,7 +87,7 @@ function setupDeliveryPage() {
   });
 
   // "Save Delivery Receipt" button
-  saveDeliveryBtn.addEventListener("click", () => {
+  saveDeliveryBtn.addEventListener("click", async () => {
     const poId = deliveryPoSelect.value;
     const dateReceived = document.getElementById("deliveryDateReceived").value;
     const receivedBy = document.getElementById("receivedBy");
@@ -111,14 +124,26 @@ function setupDeliveryPage() {
     }
 
     const delivery = {
-      id: generateId("delivery"),
       poId: poId,
       dateReceived: dateReceived,
       receivedBy: receivedBy.value.trim(),
       condition: condition.value,
       remarks: remarksInput.value.trim(),
-      proofFileName: proofInput.files.length ? proofInput.files[0].name : "",
+      proofFileName:
+        proofInput && proofInput.files.length ? proofInput.files[0].name : "",
     };
+
+    // Send the receipt to the server to be stored in the database
+    saveDeliveryBtn.disabled = true;
+    let saved;
+    try {
+      saved = await createDelivery(delivery);
+    } catch (error) {
+      showMessage(error.message);
+      return;
+    } finally {
+      saveDeliveryBtn.disabled = false;
+    }
 
     // Only a complete, good-condition delivery closes the PO.
     const isComplete = condition.value.startsWith("Complete");
@@ -127,28 +152,24 @@ function setupDeliveryPage() {
       savePurchaseOrders(purchaseOrders);
     }
 
-    const deliveries = getDeliveries();
-    deliveries.push(delivery);
-    saveDeliveries(deliveries);
-
     showMessage(
-      delivery.id +
+      saved.id +
         " recorded for " +
         purchaseOrder.id +
         (isComplete ? "." : ". The order stays open for the remaining items."),
     );
 
     deliveryForm.reset();
-    document.getElementById("drNumber").value = peekNextId("delivery");
+    document.getElementById("drNumber").value = DR_PLACEHOLDER;
+    await refreshDeliveryLog();
     renderPendingDeliveryTable();
-    renderDeliveryLogTable();
     populateDeliveryPoOptions();
   });
 
   // "Cancel / Return Delivery" button
   cancelDeliveryBtn.addEventListener("click", () => {
     deliveryForm.reset();
-    document.getElementById("drNumber").value = peekNextId("delivery");
+    document.getElementById("drNumber").value = DR_PLACEHOLDER;
     populateDeliveryPoOptions();
     showMessage("Delivery entry cleared.");
   });
