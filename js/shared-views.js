@@ -64,25 +64,46 @@ function showApprovalHistory() {
   );
 }
 
-/* Purchase Orders page: every PO whatever its status (Active, Delivered, Cancelled). */
+/* Purchase Orders page: every purchase order (Pending Delivery, Delivered, Cancelled)
+   plus requisitions cancelled before a PO was made, sorted by requisition ID. */
 function showPurchaseOrderHistory() {
-  const rows = getPurchaseOrders()
-    .map((po) => [
-      po.id,
-      po.requisitionId || "—",
-      po.vendor,
-      po.dateCreated,
-      po.requisitioner,
-      po.status,
-      formatPeso(po.total),
-    ])
-    .reverse(); // newest first
+  // "Active" is shown as "Pending Delivery", the name of its table on this page
+  const poRows = getPurchaseOrders().map((po) => [
+    po.requisitionId || "—",
+    po.id,
+    po.vendor,
+    po.dateCreated,
+    po.requisitioner,
+    po.status === "Active" ? "Pending Delivery" : po.status,
+    formatPeso(po.total),
+  ]);
+
+  // Requisitions cancelled before any PO existed (also listed under Cancelled Orders)
+  const cancelledRequisitionRows = getRequisitions()
+    .filter((r) => r.status === "Cancelled")
+    .map((r) => [
+      r.id,
+      "—",
+      "—",
+      r.dateSubmitted,
+      r.requestedBy,
+      "Cancelled",
+      "—",
+    ]);
+
+  const rows = [...poRows, ...cancelledRequisitionRows].sort(
+    (a, b) =>
+      a[0].localeCompare(b[0], undefined, { numeric: true }) ||
+      a[1].localeCompare(b[1], undefined, { numeric: true }),
+  );
+
+  const countOf = (status) => rows.filter((row) => row[5] === status).length;
 
   showTablePopup(
     "Purchase Order History",
     [
-      "PO #",
       "Requisition ID",
+      "PO #",
       "Vendor",
       "Date",
       "Requisitioner",
@@ -90,6 +111,12 @@ function showPurchaseOrderHistory() {
       "Total",
     ],
     rows,
+    [
+      ["Pending Delivery", countOf("Pending Delivery")],
+      ["Delivered", countOf("Delivered")],
+      ["Cancelled", countOf("Cancelled")],
+    ],
+    "No purchase orders or cancelled orders yet.",
   );
 }
 
@@ -144,6 +171,64 @@ function showCancelledOrdersHistory() {
     "Cancelled Orders History",
     ["PO #", "Requisition ID", "Vendor", "Date", "Requisitioner", "Total"],
     rows,
+  );
+}
+
+function showDeliverySummary() {
+  const purchaseOrders = getPurchaseOrders();
+
+  const receiptRows = getDeliveries().map((d) => {
+    const po = purchaseOrders.find((p) => p.id === d.poId);
+    return [
+      d.poId,
+      d.id,
+      po ? po.vendor : "—",
+      d.dateReceived,
+      d.condition,
+      d.receivedBy,
+      po ? formatPeso(po.total) : "—",
+    ];
+  });
+
+  // Cancelled purchase orders only, the same ones the Cancelled Orders table shows on this page
+  const cancelledRows = purchaseOrders
+    .filter((po) => po.status === "Cancelled")
+    .map((po) => [
+      po.id,
+      "Cancelled Order",
+      po.vendor,
+      po.dateCreated,
+      "Cancelled",
+      po.requisitioner,
+      formatPeso(po.total),
+    ]);
+
+  // Receipts come before the cancellation of the same PO
+  const rank = (row) => (row[1] === "Cancelled Order" ? 1 : 0);
+  const rows = [...receiptRows, ...cancelledRows].sort(
+    (a, b) =>
+      a[0].localeCompare(b[0], undefined, { numeric: true }) ||
+      rank(a) - rank(b) ||
+      a[1].localeCompare(b[1], undefined, { numeric: true }),
+  );
+
+  showTablePopup(
+    "Delivery Summary",
+    [
+      "PO #",
+      "Record",
+      "Vendor",
+      "Date (received / ordered)",
+      "Status / Condition",
+      "Received By / Requisitioner",
+      "PO Total",
+    ],
+    rows,
+    [
+      ["Delivery Receipts", receiptRows.length],
+      ["Cancelled Orders", cancelledRows.length],
+    ],
+    "No delivery receipts or cancelled orders yet.",
   );
 }
 

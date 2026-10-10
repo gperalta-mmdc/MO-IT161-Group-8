@@ -164,6 +164,15 @@ function setupDeliveryPage() {
       showCancelledOrdersHistory();
     });
   }
+  // "View Summary" at the top: receipts and cancelled orders together
+  const viewDeliverySummaryBtn = document.getElementById(
+    "viewDeliverySummaryBtn",
+  );
+  if (viewDeliverySummaryBtn) {
+    viewDeliverySummaryBtn.addEventListener("click", () => {
+      showDeliverySummary();
+    });
+  }
 }
 
 /* Rebuilds the Purchase Orders Awaiting Delivery table: Active POs not yet delivered. */
