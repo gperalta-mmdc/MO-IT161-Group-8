@@ -61,17 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
 /* Sets UI restrictions based on user role */
 function setupRoleAccess() {
   const allowedRoles = ["requisitioner", "approver", "purchasing"];
-  document.querySelectorAll(".navigation a[href]").forEach((link) => {
+  const pagePermissions = {
+    "approvals.html": ["approver", "purchasing"],
+    "purchase-order.html": ["purchasing"],
+    "purchase-order-detail.html": ["purchasing"],
+    "delivery.html": ["purchasing"],
+    "invoices.html": ["purchasing"],
+    "vendors.html": ["approver", "purchasing"],
+    "inventory.html": ["approver", "purchasing"],
+  };
+
+  document.querySelectorAll("a[href]").forEach((link) => {
     const destination = link.getAttribute("href");
-    if (destination === "approvals.html")
-      link.dataset.roleAccess = "approver purchasing";
-    if (
-      ["purchase-order.html", "purchase-order-detail.html"].includes(
-        destination,
-      )
-    ) {
-      link.dataset.roleAccess = "purchasing";
-    }
+    const permittedRoles = pagePermissions[destination];
+    if (permittedRoles) link.dataset.roleAccess = permittedRoles.join(" ");
   });
 
   const role = localStorage.getItem("procureit-role");
@@ -103,15 +106,16 @@ function setupRoleAccess() {
       });
     });
 
+    const roleName = selectedRole === "purchasing" ? "Purchasing Manager" : selectedRole;
     const bannerCopy =
       page === "approvals.html" && selectedRole === "requisitioner"
         ? "You are signed in as requisitioner. Only Approvers and Purchasing Managers have authority to approve or reject requisitions. Approval actions below are grayed out."
-        : ["purchase-order.html", "purchase-order-detail.html"].includes(
-              page,
-            ) && selectedRole !== "purchasing"
-          ? selectedRole === "approver"
-            ? "You are signed in as approver. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
-            : "You are signed in as requisitioner. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled."
+        : pagePermissions[page] && !pagePermissions[page].includes(selectedRole)
+          ? ["purchase-order.html", "purchase-order-detail.html"].includes(page)
+            ? `You are signed in as ${roleName}. Only the Purchasing Manager has permission to generate, authorize, and issue purchase orders. Action buttons are disabled.`
+            : ["delivery.html", "invoices.html"].includes(page)
+              ? `You are signed in as ${roleName}. Only the Purchasing Manager can access Delivery Receipts and Invoice Processing. Actions are disabled.`
+              : `You are signed in as ${roleName}. Only Approvers and Purchasing Managers can access Vendor Management and Inventory and Asset Tagging. Actions are disabled.`
           : null;
     let banner = document.querySelector(".rbac-banner");
     if (bannerCopy) {
@@ -129,10 +133,9 @@ function setupRoleAccess() {
       banner.remove();
     }
 
-    const restrictedPage =
-      (page === "approvals.html" && selectedRole === "requisitioner") ||
-      (["purchase-order.html", "purchase-order-detail.html"].includes(page) &&
-        selectedRole !== "purchasing");
+    const restrictedPage = Boolean(
+      pagePermissions[page] && !pagePermissions[page].includes(selectedRole),
+    );
     if (restrictedPage) {
       const content = document.querySelector(".content");
       content
