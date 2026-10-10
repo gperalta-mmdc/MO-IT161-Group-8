@@ -20,8 +20,15 @@
       </div>
 
       <div class="header-buttons">
-        <button type="button" id="notifBtn" class="btn-header">
-          Notifications
+        <button
+          type="button"
+          id="notifBtn"
+          class="btn-header"
+          aria-haspopup="dialog"
+          aria-controls="notifications-modal"
+        >
+          <span class="notification-icon" aria-hidden="true">&#128276;</span>
+          Notifications <span class="notification-badge" aria-label="3 unread">3</span>
         </button>
         <button type="button" id="editProfileBtn" class="btn-header">
           Edit Profile
@@ -321,6 +328,104 @@
         </td>
       </tr>
     </table>
+
+    <section
+      class="workflow-summary-overlay notifications-overlay"
+      id="notifications-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="notifications-title"
+      hidden
+    >
+      <div class="workflow-summary-dialog notifications-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header notifications-header modal-header">
+          <h2 id="notifications-title">System Notifications</h2>
+          <button
+            type="button"
+            class="workflow-summary-x notifications-close"
+            aria-label="Close notifications"
+          >
+            &times;
+          </button>
+        </header>
+        <div class="notifications-body modal-body" aria-live="polite">
+          <ul class="notifications-list">
+            <li class="notification-item is-unread" data-unread="true">
+              <p>Requisition REQ-1001 submitted by Juan Dela Cruz is awaiting decision.</p>
+              <time>10m ago</time>
+            </li>
+            <li class="notification-item is-unread" data-unread="true">
+              <p>Requisition REQ-1002 approved. Ready for Purchase Order generation.</p>
+              <time>1h ago</time>
+            </li>
+            <li class="notification-item">
+              <p>PO-2026-002 dispatched by Ugreen Direct via LBC Corporate.</p>
+              <time>Yesterday</time>
+            </li>
+            <li class="notification-item">
+              <p>Workplace Zero Paper Initiative: 128 paper requisition forms saved this quarter.</p>
+              <time>2 days ago</time>
+            </li>
+          </ul>
+          <p class="notifications-empty" id="notifications-empty" hidden>
+            You’re all caught up. No unread notifications.
+          </p>
+        </div>
+        <footer class="workflow-summary-footer notifications-footer modal-footer">
+          <button type="button" class="btn btn-outline-primary" id="markAllReadBtn">
+            Mark All Read
+          </button>
+          <button type="button" class="btn btn-primary notifications-close">
+            Close
+          </button>
+        </footer>
+      </div>
+    </section>
+
+    <section
+      class="workflow-summary-overlay profile-overlay"
+      id="profile-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="profile-modal-title"
+      hidden
+    >
+      <div class="workflow-summary-dialog profile-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header">
+          <h2 id="profile-modal-title">User Profile &amp; Role Verification</h2>
+          <button
+            type="button"
+            class="workflow-summary-x profile-close"
+            aria-label="Close profile dialog"
+          >
+            &times;
+          </button>
+        </header>
+        <div class="profile-modal-body modal-body">
+          <div class="profile-identity">
+            <img src="./resources/icons/profile.png" alt="" />
+            <h3 id="profile-display-name"></h3>
+            <p id="profile-position"></p>
+            <span class="profile-role-badge" id="profile-role"></span>
+          </div>
+          <section class="profile-account-details" aria-label="Account information">
+            <h3>Account Information</h3>
+            <dl>
+              <div><dt>Username</dt><dd id="profile-username"></dd></div>
+              <div><dt>Work email</dt><dd id="profile-work-email"></dd></div>
+              <div><dt>Department</dt><dd id="profile-department"></dd></div>
+            </dl>
+          </section>
+          <section class="profile-permissions" aria-labelledby="profile-permissions-heading">
+            <h3 id="profile-permissions-heading">Role Permissions</h3>
+            <ul id="profile-permission-list"></ul>
+          </section>
+          <div class="profile-dialog-actions">
+            <button type="button" class="btn btn-primary profile-close">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section
       class="workflow-summary-overlay"

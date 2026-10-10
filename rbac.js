@@ -4,19 +4,25 @@ const DEMO_ACCOUNTS = {
     password: "staff123",
     role: "requisitioner",
     name: "Peter Parker",
-    department: "IT Staff",
+    position: "IT Staff",
+    email: "peter.parker@procureit.local",
+    department: "IT Department",
   },
   approverprocureit: {
     password: "approver123",
     role: "approver",
     name: "Bruce Wayne",
-    department: "IT Supervisor",
+    position: "IT Supervisor - Head",
+    email: "bruce.wayne@procureit.local",
+    department: "IT Operations",
   },
   managerprocureit: {
     password: "manager123",
     role: "purchasing",
     name: "Tony Stark",
-    department: "Purchasing Manager",
+    position: "Purchasing Manager",
+    email: "tony.stark@procureit.local",
+    department: "Procurement and Purchasing",
   },
 };
 
@@ -38,6 +44,7 @@ function setupLoginForm(formId = "login-form") {
     if (account && account.password === passwordInput) {
       // Store user info in localStorage
       localStorage.setItem("procureit-role", account.role);
+      localStorage.setItem("procureit-username", usernameInput);
       localStorage.setItem("procureit-name", account.name);
       localStorage.setItem("procureit-department", account.department);
 
@@ -182,8 +189,14 @@ function setupRoleAccess() {
 
 /* Show the logged-in user's name/department */
 function applyLoggedInProfile() {
-  const name = localStorage.getItem("procureit-name");
-  const department = localStorage.getItem("procureit-department");
+  const role = localStorage.getItem("procureit-role");
+  const username =
+    localStorage.getItem("procureit-username") ||
+    Object.keys(DEMO_ACCOUNTS).find((key) => DEMO_ACCOUNTS[key].role === role);
+  const account = DEMO_ACCOUNTS[username];
+  const name = account?.name || localStorage.getItem("procureit-name");
+  const department =
+    account?.department || localStorage.getItem("procureit-department");
   const nameEl = document.querySelector(".profile-name");
   const deptEl = document.querySelector(".profile-department");
 
@@ -196,6 +209,7 @@ function setupLogout() {
   document.querySelectorAll('form[action="index.html"]').forEach((form) => {
     form.addEventListener("submit", () => {
       localStorage.removeItem("procureit-role");
+      localStorage.removeItem("procureit-username");
       localStorage.removeItem("procureit-name");
       localStorage.removeItem("procureit-department");
     });

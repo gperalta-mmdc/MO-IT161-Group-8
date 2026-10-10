@@ -211,18 +211,28 @@ function setupHeaderButtons() {
   const printPoBtn = document.getElementById("printPoBtn");
 
   if (notifBtn) {
-    notifBtn.addEventListener("click", () => {
-      showMessage("You have new notifications.");
-    });
+    const notificationsModal = document.getElementById("notifications-modal");
+    if (notificationsModal) {
+      setupDashboardNotifications(notifBtn, notificationsModal);
+    } else {
+      notifBtn.addEventListener("click", () => {
+        showMessage("You have new notifications.");
+      });
+    }
   }
 
   if (editProfileBtn) {
-    editProfileBtn.addEventListener("click", () => {
-      showPopup(
-        "Edit Profile",
-        "Here you can update your profile information.",
-      );
-    });
+    const profileModal = document.getElementById("profile-modal");
+    if (profileModal) {
+      setupEditProfileDialog(editProfileBtn, profileModal);
+    } else {
+      editProfileBtn.addEventListener("click", () => {
+        showPopup(
+          "Edit Profile",
+          "Here you can update your profile information.",
+        );
+      });
+    }
   }
   if (settingsBtn) {
     settingsBtn.addEventListener("click", () => {
@@ -247,6 +257,181 @@ function setupHeaderButtons() {
       showMessage("Printing purchase order...");
     });
   }
+}
+
+function setupEditProfileDialog(trigger, modal) {
+  const roleLabels = {
+    requisitioner: "Requisitioner (Staff)",
+    approver: "Approver (Department Head)",
+    purchasing: "Purchasing Manager",
+  };
+  const rolePermissions = {
+    requisitioner: [true, false, false, false, false, false, false, true],
+    approver: [true, true, false, false, false, true, true, true],
+    purchasing: [true, true, true, true, true, true, true, true],
+  };
+  const permissionLabels = [
+    "Create Requisitions",
+    "Review / Approve / Reject Requisitions",
+    "Purchase Orders",
+    "Delivery Receipts",
+    "Invoice Processing",
+    "Vendor Management",
+    "Inventory and Asset Tagging",
+    "Reports",
+  ];
+  const permissionList = modal.querySelector("#profile-permission-list");
+  const focusableSelector =
+    'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
+  let previousBodyOverflow = "";
+
+  const getAccount = () => {
+    const role = localStorage.getItem("procureit-role") || "requisitioner";
+    const username =
+      localStorage.getItem("procureit-username") ||
+      Object.keys(DEMO_ACCOUNTS).find((key) => DEMO_ACCOUNTS[key].role === role);
+    return { role, username, account: DEMO_ACCOUNTS[username] };
+  };
+
+  const populateProfile = () => {
+    const { role, username, account } = getAccount();
+    if (!account) return;
+    modal.querySelector("#profile-display-name").textContent = account.name;
+    modal.querySelector("#profile-position").textContent = account.position;
+    modal.querySelector("#profile-role").textContent = roleLabels[role] || role;
+    modal.querySelector("#profile-username").textContent = username;
+    modal.querySelector("#profile-work-email").textContent = account.email;
+    modal.querySelector("#profile-department").textContent = account.department;
+
+    const permissions = rolePermissions[role] || rolePermissions.requisitioner;
+    permissionList.replaceChildren();
+    permissionLabels.forEach((label, index) => {
+      const allowed = permissions[index];
+      const item = document.createElement("li");
+      item.className = allowed ? "permission-allowed" : "permission-restricted";
+      const mark = document.createElement("span");
+      mark.className = "permission-mark";
+      mark.setAttribute("aria-hidden", "true");
+      mark.textContent = allowed ? "✓" : "×";
+      const text = document.createElement("span");
+      text.textContent = allowed ? label : `${label} (Restricted)`;
+      item.append(mark, text);
+      permissionList.appendChild(item);
+    });
+  };
+
+  const close = () => {
+    modal.hidden = true;
+    document.body.style.overflow = previousBodyOverflow;
+    trigger.focus();
+  };
+
+  trigger.addEventListener("click", () => {
+    populateProfile();
+    previousBodyOverflow = document.body.style.overflow;
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".profile-close").focus();
+  });
+  modal.querySelectorAll(".profile-close").forEach((button) => {
+    button.addEventListener("click", close);
+  });
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      close();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = [...modal.querySelectorAll(focusableSelector)].filter(
+      (element) => element.getClientRects().length > 0,
+    );
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+}
+
+function setupDashboardNotifications(trigger, modal) {
+  const closeButtons = modal.querySelectorAll(".notifications-close");
+  const markAllReadButton = modal.querySelector("#markAllReadBtn");
+  const unreadBadge = trigger.querySelector(".notification-badge");
+  const unreadItems = modal.querySelectorAll('.notification-item[data-unread="true"]');
+  const emptyMessage = modal.querySelector("#notifications-empty");
+  const focusableSelector =
+    'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
+  let previousBodyOverflow = "";
+
+  const markNotificationsRead = () => {
+    unreadItems.forEach((item) => {
+      item.classList.remove("is-unread");
+      item.dataset.unread = "false";
+    });
+    if (unreadBadge) unreadBadge.hidden = true;
+    trigger.setAttribute("aria-label", "Notifications. No unread notifications.");
+    if (emptyMessage) emptyMessage.hidden = false;
+    if (markAllReadButton) {
+      markAllReadButton.disabled = true;
+      markAllReadButton.textContent = "All Read";
+    }
+  };
+
+  if (localStorage.getItem("procureit-dashboard-notifications-read") === "true") {
+    markNotificationsRead();
+  }
+
+  const close = () => {
+    modal.hidden = true;
+    document.body.style.overflow = previousBodyOverflow;
+    trigger.focus();
+  };
+
+  trigger.addEventListener("click", () => {
+    previousBodyOverflow = document.body.style.overflow;
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".notifications-close").focus();
+  });
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  markAllReadButton?.addEventListener("click", () => {
+    localStorage.setItem("procureit-dashboard-notifications-read", "true");
+    markNotificationsRead();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      close();
+      return;
+    }
+    if (event.key !== "Tab") return;
+
+    const focusable = [...modal.querySelectorAll(focusableSelector)].filter(
+      (element) => element.getClientRects().length > 0,
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 }
 
 /* ----- Show date on dashboard ----- */
