@@ -2,9 +2,10 @@
   "name": "wst",
   "version": "1.0.0",
   "description": "Web Systems and Technology<br> MO-IT161 - Group 8<br> <br> Members :<br>  Giannros Peralta<br> Marcelyn Madanlo<br> Mark Anthony Goyon<br> Daniel Cotoner<br> <br> Documentation : <br> AI-Use Statement : https://docs.google.com/document/d/19z25TC36VcNYAJuEGOokYcKDwtZ2JF6s1mCVSkrNDMA/edit?usp=sharing <br> Development Worksheet : <br>https://docs.google.com/spreadsheets/d/12RqRDf8C7PoGM7Ky-QcVY0JuqXZ4AIcQhaRaPh_aJ_g/edit?usp=sharing<br><br> Project - ProcureIT<br> <br> Log-in Credentials : <br> username : staffprocureit / password : staff123<br> username : approverprocureit / password : approver123<br> username : managerprocureit / password : manager123<br> <br> Description :<br> A paperless procurement solution for a BPO's IT Department, it replaces forms and spreadsheets  with an end-to-end digital process for managing/tracking assets like laptops, desktops, headsets and IT equipment. Handles hardware requests, manager approvals, deployment, repairs, and device  returns. Gives staff, managers, and IT staff a system to request, approve, and track every item  from procurement to return/disposal. It also helps meet 5S standards by clearing out paper-trails  and keeping hardware records organized in one place.<br> <br> Implemented Functions : <br> - Log-In credentials with different user roles: staff / supervisor / manager<br> - Workflow Stepper shows in which process the user is currently working on<br> - Dashboard Counter reflects workflow process, shows accurate number of pending, approved and active processes<br> - Functional workflow from Dashboard to Delivery Receipt creation. (Invoice Processing, Vendor Management,<br>   Inventory /Asset Management and Reports are currently not functional. )<br> - Requisition Ids, PO Numbers and DR Numbers are auto-generated for data continuity<br> - Purchase Order implements automatic calculation of prices together with VAT and input for other fees.<br> - View and Summary buttons currently show placeholders, will be implemented for the next milestone<br>",
-  "main": "inventory.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   },
   "homepage": "https://github.com/gperalta-mmdc/MO-IT161-Group-8#readme",
   "dependencies": {
-    "express": "^5.3.0"
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "mongoose": "^9.11.1"
   }
 }
