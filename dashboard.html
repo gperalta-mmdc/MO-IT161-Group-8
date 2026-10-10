@@ -28,7 +28,7 @@
           aria-controls="notifications-modal"
         >
           <span class="notification-icon" aria-hidden="true">&#128276;</span>
-          Notifications <span class="notification-badge" aria-label="3 unread">3</span>
+          Notifications <span class="notification-badge" aria-label="2 unread">2</span>
         </button>
         <button
           type="button"
@@ -39,7 +39,13 @@
         >
           Edit Profile
         </button>
-        <button type="button" id="settingsBtn" class="btn-header">
+        <button
+          type="button"
+          id="settingsBtn"
+          class="btn-header"
+          aria-haspopup="dialog"
+          aria-controls="settings-modal"
+        >
           Settings
         </button>
         <form action="index.html" method="get">
@@ -219,7 +225,7 @@
           </div>
 
           <section class="dashboard-card-grid row g-3" aria-label="Procurement workflow status">
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="requisitions">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -230,7 +236,7 @@
             <p><span class="card-count">3</span> Requisitions submitted</p>
           </article>
           </div>
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="approvals">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -246,7 +252,7 @@
             </p>
           </article>
           </div>
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="purchaseOrders">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -262,7 +268,7 @@
             </p>
           </article>
           </div>
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="deliveryReceipts">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -276,7 +282,7 @@
             </p>
           </article>
           </div>
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="invoices">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -294,7 +300,7 @@
 
           <h3 class="card-group-title">Supporting records</h3>
           <section class="dashboard-card-grid row g-3" aria-label="Supporting records">
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="vendors">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -308,7 +314,7 @@
             </p>
           </article>
           </div>
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="inventory">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -319,7 +325,7 @@
             <p><span class="card-count">3</span> Items below reorder level</p>
           </article>
           </div>
-          <div class="col-12 col-md-6 col-xl-4">
+          <div class="col-12 col-md-6 col-xl-4" data-dashboard-card="reports">
           <article class="card dashboard-summary-card h-100">
             <button type="button" class="card-menu-btn">&#9662;</button>
             <div class="card-menu">
@@ -334,6 +340,73 @@
         </td>
       </tr>
     </table>
+
+    <section
+      class="workflow-summary-overlay settings-overlay"
+      id="settings-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-title"
+      hidden
+    >
+      <div class="workflow-summary-dialog settings-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header">
+          <h2 id="settings-title">Dashboard Settings</h2>
+          <button type="button" class="workflow-summary-x settings-close" aria-label="Close settings">
+            &times;
+          </button>
+        </header>
+        <form id="dashboard-settings-form">
+          <div class="settings-body modal-body">
+            <fieldset class="settings-group">
+              <legend>Display</legend>
+              <label class="settings-select-label" for="settings-theme">Color theme</label>
+              <select class="form-select" id="settings-theme" name="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </fieldset>
+
+            <fieldset class="settings-group">
+              <legend>Dashboard content</legend>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="settings-stepper" name="showStepper" />
+                <label class="form-check-label" for="settings-stepper">Show procurement workflow stepper</label>
+              </div>
+              <div class="settings-card-grid">
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-requisitions" name="card-requisitions" /><label class="form-check-label" for="settings-card-requisitions">Purchase Requisitions</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-approvals" name="card-approvals" /><label class="form-check-label" for="settings-card-approvals">Approvals</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-purchase-orders" name="card-purchaseOrders" /><label class="form-check-label" for="settings-card-purchase-orders">Purchase Orders</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-deliveries" name="card-deliveryReceipts" /><label class="form-check-label" for="settings-card-deliveries">Delivery Receipts</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-invoices" name="card-invoices" /><label class="form-check-label" for="settings-card-invoices">Invoice Processing</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-vendors" name="card-vendors" /><label class="form-check-label" for="settings-card-vendors">Vendor Management</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-inventory" name="card-inventory" /><label class="form-check-label" for="settings-card-inventory">Inventory and Asset Tagging</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-card-reports" name="card-reports" /><label class="form-check-label" for="settings-card-reports">Reports</label></div>
+              </div>
+            </fieldset>
+
+            <fieldset class="settings-group">
+              <legend>Notifications</legend>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="settings-notification-badge" name="showNotificationBadge" />
+                <label class="form-check-label" for="settings-notification-badge">Show unread count on the Notifications button</label>
+              </div>
+              <div class="settings-card-grid">
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-notifications-requisitions" name="notification-requisitions" /><label class="form-check-label" for="settings-notifications-requisitions">Requisition updates</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-notifications-orders" name="notification-purchaseOrders" /><label class="form-check-label" for="settings-notifications-orders">Purchase order updates</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="settings-notifications-system" name="notification-system" /><label class="form-check-label" for="settings-notifications-system">System updates</label></div>
+              </div>
+            </fieldset>
+            <p class="settings-save-status" id="settings-save-status" role="status" aria-live="polite"></p>
+          </div>
+          <footer class="workflow-summary-footer modal-footer">
+            <button type="button" class="btn btn-outline-secondary" id="resetSettingsBtn">Reset to Defaults</button>
+            <button type="button" class="btn btn-outline-primary settings-close">Close</button>
+            <button type="submit" class="btn btn-primary">Save Preferences</button>
+          </footer>
+        </form>
+      </div>
+    </section>
 
     <section
       class="workflow-summary-overlay notifications-overlay"
@@ -356,19 +429,19 @@
         </header>
         <div class="notifications-body modal-body" aria-live="polite">
           <ul class="notifications-list">
-            <li class="notification-item is-unread" data-unread="true">
+            <li class="notification-item is-unread" data-unread="true" data-notification-category="requisitions">
               <p>Requisition REQ-1001 submitted by Juan Dela Cruz is awaiting decision.</p>
               <time>10m ago</time>
             </li>
-            <li class="notification-item is-unread" data-unread="true">
+            <li class="notification-item is-unread" data-unread="true" data-notification-category="requisitions">
               <p>Requisition REQ-1002 approved. Ready for Purchase Order generation.</p>
               <time>1h ago</time>
             </li>
-            <li class="notification-item">
+            <li class="notification-item" data-notification-category="purchaseOrders">
               <p>PO-2026-002 dispatched by Ugreen Direct via LBC Corporate.</p>
               <time>Yesterday</time>
             </li>
-            <li class="notification-item">
+            <li class="notification-item" data-notification-category="system">
               <p>Workplace Zero Paper Initiative: 128 paper requisition forms saved this quarter.</p>
               <time>2 days ago</time>
             </li>

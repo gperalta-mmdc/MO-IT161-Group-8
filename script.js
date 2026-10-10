@@ -24,6 +24,7 @@
 /* PART 1 - SHARED FUNCTIONS */
 
 document.addEventListener("DOMContentLoaded", () => {
+  applyDashboardSettings(loadDashboardSettings());
   highlightActiveNavLink();
   setupHeaderButtons();
   showTodayDate();
@@ -235,9 +236,14 @@ function setupHeaderButtons() {
     }
   }
   if (settingsBtn) {
-    settingsBtn.addEventListener("click", () => {
-      showPopup("Settings", "Configure system preferences and settings here.");
-    });
+    const settingsModal = document.getElementById("settings-modal");
+    if (settingsModal) {
+      setupDashboardSettings(settingsBtn, settingsModal);
+    } else {
+      settingsBtn.addEventListener("click", () => {
+        showPopup("Settings", "Configure system preferences and settings here.");
+      });
+    }
   }
 
   if (downloadReportBtn) {
@@ -422,6 +428,149 @@ function setupDashboardNotifications(trigger, modal) {
       (element) => element.getClientRects().length > 0,
     );
     if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+}
+
+const DASHBOARD_SETTING_DEFAULTS = {
+  theme: "light",
+  showStepper: true,
+  "card-requisitions": true,
+  "card-approvals": true,
+  "card-purchaseOrders": true,
+  "card-deliveryReceipts": true,
+  "card-invoices": true,
+  "card-vendors": true,
+  "card-inventory": true,
+  "card-reports": true,
+  showNotificationBadge: true,
+  "notification-requisitions": true,
+  "notification-purchaseOrders": true,
+  "notification-system": true,
+};
+
+function loadDashboardSettings() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("procureit-dashboard-settings") || "{}",
+    );
+    return { ...DASHBOARD_SETTING_DEFAULTS, ...saved };
+  } catch {
+    return { ...DASHBOARD_SETTING_DEFAULTS };
+  }
+}
+
+function applyDashboardSettings(settings) {
+  document.body.classList.toggle("theme-dark", settings.theme === "dark");
+
+  const stepper = document.querySelector(".dashboard-stepper");
+  if (stepper) stepper.hidden = !settings.showStepper;
+  document.querySelectorAll("[data-dashboard-card]").forEach((card) => {
+    card.hidden = settings[`card-${card.dataset.dashboardCard}`] === false;
+  });
+
+  document.querySelectorAll(".notification-item[data-notification-category]").forEach((item) => {
+    item.hidden = settings[`notification-${item.dataset.notificationCategory}`] === false;
+  });
+  const badge = document.querySelector("#notifBtn .notification-badge");
+  const trigger = document.getElementById("notifBtn");
+  if (badge && trigger) {
+    const unreadCount = document.querySelectorAll(
+      '.notification-item.is-unread[data-unread="true"]:not([hidden])',
+    ).length;
+    badge.textContent = String(unreadCount);
+    badge.hidden = !settings.showNotificationBadge || unreadCount === 0;
+    trigger.setAttribute(
+      "aria-label",
+      badge.hidden ? "Notifications" : `Notifications. ${unreadCount} unread.`,
+    );
+  }
+}
+
+function setupDashboardSettings(trigger, modal) {
+  const form = modal.querySelector("#dashboard-settings-form");
+  const status = modal.querySelector("#settings-save-status");
+  const resetButton = modal.querySelector("#resetSettingsBtn");
+  const focusableSelector =
+    'button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
+  let previousBodyOverflow = "";
+
+  const populateForm = (settings) => {
+    Object.entries(DASHBOARD_SETTING_DEFAULTS).forEach(([name, defaultValue]) => {
+      const control = form.elements.namedItem(name);
+      if (!control) return;
+      if (defaultValue === "light") control.value = settings[name];
+      else control.checked = Boolean(settings[name]);
+    });
+  };
+
+  const readForm = () => {
+    const settings = {};
+    Object.entries(DASHBOARD_SETTING_DEFAULTS).forEach(([name, defaultValue]) => {
+      const control = form.elements.namedItem(name);
+      if (!control) return;
+      settings[name] = defaultValue === "light" ? control.value : control.checked;
+    });
+    return settings;
+  };
+
+  const close = () => {
+    modal.hidden = true;
+    document.body.style.overflow = previousBodyOverflow;
+    trigger.focus();
+  };
+
+  trigger.addEventListener("click", () => {
+    const settings = loadDashboardSettings();
+    populateForm(settings);
+    applyDashboardSettings(settings);
+    status.textContent = "";
+    previousBodyOverflow = document.body.style.overflow;
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".settings-close").focus();
+  });
+  modal.querySelectorAll(".settings-close").forEach((button) => {
+    button.addEventListener("click", close);
+  });
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const settings = readForm();
+    localStorage.setItem("procureit-dashboard-settings", JSON.stringify(settings));
+    applyDashboardSettings(settings);
+    status.textContent = "Your preferences have been saved.";
+  });
+  resetButton?.addEventListener("click", () => {
+    localStorage.removeItem("procureit-dashboard-settings");
+    const defaults = { ...DASHBOARD_SETTING_DEFAULTS };
+    populateForm(defaults);
+    applyDashboardSettings(defaults);
+    status.textContent = "Preferences reset to defaults.";
+  });
+
+  applyDashboardSettings(loadDashboardSettings());
+  document.addEventListener("keydown", (event) => {
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      close();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = [...modal.querySelectorAll(focusableSelector)].filter(
+      (element) => element.getClientRects().length > 0,
+    );
+    if (!focusable.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     if (event.shiftKey && document.activeElement === first) {
