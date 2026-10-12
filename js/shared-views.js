@@ -238,9 +238,9 @@ function renderCancelledPurchaseOrdersTable(includeRequisitions = true) {
   const cancelledPOs = getPurchaseOrders().filter(
     (po) => po.status === "Cancelled",
   );
-  const cancelledRequisitions = getRequisitions().filter(
-    (r) => r.status === "Cancelled",
-  );
+  const cancelledRequisitions = includeRequisitions
+    ? getRequisitions().filter((r) => r.status === "Cancelled")
+    : [];
 
   tableBody.innerHTML = "";
 

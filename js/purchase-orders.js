@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("approved-requisitions-table-body")) {
-    setupPurchaseOrderPage();
+    startPage(setupPurchaseOrderPage);
   }
 });
 
@@ -18,7 +18,7 @@ function setupPurchaseOrderPage() {
   const viewHistoryBtn = document.getElementById("viewHistoryBtn");
 
   // "Cancel Order" for an approved requisition awaiting a purchase order
-  approvedTableBody.addEventListener("click", (event) => {
+  approvedTableBody.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button || !button.classList.contains("js-cancel-po")) return;
 
@@ -28,15 +28,20 @@ function setupPurchaseOrderPage() {
     const requisition = requisitions.find((r) => r.id === id);
     if (!requisition) return;
 
-    requisition.status = "Cancelled";
-    saveRequisitions(requisitions);
+    button.disabled = true;
+    try {
+      await updateRequisition(id, { status: "Cancelled" });
+      showMessage(id + " has been cancelled.");
+    } catch (error) {
+      showMessage(error.message);
+      await loadRequisitions().catch(() => {});
+    }
     renderApprovedRequisitionsTable();
     renderCancelledPurchaseOrdersTable();
-    showMessage(requisition.id + " has been cancelled.");
   });
 
   // View / Cancel Order for an already-created purchase order
-  activeTableBody.addEventListener("click", (event) => {
+  activeTableBody.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
 
@@ -54,7 +59,7 @@ function setupPurchaseOrderPage() {
     if (button.classList.contains("js-cancel-po")) {
       purchaseOrder.status = "Cancelled";
       savePurchaseOrders(purchaseOrders);
-      releaseRequisitionFromPo(purchaseOrder);
+      await releaseRequisitionFromPo(purchaseOrder);
       renderApprovedRequisitionsTable();
       renderActivePurchaseOrdersTable();
       renderCancelledPurchaseOrdersTable();

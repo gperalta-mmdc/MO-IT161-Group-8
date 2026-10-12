@@ -29,12 +29,69 @@ function saveRecords(storageKey, records) {
 
 /* ----- Requisitions ----- */
 
-function getRequisitions() {
-  return getRecords(STORAGE_KEYS.requisitions);
+let requisitionsCache = []; // filled by loadRequisitions()
+
+/* Retrieves every requisition from the server */
+async function loadRequisitions() {
+  const response = await fetch("/api/requisitions");
+  if (!response.ok) throw new Error("Server responded " + response.status);
+  requisitionsCache = await response.json();
+  return requisitionsCache;
 }
 
-function saveRequisitions(requisitions) {
-  return saveRecords(STORAGE_KEYS.requisitions, requisitions);
+function getRequisitions() {
+  return JSON.parse(JSON.stringify(requisitionsCache));
+}
+
+async function sendToServer(url, method, body) {
+  let response;
+  try {
+    response = await fetch(url, {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    throw new Error("Cannot reach the server. Is it running?");
+  }
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      result.error || "The server could not complete that request.",
+    );
+  }
+  return result;
+}
+
+async function createRequisition(requisition) {
+  const saved = await sendToServer("/api/requisitions", "POST", requisition);
+  requisitionsCache.push(saved);
+  return saved;
+}
+
+/* Changes one requisition on the server, e.g. updateRequisition("REQ-1001", { status: "Withdrawn" }) */
+async function updateRequisition(id, changes) {
+  const updated = await sendToServer(
+    "/api/requisitions/" + encodeURIComponent(id),
+    "PATCH",
+    changes,
+  );
+  const index = requisitionsCache.findIndex((r) => r.id === id);
+  if (index === -1) requisitionsCache.push(updated);
+  else requisitionsCache[index] = updated;
+  return updated;
+}
+
+async function startPage(setup) {
+  try {
+    await loadRequisitions();
+  } catch (error) {
+    console.error("Could not load requisitions from the server:", error);
+    showMessage("Cannot reach the server. Start it with: npm start");
+  }
+  setup();
+  setupRoleAccess();
 }
 
 /* ----- Purchase Orders ----- */
@@ -84,10 +141,17 @@ async function createDelivery(delivery) {
   return result;
 }
 /* Frees the requisition behind a cancelled PO so a new PO can be made for it. */
-function releaseRequisitionFromPo(purchaseOrder) {
-  const requisitions = getRequisitions();
-  const requisition = requisitions.find((r) => r.poId === purchaseOrder.id);
-  if (!requisition) return;
-  delete requisition.poId;
-  saveRequisitions(requisitions);
+async function releaseRequisitionFromPo(purchaseOrder) {
+  try {
+    await sendToServer("/api/requisitions/release", "POST", {
+      poId: purchaseOrder.id,
+    });
+    await loadRequisitions();
+  } catch (error) {
+    console.error("Could not free the requisition:", error);
+    showMessage(
+      "The order was cancelled, but its requisition could not be freed: " +
+        error.message,
+    );
+  }
 }

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const Delivery = require("./models/Delivery");
 const Counter = require("./models/Counter");
+const Requisition = require("./models/Requisition");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -103,6 +104,161 @@ app.post("/api/deliveries", async (req, res) => {
     }
     console.error(error);
     res.status(500).json({ error: "Could not save the delivery receipt." });
+  }
+});
+
+/* ----- Requisitions API ----- */
+
+/* Today's date used as the decision date */
+function todayIso() {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return now.getFullYear() + "-" + month + "-" + day;
+}
+
+// Retrieve every requisition, oldest first
+app.get("/api/requisitions", async (req, res) => {
+  try {
+    const requisitions = await Requisition.find().sort({ createdAt: 1 });
+    res.set("Cache-Control", "no-store");
+    res.json(requisitions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not load requisitions." });
+  }
+});
+
+// Receive a new requisition from the form and store it as Pending
+app.post("/api/requisitions", async (req, res) => {
+  console.log("Received requisition:", req.body);
+  try {
+    const { requestedBy, department, dateSubmitted, items, reason } =
+      req.body || {};
+
+    const requisition = new Requisition({
+      requestedBy,
+      department,
+      dateSubmitted,
+      items,
+      reason,
+    });
+
+    await requisition.validate([
+      "requestedBy",
+      "department",
+      "dateSubmitted",
+      "items",
+      "reason",
+    ]);
+
+    requisition.reqNumber = await nextId("requisition", "REQ");
+    await requisition.save();
+    res.status(201).json(requisition);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors)
+        .map((e) => e.message)
+        .join(" ");
+      return res.status(400).json({ error: message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Could not save the requisition." });
+  }
+});
+
+app.post("/api/requisitions/release", async (req, res) => {
+  const poId = req.body && req.body.poId;
+  if (typeof poId !== "string" || poId.trim() === "") {
+    return res
+      .status(400)
+      .json({ error: "A purchase order number is required." });
+  }
+  try {
+    const result = await Requisition.updateMany(
+      { poId: poId.trim() },
+      { $unset: { poId: "" } },
+    );
+    res.json({ released: result.modifiedCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not release the requisition." });
+  }
+});
+
+// Change one requisition
+app.patch("/api/requisitions/:id", async (req, res) => {
+  try {
+    const { status, decidedBy, remarks, poId } = req.body || {};
+    let filter;
+    let update;
+    let conflictMessage;
+
+    if (status === "Approved" || status === "Rejected") {
+      if (
+        typeof decidedBy !== "string" ||
+        decidedBy.trim() === "" ||
+        decidedBy.length > 100
+      ) {
+        return res.status(400).json({ error: "Decided by is required." });
+      }
+      if (
+        remarks !== undefined &&
+        (typeof remarks !== "string" || remarks.length > 500)
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Remarks must be 500 characters or fewer." });
+      }
+      filter = { status: "Pending" };
+      update = {
+        $set: {
+          status,
+          decidedBy: decidedBy.trim(),
+          dateDecided: todayIso(), // the server's date, not the browser's
+          remarks: (remarks || "").trim(),
+        },
+      };
+      conflictMessage =
+        "This requisition is no longer pending. Someone may have already decided it.";
+    } else if (status === "Withdrawn") {
+      filter = { status: "Pending" };
+      update = { $set: { status } };
+      conflictMessage = "Only a pending requisition can be withdrawn.";
+    } else if (status === "Cancelled") {
+      filter = { status: "Approved", poId: { $exists: false } };
+      update = { $set: { status } };
+      conflictMessage =
+        "Only an approved requisition without a purchase order can be cancelled.";
+    } else if (
+      status === undefined &&
+      typeof poId === "string" &&
+      poId.trim() !== ""
+    ) {
+      filter = { status: "Approved", poId: { $exists: false } };
+      update = { $set: { poId: poId.trim() } };
+      conflictMessage =
+        "This requisition is not available for a new purchase order.";
+    } else {
+      return res.status(400).json({ error: "That change is not supported." });
+    }
+
+    const updated = await Requisition.findOneAndUpdate(
+      { reqNumber: req.params.id, ...filter },
+      update,
+      { returnDocument: "after", runValidators: true },
+    );
+
+    if (!updated) {
+      const exists = await Requisition.exists({ reqNumber: req.params.id });
+      return exists
+        ? res.status(409).json({ error: conflictMessage })
+        : res.status(404).json({ error: "Requisition not found." });
+    }
+    res.json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not update the requisition." });
   }
 });
 

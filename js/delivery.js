@@ -43,7 +43,7 @@ function setupDeliveryPage() {
   );
 
   // Record Delivery / Cancel Order buttons in the awaiting-delivery table
-  pendingTableBody.addEventListener("click", (event) => {
+  pendingTableBody.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
 
@@ -65,7 +65,7 @@ function setupDeliveryPage() {
 
       purchaseOrder.status = "Cancelled";
       savePurchaseOrders(purchaseOrders);
-      releaseRequisitionFromPo(purchaseOrder);
+      await releaseRequisitionFromPo(purchaseOrder);
       renderPendingDeliveryTable();
       renderCancelledPurchaseOrdersTable(false);
       populateDeliveryPoOptions();

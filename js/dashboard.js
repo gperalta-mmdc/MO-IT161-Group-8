@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".dashboard-stepper")) {
-    setupDashboardCounts();
+    startPage(setupDashboardCounts);
   }
 });
 

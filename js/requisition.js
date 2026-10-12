@@ -1,8 +1,10 @@
 /* ----- 3 Requisition Module (requisition.html only) ----- */
 
+const REQ_PLACEHOLDER = "Assigned on save";
+
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("requisition-form")) {
-    setupRequisitionPage();
+    startPage(setupRequisitionPage);
   }
 });
 
@@ -10,8 +12,7 @@ function setupRequisitionPage() {
   renderRequisitionsTable(); // shows anything saved from a previous visit
   fillRequestedBy();
 
-  document.getElementById("requisitionIdPreview").value =
-    peekNextId("requisition");
+  document.getElementById("requisitionIdPreview").value = REQ_PLACEHOLDER;
   const form = document.getElementById("requisition-form");
   const viewBtn = document.getElementById("viewRequisitionBtn");
   const submitBtn = document.getElementById("submitRequisitionBtn");
@@ -23,7 +24,7 @@ function setupRequisitionPage() {
   });
 
   // "Submit Requisition"
-  submitBtn.addEventListener("click", () => {
+  submitBtn.addEventListener("click", async () => {
     const requestedBy = document.getElementById("requestedBy").value.trim();
     const department = document.getElementById("department");
     const dateSubmitted = document.getElementById("requisitionDate").value;
@@ -53,29 +54,34 @@ function setupRequisitionPage() {
     }
 
     const requisition = {
-      id: generateId("requisition"),
       requestedBy: requestedBy,
       department: department.value,
       dateSubmitted: dateSubmitted,
       items: items,
       reason: reason,
-      status: "Pending",
     };
 
-    const requisitions = getRequisitions();
-    requisitions.push(requisition);
-    saveRequisitions(requisitions);
+    // Send the requisition to the server to be stored in the database
+    submitBtn.disabled = true;
+    let saved;
+    try {
+      saved = await createRequisition(requisition);
+    } catch (error) {
+      showMessage(error.message);
+      return;
+    } finally {
+      submitBtn.disabled = false;
+    }
 
     renderRequisitionsTable();
     form.reset();
     fillRequestedBy();
-    document.getElementById("requisitionIdPreview").value =
-      peekNextId("requisition");
-    showMessage(requisition.id + " has been submitted.");
+    document.getElementById("requisitionIdPreview").value = REQ_PLACEHOLDER;
+    showMessage(saved.id + " has been submitted.");
   });
 
   //* View / Print / Withdraw buttons in the Submitted Requisitions table *//
-  tableBody.addEventListener("click", (event) => {
+  tableBody.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
 
@@ -90,10 +96,15 @@ function setupRequisitionPage() {
     } else if (button.classList.contains("js-print")) {
       showMessage("Printing " + requisition.id + "...");
     } else if (button.classList.contains("js-withdraw")) {
-      requisition.status = "Withdrawn";
-      saveRequisitions(requisitions);
+      button.disabled = true;
+      try {
+        await updateRequisition(id, { status: "Withdrawn" });
+        showMessage(id + " has been withdrawn.");
+      } catch (error) {
+        showMessage(error.message);
+        await loadRequisitions().catch(() => {});
+      }
       renderRequisitionsTable();
-      showMessage(requisition.id + " has been withdrawn.");
     }
   });
 

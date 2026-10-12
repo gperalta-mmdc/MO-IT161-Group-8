@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("po-form")) {
-    setupPurchaseOrderDetailPage();
+    startPage(setupPurchaseOrderDetailPage);
   }
 });
 
@@ -29,7 +29,7 @@ function setupPurchaseOrderDetailPage() {
   });
 
   // "Save Purchase Order" button
-  saveBtn.addEventListener("click", () => {
+  saveBtn.addEventListener("click", async () => {
     const requisitionSelectEl = document.getElementById("poRequisition");
     const poDate = document.getElementById("poDate");
     const requisitioner = document.getElementById("poRequisitioner");
@@ -136,7 +136,7 @@ function setupPurchaseOrderDetailPage() {
     }
 
     const purchaseOrder = {
-      id: generateId("purchaseOrder"),
+      id: peekNextId("purchaseOrder"),
       requisitionId: requisition.id,
       dateCreated: poDate.value,
       requisitioner: requisitioner.value.trim(),
@@ -159,9 +159,19 @@ function setupPurchaseOrderDetailPage() {
       status: "Active",
     };
 
-    // Link the requisition to this PO so it drops off the awaiting-PO list
-    requisition.poId = purchaseOrder.id;
-    saveRequisitions(requisitions);
+    // Link the requisition to this PO on the server so it drops off the awaiting-PO list
+    saveBtn.disabled = true;
+    try {
+      await updateRequisition(requisition.id, { poId: purchaseOrder.id });
+    } catch (error) {
+      showMessage(error.message);
+      await loadRequisitions().catch(() => {});
+      populatePoRequisitionOptions();
+      return;
+    } finally {
+      saveBtn.disabled = false;
+    }
+    generateId("purchaseOrder");
 
     const purchaseOrders = getPurchaseOrders();
     purchaseOrders.push(purchaseOrder);

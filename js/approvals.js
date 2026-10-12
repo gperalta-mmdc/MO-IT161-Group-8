@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("pending-approvals-table-body")) {
-    setupApprovalsPage();
+    startPage(setupApprovalsPage);
   }
 });
 
@@ -16,7 +16,7 @@ function setupApprovalsPage() {
   const viewHistoryBtn = document.getElementById("viewHistoryBtn");
 
   // View / Approve / Reject buttons in the awaiting-decision table
-  pendingTableBody.addEventListener("click", (event) => {
+  pendingTableBody.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
 
@@ -41,20 +41,25 @@ function setupApprovalsPage() {
     const remarksInput = row.querySelector(".decision-remarks");
     const remarks = remarksInput ? remarksInput.value.trim() : "";
     const loggedInName = localStorage.getItem("procureit-name") || "System";
-
-    requisition.status = button.classList.contains("js-approve")
+    const decision = button.classList.contains("js-approve")
       ? "Approved"
       : "Rejected";
-    requisition.decidedBy = loggedInName;
-    requisition.dateDecided = getTodayIso();
-    requisition.remarks = remarks;
 
-    saveRequisitions(requisitions);
+    // Send the decision to the server. It records the date and refuses a second decision.
+    row.querySelectorAll("button").forEach((b) => (b.disabled = true));
+    try {
+      await updateRequisition(id, {
+        status: decision,
+        decidedBy: loggedInName,
+        remarks: remarks,
+      });
+      showMessage(id + " has been " + decision.toLowerCase() + ".");
+    } catch (error) {
+      showMessage(error.message);
+      await loadRequisitions().catch(() => {});
+    }
     renderPendingApprovalsTable();
     renderApprovalHistoryTable();
-    showMessage(
-      requisition.id + " has been " + requisition.status.toLowerCase() + ".",
-    );
   });
 
   // "View History" button above the Approval History table
