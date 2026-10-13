@@ -155,33 +155,13 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>INV-3051</td>
-                  <td>Hexagon IT Hardware</td>
-                  <td>PO-2042</td>
-                  <td>DR#873572</td>
-                  <td>54,200.00</td>
-                  <td>2026-09-09</td>
-                  <td>Pending Review</td>
-                  <td>
-                    <div class="btn-action">
-                      <button
-                        class="btn-content js-review-invoice"
-                        type="button"
-                      >
-                        Record Invoice
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="invoice-pending-table-body"></tbody>
             </table>
           </fieldset>
 
           <fieldset class="content-field">
             <legend class="content-legend">Record New Invoice</legend>
-            <form id="invoice-form">
+            <form id="invoice-record-form">
               <label class="content-label" for="invoiceNumber"
                 >Invoice Number</label
               >
@@ -189,18 +169,14 @@
               <input
                 type="text"
                 id="invoiceNumber"
-                placeholder="e.g. INV-3052"
+                value="Assigned on save"
+                readonly
               />
               <br /><br />
               <label class="content-label" for="invoiceVendor">Vendor</label>
               <br />
               <select id="invoiceVendor">
                 <option>-- Select Vendor --</option>
-                <option>Hexagon IT Hardware</option>
-                <option>MMDC Office Supplies</option>
-                <option>Hewlett Packard</option>
-                <option>Lenovo</option>
-                <option>Ugreen</option>
               </select>
               <br /><br />
               <label class="content-label" for="invoicePO"
@@ -209,24 +185,21 @@
               <br />
               <select id="invoicePO">
                 <option>-- Select Purchase Order --</option>
-                <option>PO-2041</option>
-                <option>PO-2042</option>
-                <option>PO#02</option>
-                <option>PO#03</option>
-                <option>PO#04</option>
-                <option>PO#05</option>
               </select>
               <br /><br />
-              <label class="content-label">Matched Delivery Receipt</label>
+              <label class="content-label" for="invoiceDeliveryReceipt"
+                >Matched Delivery Receipt</label
+              >
               <br />
-              <select>
-                <option>-- Select Delivery Receipt --</option>
-                <option>PO-2039 &mdash; Received 2026-08-30</option>
+              <select id="invoiceDeliveryReceipt">
+                <option>-- Select Delivery Receipt (optional) --</option>
               </select>
               <br /><br />
-              <label class="content-label">Invoice Date</label>
+              <label class="content-label" for="invoiceDate"
+                >Invoice Date</label
+              >
               <br />
-              <input type="date" />
+              <input type="date" id="invoiceDate" />
               <br /><br />
               <label class="content-label" for="invoiceAmount"
                 >Invoice Amount</label
@@ -240,13 +213,15 @@
                 placeholder="0.00"
               />
               <br /><br />
-              <label class="content-label">Attach Invoice Document</label>
+              <label class="content-label" for="invoiceFile"
+                >Attach Invoice Document</label
+              >
               <br />
-              <input type="file" />
+              <input type="file" id="invoiceFile" />
               <br /><br />
-              <label class="content-label">Remarks</label>
+              <label class="content-label" for="invoiceRemarks">Remarks</label>
               <br />
-              <textarea rows="4" cols="50"></textarea>
+              <textarea id="invoiceRemarks" rows="4" cols="50"></textarea>
               <br /><br />
               <button type="button" id="submitInvoiceBtn" class="btn-content">
                 Submit for Approval
@@ -264,12 +239,16 @@
               <input
                 type="text"
                 id="decisionInvoiceNumber"
-                placeholder="e.g. INV-3051"
+                placeholder="e.g. INV-1001"
               />
               <br /><br />
-              <label class="content-label">Remarks</label>
+              <label class="content-label" for="decisionRemarks">Remarks</label>
               <br />
-              <input type="text" placeholder="Optional remarks" />
+              <input
+                type="text"
+                id="decisionRemarks"
+                placeholder="Optional remarks"
+              />
               <br /><br />
               <button class="btn-content" type="button" id="approveInvoiceBtn">
                 Approve for Payment
@@ -294,26 +273,7 @@
                   <th>Date Processed</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>INV-3049</td>
-                  <td>Rock and Paper Co.</td>
-                  <td>PO-2039</td>
-                  <td>DR-93927</td>
-                  <td>12,800.00</td>
-                  <td>Approved for Payment</td>
-                  <td>2026-09-02</td>
-                </tr>
-                <tr>
-                  <td>INV-3048</td>
-                  <td>MMDC Office Supplies</td>
-                  <td>PO-2038</td>
-                  <td>0004321</td>
-                  <td>3,450.00</td>
-                  <td>Rejected</td>
-                  <td>2026-08-29</td>
-                </tr>
-              </tbody>
+              <tbody id="invoice-history-table-body"></tbody>
             </table>
             <br />
             <button type="button" id="viewInvoiceBtn" class="btn-content">
@@ -329,6 +289,9 @@
     </footer>
     <script src="rbac.js"></script>
     <script src="script.js" defer></script>
-    <script src="workflow.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/shared-views.js"></script>
+    <script src="js/invoices.js"></script>
   </body>
 </html>
