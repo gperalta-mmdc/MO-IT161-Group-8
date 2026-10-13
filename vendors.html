@@ -154,103 +154,20 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>VEN-001</td>
-                  <td>Hewlett Packard</td>
-                  <td>IT Hardware</td>
-                  <td>Anna Reyes</td>
-                  <td>Active</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view-vendor" type="button">
-                        View
-                      </button>
-                      <button class="btn-content js-edit-vendor" type="button">
-                        Update Status
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>VEN-002</td>
-                  <td>Lenovo</td>
-                  <td>IT Hardware</td>
-                  <td>Carlo Diaz</td>
-                  <td>Active</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view-vendor" type="button">
-                        View
-                      </button>
-                      <button class="btn-content js-edit-vendor" type="button">
-                        Update Status
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>VEN-003</td>
-                  <td>Ugreen</td>
-                  <td>IT Peripherals</td>
-                  <td>Bea Lim</td>
-                  <td>Active</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view-vendor" type="button">
-                        View
-                      </button>
-                      <button class="btn-content js-edit-vendor" type="button">
-                        Update Status
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>VEN-004</td>
-                  <td>Hexagon IT Hardware</td>
-                  <td>IT Hardware</td>
-                  <td>Ramon Cruz</td>
-                  <td>Active</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view-vendor" type="button">
-                        View
-                      </button>
-                      <button class="btn-content js-edit-vendor" type="button">
-                        Update Status
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>VEN-005</td>
-                  <td>MMDC Office Supplies</td>
-                  <td>Office Supplies</td>
-                  <td>Liza Tan</td>
-                  <td>Inactive</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-view-vendor" type="button">
-                        View
-                      </button>
-                      <button class="btn-content js-edit-vendor" type="button">
-                        Update Status
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="vendor-table-body"></tbody>
             </table>
           </fieldset>
 
           <fieldset class="content-field">
-            <legend class="content-legend">Add New Vendor</legend>
-            <form id="vendor-form">
+            <legend class="content-legend" id="vendor-form-legend">
+              Add New Vendor
+            </legend>
+            <form id="vendor-record-form">
               <label class="content-label" for="vendorName">Vendor Name</label>
               <br />
               <input type="text" id="vendorName" placeholder="Company name" />
               <br /><br />
+
               <label class="content-label" for="vendorCategory">Category</label>
               <br />
               <select id="vendorCategory">
@@ -262,12 +179,14 @@
                 <option>Other</option>
               </select>
               <br /><br />
+
               <label class="content-label" for="contactPerson"
                 >Contact Person</label
               >
               <br />
               <input type="text" id="contactPerson" placeholder="Full name" />
               <br /><br />
+
               <label class="content-label" for="vendorEmail">Email</label>
               <br />
               <input
@@ -276,36 +195,58 @@
                 placeholder="name@vendor.com"
               />
               <br /><br />
-              <label class="content-label">Phone</label>
+
+              <label class="content-label" for="vendorPhone">Phone</label>
               <br />
-              <input type="tel" placeholder="e.g. 0917 000 0000" />
+              <input
+                type="tel"
+                id="vendorPhone"
+                placeholder="e.g. 0917 000 0000"
+              />
               <br /><br />
-              <label class="content-label">Address</label>
+
+              <label class="content-label" for="vendorAddress">Address</label>
               <br />
-              <textarea rows="2" cols="50"></textarea>
+              <textarea id="vendorAddress" rows="2" cols="50"></textarea>
               <br /><br />
-              <label class="content-label"
+
+              <label class="content-label" for="vendorTin"
                 >Tax Identification Number (TIN)</label
               >
               <br />
-              <input type="text" placeholder="000-000-000-000" />
+              <input
+                type="text"
+                id="vendorTin"
+                placeholder="000-000-000-000"
+              />
               <br /><br />
-              <label class="content-label"
+
+              <label class="content-label" for="vendorDocuments"
                 >Upload Business Permit / Accreditation Documents</label
               >
               <br />
-              <input type="file" multiple />
+              <input type="file" id="vendorDocuments" multiple />
               <br /><br />
-              <label class="content-label">Status</label>
+
+              <label class="content-label" for="vendorStatus">Status</label>
               <br />
-              <select>
+              <select id="vendorStatus">
                 <option>Active</option>
                 <option>Inactive</option>
                 <option>Under Review</option>
               </select>
               <br /><br />
-              <button class="btn-content" type="button" id="addVendorBtn">
+
+              <button type="button" id="addVendorBtn" class="btn-content">
                 Add Vendor
+              </button>
+              <button
+                type="button"
+                id="cancelVendorEditBtn"
+                class="reject-btn"
+                hidden
+              >
+                Cancel Edit
               </button>
             </form>
           </fieldset>
@@ -333,8 +274,8 @@
                   <td>
                     <div class="btn-action">
                       <button
-                        class="btn-content js-renew-document"
                         type="button"
+                        class="btn-content js-renew-document"
                       >
                         Request Renewal
                       </button>
@@ -349,53 +290,10 @@
                   <td>
                     <div class="btn-action">
                       <button
-                        class="btn-content js-renew-document"
                         type="button"
+                        class="btn-content js-renew-document"
                       >
                         Request Renewal
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-
-          <fieldset class="content-field">
-            <legend class="content-legend">Inactive Vendors</legend>
-            <table class="content-table" border="1">
-              <thead>
-                <tr>
-                  <th>Vendor</th>
-                  <th>Document</th>
-                  <th>Expiry Date</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Hexagon IT Hardware</td>
-                  <td>Service Agreement</td>
-                  <td>2026-09-25</td>
-                  <td>Expiring Soon</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-renew-vendor" type="button">
-                        Renew Vendor
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>MMDC Office Supplies</td>
-                  <td>Business Permit</td>
-                  <td>2026-09-30</td>
-                  <td>Expiring Soon</td>
-                  <td>
-                    <div class="btn-action">
-                      <button class="btn-content js-renew-vendor" type="button">
-                        Renew Vendor
                       </button>
                     </div>
                   </td>
@@ -412,6 +310,9 @@
     </footer>
     <script src="rbac.js"></script>
     <script src="script.js" defer></script>
-    <script src="workflow.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/shared-views.js"></script>
+    <script src="js/vendors.js"></script>
   </body>
 </html>
