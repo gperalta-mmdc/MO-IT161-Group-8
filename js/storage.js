@@ -155,3 +155,71 @@ async function releaseRequisitionFromPo(purchaseOrder) {
     );
   }
 }
+
+/* ----- Invoices (stored in MongoDB) ----- */
+
+let invoicesCache = [];
+
+async function loadInvoices() {
+  const response = await fetch("/api/invoices");
+  if (!response.ok) throw new Error("Server responded " + response.status);
+  invoicesCache = await response.json();
+  return invoicesCache;
+}
+
+function getInvoices() {
+  return JSON.parse(JSON.stringify(invoicesCache));
+}
+
+async function createInvoice(invoice) {
+  const saved = await sendToServer("/api/invoices", "POST", invoice);
+  invoicesCache.push(saved);
+  return saved;
+}
+
+/* e.g. updateInvoice("INV-1001", { status: "Rejected", remarks: "..." }) */
+async function updateInvoice(id, changes) {
+  const updated = await sendToServer(
+    "/api/invoices/" + encodeURIComponent(id),
+    "PUT",
+    changes,
+  );
+  const index = invoicesCache.findIndex((i) => i.id === id);
+  if (index === -1) invoicesCache.push(updated);
+  else invoicesCache[index] = updated;
+  return updated;
+}
+
+/* ----- Vendors (stored in MongoDB) ----- */
+
+let vendorsCache = [];
+
+async function loadVendors() {
+  const response = await fetch("/api/vendors");
+  if (!response.ok) throw new Error("Server responded " + response.status);
+  vendorsCache = await response.json();
+  return vendorsCache;
+}
+
+function getVendors() {
+  return JSON.parse(JSON.stringify(vendorsCache));
+}
+
+async function createVendor(vendor) {
+  const saved = await sendToServer("/api/vendors", "POST", vendor);
+  vendorsCache.push(saved);
+  return saved;
+}
+
+/* e.g. updateVendor("VEN-1001", { status: "Inactive" }) */
+async function updateVendor(id, changes) {
+  const updated = await sendToServer(
+    "/api/vendors/" + encodeURIComponent(id),
+    "PUT",
+    changes,
+  );
+  const index = vendorsCache.findIndex((v) => v.id === id);
+  if (index === -1) vendorsCache.push(updated);
+  else vendorsCache[index] = updated;
+  return updated;
+}
