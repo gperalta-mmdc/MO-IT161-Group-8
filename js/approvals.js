@@ -81,21 +81,11 @@ function renderPendingApprovalsTable() {
     const row = document.createElement("tr");
     row.setAttribute("data-id", requisition.id);
     row.innerHTML =
-      "<td>" +
-      requisition.id +
-      "</td>" +
-      "<td>" +
-      requisition.requestedBy +
-      "</td>" +
-      "<td>" +
-      requisition.department +
-      "</td>" +
+      tds(requisition.id, requisition.requestedBy, requisition.department) +
       '<td><div class="btn-action">' +
       '<button type="button" class="btn-content js-view-approval">View Requisition</button>' +
       "</div></td>" +
-      "<td>" +
-      requisition.dateSubmitted +
-      "</td>" +
+      tds(requisition.dateSubmitted) +
       '<td><form class="decision-form">' +
       '<label class="content-label">Remarks</label>' +
       '<input type="text" class="decision-remarks" placeholder="Optional remarks" />' +
@@ -118,22 +108,13 @@ function renderApprovalHistoryTable() {
 
   decided.forEach((requisition) => {
     const row = document.createElement("tr");
-    row.innerHTML =
-      "<td>" +
-      requisition.id +
-      "</td>" +
-      "<td>" +
-      requisition.department +
-      "</td>" +
-      "<td>" +
-      requisition.status +
-      "</td>" +
-      "<td>" +
-      (requisition.decidedBy || "—") +
-      "</td>" +
-      "<td>" +
-      (requisition.dateDecided || "—") +
-      "</td>";
+    row.innerHTML = tds(
+      requisition.id,
+      requisition.department,
+      requisition.status,
+      requisition.decidedBy || "—",
+      requisition.dateDecided || "—",
+    );
     tableBody.appendChild(row);
   });
 }

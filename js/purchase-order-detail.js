@@ -1,5 +1,7 @@
 /* ----- 6 Purchase Order Detail Module (purchase-order-detail.html only) ----- */
 
+const PO_PLACEHOLDER = "Assigned on save";
+
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("po-form")) {
     startPage(setupPurchaseOrderDetailPage);
@@ -13,7 +15,7 @@ function setupPurchaseOrderDetailPage() {
   const clearBtn = document.getElementById("clearPoBtn");
   const requisitionSelect = document.getElementById("poRequisition");
 
-  document.getElementById("poNumber").value = peekNextId("purchaseOrder");
+  document.getElementById("poNumber").value = PO_PLACEHOLDER;
   const preselectId = getQueryParam("reqId");
   populatePoRequisitionOptions(preselectId);
 
@@ -27,6 +29,15 @@ function setupPurchaseOrderDetailPage() {
       showMessage("Totals updated.");
     }
   });
+
+  // "Clear" button
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      form.reset();
+      document.getElementById("poNumber").value = PO_PLACEHOLDER;
+      populatePoRequisitionOptions();
+    });
+  }
 
   // "Save Purchase Order" button
   saveBtn.addEventListener("click", async () => {
@@ -136,7 +147,6 @@ function setupPurchaseOrderDetailPage() {
     }
 
     const purchaseOrder = {
-      id: peekNextId("purchaseOrder"),
       requisitionId: requisition.id,
       dateCreated: poDate.value,
       requisitioner: requisitioner.value.trim(),
@@ -150,53 +160,37 @@ function setupPurchaseOrderDetailPage() {
       shippingTerms: document.getElementById("shippingTerms").value,
       expectedDelivery: document.getElementById("expectedDelivery").value,
       items: collectPoItemLines(),
-      subtotal: document.getElementById("poSubtotal").value,
       taxRate: document.getElementById("poTaxRate").value,
-      tax: document.getElementById("poTax").value,
       shipping: document.getElementById("poShipping").value,
-      total: document.getElementById("poTotal").value,
       notes: document.getElementById("poNotes").value.trim(),
-      status: "Active",
     };
 
-    // Link the requisition to this PO on the server so it drops off the awaiting-PO list
+    // Send the purchase order to the server to be stored in the database
     saveBtn.disabled = true;
+    let saved;
     try {
-      await updateRequisition(requisition.id, { poId: purchaseOrder.id });
+      saved = await createPurchaseOrder(purchaseOrder);
     } catch (error) {
       showMessage(error.message);
-      await loadRequisitions().catch(() => {});
+      await reloadOrderData();
       populatePoRequisitionOptions();
       return;
     } finally {
       saveBtn.disabled = false;
     }
-    generateId("purchaseOrder");
-
-    const purchaseOrders = getPurchaseOrders();
-    purchaseOrders.push(purchaseOrder);
-    savePurchaseOrders(purchaseOrders);
 
     showMessage(
       "Purchase order " +
-        purchaseOrder.id +
+        saved.id +
         " for " +
-        vendor.value +
+        saved.vendor +
         " saved. Total: " +
-        purchaseOrder.total +
+        formatPeso(saved.total) +
         ".",
     );
     form.reset();
-    document.getElementById("poNumber").value = peekNextId("purchaseOrder");
+    document.getElementById("poNumber").value = PO_PLACEHOLDER;
     populatePoRequisitionOptions();
-  });
-
-  // "Clear Form" button
-  clearBtn.addEventListener("click", () => {
-    form.reset();
-    document.getElementById("poNumber").value = peekNextId("purchaseOrder");
-    populatePoRequisitionOptions();
-    showMessage("Form cleared.");
   });
 }
 
@@ -274,7 +268,6 @@ function collectPoItemLines() {
   const descs = document.querySelectorAll(".po-item-desc");
   const qtys = document.querySelectorAll(".po-qty");
   const prices = document.querySelectorAll(".po-price");
-  const lineTotals = document.querySelectorAll(".po-line-total");
   const items = [];
 
   for (let i = 0; i < descs.length; i++) {
@@ -288,7 +281,6 @@ function collectPoItemLines() {
         description: description,
         quantity: quantity,
         unitPrice: unitPrice,
-        lineTotal: lineTotals[i].value,
       });
     }
   }

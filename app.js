@@ -5,6 +5,7 @@ const path = require("path");
 const Delivery = require("./models/Delivery");
 const Counter = require("./models/Counter");
 const Requisition = require("./models/Requisition");
+const PurchaseOrder = require("./models/PurchaseOrder");
 const Invoice = require("./models/Invoice");
 const Vendor = require("./models/Vendor");
 
@@ -30,7 +31,9 @@ app.use((req, res, next) => {
   } catch (error) {
     return res.status(400).send("Bad request");
   }
-  requested = requested.replace(/\\/g, "/").toLowerCase();
+  requested = path.posix
+    .normalize("/" + requested.replace(/\\/g, "/"))
+    .toLowerCase();
   const blocked = PRIVATE_PATHS.some(
     (p) => requested === p || requested.startsWith(p + "/"),
   );
@@ -94,8 +97,46 @@ app.post("/api/deliveries", async (req, res) => {
       "proofFileName",
     ]);
 
-    delivery.drNumber = await nextId("delivery", "DR");
-    await delivery.save();
+    // The receipt must be for a purchase order that is still waiting for delivery.
+    const isComplete = delivery.condition === "Complete & Good Condition";
+    let closedOrder = null;
+    let available;
+    if (isComplete) {
+      closedOrder = await PurchaseOrder.findOneAndUpdate(
+        { poNumber: delivery.poId, status: "Active" },
+        { $set: { status: "Delivered" } },
+      );
+      available = Boolean(closedOrder);
+    } else {
+      available = Boolean(
+        await PurchaseOrder.exists({
+          poNumber: delivery.poId,
+          status: "Active",
+        }),
+      );
+    }
+    if (!available) {
+      const known = await PurchaseOrder.exists({ poNumber: delivery.poId });
+      return known
+        ? res
+            .status(409)
+            .json({ error: "This purchase order is not waiting for delivery." })
+        : res.status(404).json({ error: "Purchase order not found." });
+    }
+
+    try {
+      delivery.drNumber = await nextId("delivery", "DR");
+      await delivery.save();
+    } catch (saveError) {
+      // Put the order back if the receipt could not be saved
+      if (closedOrder) {
+        await PurchaseOrder.updateOne(
+          { poNumber: delivery.poId, status: "Delivered" },
+          { $set: { status: "Active" } },
+        );
+      }
+      throw saveError;
+    }
     res.status(201).json(delivery);
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -108,7 +149,9 @@ app.post("/api/deliveries", async (req, res) => {
     res.status(500).json({ error: "Could not save the delivery receipt." });
   }
 });
+
 /* ----- Invoices API ----- */
+const DECISION_REMARKS_FIELD = "remarks";
 
 app.get("/api/invoices", async (req, res) => {
   try {
@@ -153,6 +196,38 @@ app.post("/api/invoices", async (req, res) => {
       "invoiceFileName",
     ]);
 
+    // The invoice must point at a real purchase order that is not cancelled
+    const purchaseOrder = await PurchaseOrder.findOne({
+      poNumber: invoice.poId,
+    });
+    if (!purchaseOrder) {
+      return res.status(404).json({ error: "Purchase order not found." });
+    }
+    if (purchaseOrder.status === "Cancelled") {
+      return res
+        .status(409)
+        .json({ error: "A cancelled purchase order cannot be invoiced." });
+    }
+    if (purchaseOrder.vendor !== invoice.vendor) {
+      return res
+        .status(400)
+        .json({ error: "The vendor does not match the purchase order." });
+    }
+
+    // A delivery receipt, if given, must belong to that same purchase order
+    if (invoice.deliveryReceipt) {
+      const receiptMatches = await Delivery.exists({
+        drNumber: invoice.deliveryReceipt,
+        poId: invoice.poId,
+      });
+      if (!receiptMatches) {
+        return res.status(400).json({
+          error:
+            "That delivery receipt does not belong to this purchase order.",
+        });
+      }
+    }
+
     invoice.invoiceNumber = await nextId("invoice", "INV");
     await invoice.save();
     res.status(201).json(invoice);
@@ -168,7 +243,7 @@ app.post("/api/invoices", async (req, res) => {
   }
 });
 
-// Approve or reject an invoice
+// Approve or reject an invoice (only while it is still "Pending Review")
 app.put("/api/invoices/:id", async (req, res) => {
   try {
     const { status, remarks } = req.body || {};
@@ -176,14 +251,26 @@ app.put("/api/invoices/:id", async (req, res) => {
       return res.status(400).json({ error: "Status is not a valid decision." });
     }
 
-    const invoice = await Invoice.findOne({ invoiceNumber: req.params.id });
+    const note = typeof remarks === "string" ? remarks.trim() : "";
+    const changes = { status: status };
+    if (note) changes[DECISION_REMARKS_FIELD] = note;
+
+    // One atomic step: the status filter means a second decision can never get through
+    const invoice = await Invoice.findOneAndUpdate(
+      { invoiceNumber: req.params.id, status: "Pending Review" },
+      { $set: changes },
+      { returnDocument: "after", runValidators: true },
+    );
+
     if (!invoice) {
-      return res.status(404).json({ error: "Invoice not found." });
+      const known = await Invoice.exists({ invoiceNumber: req.params.id });
+      return known
+        ? res
+            .status(409)
+            .json({ error: "This invoice has already been decided." })
+        : res.status(404).json({ error: "Invoice not found." });
     }
 
-    invoice.status = status;
-    if (remarks) invoice.remarks = remarks;
-    await invoice.save();
     res.json(invoice);
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -196,6 +283,7 @@ app.put("/api/invoices/:id", async (req, res) => {
     res.status(500).json({ error: "Could not update the invoice." });
   }
 });
+
 /* ----- Vendors API ----- */
 
 app.get("/api/vendors", async (req, res) => {
@@ -356,29 +444,10 @@ app.post("/api/requisitions", async (req, res) => {
   }
 });
 
-app.post("/api/requisitions/release", async (req, res) => {
-  const poId = req.body && req.body.poId;
-  if (typeof poId !== "string" || poId.trim() === "") {
-    return res
-      .status(400)
-      .json({ error: "A purchase order number is required." });
-  }
-  try {
-    const result = await Requisition.updateMany(
-      { poId: poId.trim() },
-      { $unset: { poId: "" } },
-    );
-    res.json({ released: result.modifiedCount });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Could not release the requisition." });
-  }
-});
-
 // Change one requisition
 app.patch("/api/requisitions/:id", async (req, res) => {
   try {
-    const { status, decidedBy, remarks, poId } = req.body || {};
+    const { status, decidedBy, remarks } = req.body || {};
     let filter;
     let update;
     let conflictMessage;
@@ -419,15 +488,6 @@ app.patch("/api/requisitions/:id", async (req, res) => {
       update = { $set: { status } };
       conflictMessage =
         "Only an approved requisition without a purchase order can be cancelled.";
-    } else if (
-      status === undefined &&
-      typeof poId === "string" &&
-      poId.trim() !== ""
-    ) {
-      filter = { status: "Approved", poId: { $exists: false } };
-      update = { $set: { poId: poId.trim() } };
-      conflictMessage =
-        "This requisition is not available for a new purchase order.";
     } else {
       return res.status(400).json({ error: "That change is not supported." });
     }
@@ -448,6 +508,170 @@ app.patch("/api/requisitions/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Could not update the requisition." });
+  }
+});
+
+/* ----- Purchase orders API ----- */
+
+const toCents = (amount) => Math.round(amount * 100);
+
+/* A wrong total can't be sent from the browser. */
+function computeTotals(order) {
+  let subtotalCents = 0;
+  order.items.forEach((item) => {
+    const lineCents = toCents(item.quantity * item.unitPrice);
+    item.lineTotal = lineCents / 100;
+    subtotalCents += lineCents;
+  });
+  const taxCents = Math.round(subtotalCents * (order.taxRate / 100));
+  const shippingCents = toCents(order.shipping);
+  order.subtotal = subtotalCents / 100;
+  order.tax = taxCents / 100;
+  order.total = (subtotalCents + taxCents + shippingCents) / 100;
+}
+
+/* An empty box in the form means "use the default" */
+const blankToUndefined = (value) =>
+  value === "" || value === null ? undefined : value;
+
+// Retrieve every purchase order, oldest first
+app.get("/api/purchase-orders", async (req, res) => {
+  try {
+    const orders = await PurchaseOrder.find().sort({ createdAt: 1 });
+    res.set("Cache-Control", "no-store");
+    res.json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not load purchase orders." });
+  }
+});
+
+// Receive a new purchase order, work out its totals
+app.post("/api/purchase-orders", async (req, res) => {
+  console.log("Received purchase order:", req.body);
+  let claimToken = null;
+  try {
+    const body = req.body || {};
+
+    // The number, status and all amounts are never taken from the browser
+    const order = new PurchaseOrder({
+      requisitionId: body.requisitionId,
+      dateCreated: body.dateCreated,
+      requisitioner: body.requisitioner,
+      department: body.department,
+      vendor: body.vendor,
+      shipToName: body.shipToName,
+      shipToAddress: body.shipToAddress,
+      shipToPhone: body.shipToPhone,
+      shipVia: body.shipVia,
+      fob: body.fob,
+      shippingTerms: body.shippingTerms,
+      expectedDelivery: body.expectedDelivery,
+      items: body.items,
+      taxRate: blankToUndefined(body.taxRate),
+      shipping: blankToUndefined(body.shipping),
+      notes: body.notes,
+    });
+
+    await order.validate([
+      "requisitionId",
+      "dateCreated",
+      "requisitioner",
+      "department",
+      "vendor",
+      "shipToName",
+      "shipToAddress",
+      "shipToPhone",
+      "shipVia",
+      "fob",
+      "shippingTerms",
+      "expectedDelivery",
+      "items",
+      "taxRate",
+      "shipping",
+      "notes",
+    ]);
+    computeTotals(order);
+
+    // Claim the requisition first, so two people can't both make a PO from it
+    claimToken = "claim-" + new mongoose.Types.ObjectId().toString();
+    const claimed = await Requisition.findOneAndUpdate(
+      {
+        reqNumber: order.requisitionId,
+        status: "Approved",
+        poId: { $exists: false },
+      },
+      { $set: { poId: claimToken } },
+    );
+    if (!claimed) {
+      claimToken = null;
+      const known = await Requisition.exists({
+        reqNumber: order.requisitionId,
+      });
+      return known
+        ? res.status(409).json({
+            error:
+              "This requisition is not available for a new purchase order.",
+          })
+        : res.status(404).json({ error: "Requisition not found." });
+    }
+
+    order.poNumber = await nextId("purchaseOrder", "PO");
+    await order.save();
+
+    // Replace the temporary claim with the real PO number
+    await Requisition.updateOne(
+      { reqNumber: order.requisitionId, poId: claimToken },
+      { $set: { poId: order.poNumber } },
+    );
+    claimToken = null;
+    res.status(201).json(order);
+  } catch (error) {
+    // Give the requisition back if the order could not be saved
+    if (claimToken) {
+      await Requisition.updateOne(
+        { poId: claimToken },
+        { $unset: { poId: "" } },
+      ).catch((undoError) => console.error(undoError));
+    }
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors)
+        .map((e) => e.message)
+        .join(" ");
+      return res.status(400).json({ error: message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Could not save the purchase order." });
+  }
+});
+
+// Cancel an active purchase order and free its requisition for a new PO.
+app.patch("/api/purchase-orders/:id", async (req, res) => {
+  try {
+    if (!req.body || req.body.status !== "Cancelled") {
+      return res.status(400).json({ error: "That change is not supported." });
+    }
+    const updated = await PurchaseOrder.findOneAndUpdate(
+      { poNumber: req.params.id, status: "Active" },
+      { $set: { status: "Cancelled" } },
+      { returnDocument: "after" },
+    );
+    if (!updated) {
+      const known = await PurchaseOrder.exists({ poNumber: req.params.id });
+      return known
+        ? res
+            .status(409)
+            .json({ error: "Only an active purchase order can be cancelled." })
+        : res.status(404).json({ error: "Purchase order not found." });
+    }
+    await Requisition.updateMany(
+      { poId: updated.poNumber },
+      { $unset: { poId: "" } },
+    );
+    res.json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not cancel the purchase order." });
   }
 });
 

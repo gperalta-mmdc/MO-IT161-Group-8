@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("pending-delivery-table-body")) {
-    setupDeliveryPage();
+    startPage(setupDeliveryPage);
   }
 });
 
@@ -63,13 +63,18 @@ function setupDeliveryPage() {
       const purchaseOrder = purchaseOrders.find((po) => po.id === poId);
       if (!purchaseOrder) return;
 
-      purchaseOrder.status = "Cancelled";
-      savePurchaseOrders(purchaseOrders);
-      await releaseRequisitionFromPo(purchaseOrder);
+      button.disabled = true;
+      try {
+        // The server cancels the order and frees its requisition
+        await cancelPurchaseOrder(poId);
+        showMessage(poId + " has been cancelled.");
+      } catch (error) {
+        showMessage(error.message);
+        await reloadOrderData();
+      }
       renderPendingDeliveryTable();
       renderCancelledPurchaseOrdersTable(false);
       populateDeliveryPoOptions();
-      showMessage(purchaseOrder.id + " has been cancelled.");
     }
   });
 
@@ -140,17 +145,18 @@ function setupDeliveryPage() {
       saved = await createDelivery(delivery);
     } catch (error) {
       showMessage(error.message);
+      await loadPurchaseOrders().catch(() => {});
+      renderPendingDeliveryTable();
+      populateDeliveryPoOptions();
       return;
     } finally {
       saveDeliveryBtn.disabled = false;
     }
 
-    // Only a complete, good-condition delivery closes the PO.
-    const isComplete = condition.value.startsWith("Complete");
-    if (isComplete) {
-      purchaseOrder.status = "Delivered";
-      savePurchaseOrders(purchaseOrders);
-    }
+    // The server closes the PO when the delivery is complete and in good condition
+    await loadPurchaseOrders().catch(() => {});
+    const updatedPo = getPurchaseOrders().find((po) => po.id === poId);
+    const isComplete = Boolean(updatedPo) && updatedPo.status === "Delivered";
 
     showMessage(
       saved.id +
@@ -207,15 +213,11 @@ function renderPendingDeliveryTable() {
     const row = document.createElement("tr");
     row.setAttribute("data-id", purchaseOrder.id);
     row.innerHTML =
-      "<td>" +
-      purchaseOrder.id +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.vendor +
-      "</td>" +
-      "<td>" +
-      (purchaseOrder.expectedDelivery || "—") +
-      "</td>" +
+      tds(
+        purchaseOrder.id,
+        purchaseOrder.vendor,
+        purchaseOrder.expectedDelivery || "—",
+      ) +
       '<td><select class="delivery-status-select">' +
       "<option>Open</option><option>Sent to Vendor</option>" +
       "<option>Acknowledged</option><option>In Transit</option>" +
@@ -262,24 +264,14 @@ function renderDeliveryLogTable() {
     const row = document.createElement("tr");
     row.setAttribute("data-id", delivery.id);
     row.innerHTML =
-      "<td>" +
-      delivery.id +
-      "</td>" +
-      "<td>" +
-      delivery.poId +
-      "</td>" +
-      "<td>" +
-      vendor +
-      "</td>" +
-      "<td>" +
-      delivery.dateReceived +
-      "</td>" +
-      "<td>" +
-      delivery.condition +
-      "</td>" +
-      "<td>" +
-      delivery.receivedBy +
-      "</td>" +
+      tds(
+        delivery.id,
+        delivery.poId,
+        vendor,
+        delivery.dateReceived,
+        delivery.condition,
+        delivery.receivedBy,
+      ) +
       '<td><div class="btn-action">' +
       '<button type="button" class="btn-content js-view-delivery-log">View</button>' +
       "</div></td>";

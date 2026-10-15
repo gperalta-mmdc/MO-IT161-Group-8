@@ -64,6 +64,20 @@ function getTodayIso() {
   return yyyy + "-" + mm + "-" + dd;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/* Builds "<td>..</td><td>..</td>" from plain values, escaping every value */
+function tds(...values) {
+  return values.map((v) => "<td>" + escapeHtml(v) + "</td>").join("");
+}
+
 /* Formats a number as pesos */
 function formatPeso(value) {
   return (

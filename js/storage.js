@@ -85,7 +85,7 @@ async function updateRequisition(id, changes) {
 
 async function startPage(setup) {
   try {
-    await loadRequisitions();
+    await Promise.all([loadRequisitions(), loadPurchaseOrders()]);
   } catch (error) {
     console.error("Could not load requisitions from the server:", error);
     showMessage("Cannot reach the server. Start it with: npm start");
@@ -94,14 +94,50 @@ async function startPage(setup) {
   setupRoleAccess();
 }
 
-/* ----- Purchase Orders ----- */
+/* ----- Purchase Orders (stored in MongoDB, through the server) ----- */
 
+let purchaseOrdersCache = []; // filled by loadPurchaseOrders()
+
+/* Retrieves every purchase order from the server */
+async function loadPurchaseOrders() {
+  const response = await fetch("/api/purchase-orders");
+  if (!response.ok) throw new Error("Server responded " + response.status);
+  purchaseOrdersCache = await response.json();
+  return purchaseOrdersCache;
+}
 function getPurchaseOrders() {
-  return getRecords(STORAGE_KEYS.purchaseOrders);
+  return JSON.parse(JSON.stringify(purchaseOrdersCache));
 }
 
-function savePurchaseOrders(purchaseOrders) {
-  return saveRecords(STORAGE_KEYS.purchaseOrders, purchaseOrders);
+/* Reloads purchase orders and requisitions */
+async function reloadOrderData() {
+  try {
+    await Promise.all([loadPurchaseOrders(), loadRequisitions()]);
+  } catch (error) {
+    console.error("Could not refresh from the server:", error);
+  }
+}
+
+/* Sends one new purchase order to the server */
+async function createPurchaseOrder(purchaseOrder) {
+  const saved = await sendToServer(
+    "/api/purchase-orders",
+    "POST",
+    purchaseOrder,
+  );
+  await reloadOrderData();
+  return saved;
+}
+
+/* Cancels an active purchase order on the server */
+async function cancelPurchaseOrder(id) {
+  const updated = await sendToServer(
+    "/api/purchase-orders/" + encodeURIComponent(id),
+    "PATCH",
+    { status: "Cancelled" },
+  );
+  await reloadOrderData();
+  return updated;
 }
 
 /* ----- Delivery Receipts (stored in MongoDB) ----- */
@@ -139,21 +175,6 @@ async function createDelivery(delivery) {
     throw new Error(result.error || "Could not save the delivery receipt.");
   }
   return result;
-}
-/* Frees the requisition behind a cancelled PO so a new PO can be made for it. */
-async function releaseRequisitionFromPo(purchaseOrder) {
-  try {
-    await sendToServer("/api/requisitions/release", "POST", {
-      poId: purchaseOrder.id,
-    });
-    await loadRequisitions();
-  } catch (error) {
-    console.error("Could not free the requisition:", error);
-    showMessage(
-      "The order was cancelled, but its requisition could not be freed: " +
-        error.message,
-    );
-  }
 }
 
 /* ----- Invoices (stored in MongoDB) ----- */

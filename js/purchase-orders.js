@@ -57,13 +57,18 @@ function setupPurchaseOrderPage() {
     }
 
     if (button.classList.contains("js-cancel-po")) {
-      purchaseOrder.status = "Cancelled";
-      savePurchaseOrders(purchaseOrders);
-      await releaseRequisitionFromPo(purchaseOrder);
+      button.disabled = true;
+      try {
+        // The server cancels the order and frees its requisition
+        await cancelPurchaseOrder(id);
+        showMessage(id + " has been cancelled.");
+      } catch (error) {
+        showMessage(error.message);
+        await reloadOrderData();
+      }
       renderApprovedRequisitionsTable();
       renderActivePurchaseOrdersTable();
       renderCancelledPurchaseOrdersTable();
-      showMessage(purchaseOrder.id + " has been cancelled.");
     }
   });
 
@@ -87,21 +92,13 @@ function renderApprovedRequisitionsTable() {
     const row = document.createElement("tr");
     row.setAttribute("data-id", requisition.id);
     row.innerHTML =
-      "<td>" +
-      requisition.id +
-      "</td>" +
-      "<td>" +
-      requisition.department +
-      "</td>" +
-      "<td>" +
-      requisition.status +
-      "</td>" +
-      "<td>" +
-      (requisition.decidedBy || "—") +
-      "</td>" +
-      "<td>" +
-      (requisition.dateDecided || "—") +
-      "</td>" +
+      tds(
+        requisition.id,
+        requisition.department,
+        requisition.status,
+        requisition.decidedBy || "—",
+        requisition.dateDecided || "—",
+      ) +
       '<td><div class="btn-action">' +
       '<a href="purchase-order-detail.html?reqId=' +
       encodeURIComponent(requisition.id) +
@@ -123,24 +120,14 @@ function renderActivePurchaseOrdersTable() {
     const row = document.createElement("tr");
     row.setAttribute("data-id", purchaseOrder.id);
     row.innerHTML =
-      "<td>" +
-      purchaseOrder.id +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.vendor +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.dateCreated +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.requisitioner +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.status +
-      "</td>" +
-      "<td>" +
-      formatPeso(purchaseOrder.total) +
-      "</td>" +
+      tds(
+        purchaseOrder.id,
+        purchaseOrder.vendor,
+        purchaseOrder.dateCreated,
+        purchaseOrder.requisitioner,
+        purchaseOrder.status,
+        formatPeso(purchaseOrder.total),
+      ) +
       '<td><div class="btn-action">' +
       '<button type="button" class="btn-content js-view-po">View</button>' +
       '<button type="button" class="reject-btn js-cancel-po">Cancel Order</button>' +

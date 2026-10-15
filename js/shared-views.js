@@ -246,25 +246,14 @@ function renderCancelledPurchaseOrdersTable(includeRequisitions = true) {
 
   cancelledPOs.forEach((purchaseOrder) => {
     const row = document.createElement("tr");
-    row.innerHTML =
-      "<td>" +
-      purchaseOrder.id +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.vendor +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.dateCreated +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.requisitioner +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.status +
-      "</td>" +
-      "<td>" +
-      purchaseOrder.total +
-      "</td>";
+    row.innerHTML = tds(
+      purchaseOrder.id,
+      purchaseOrder.vendor,
+      purchaseOrder.dateCreated,
+      purchaseOrder.requisitioner,
+      purchaseOrder.status,
+      formatPeso(purchaseOrder.total),
+    );
     tableBody.appendChild(row);
   });
 
@@ -273,21 +262,14 @@ function renderCancelledPurchaseOrdersTable(includeRequisitions = true) {
   // No PO was ever created for these, so vendor and total don't exist yet
   cancelledRequisitions.forEach((requisition) => {
     const row = document.createElement("tr");
-    row.innerHTML =
-      "<td>" +
-      requisition.id +
-      "</td>" +
-      "<td>—</td>" +
-      "<td>" +
-      requisition.dateSubmitted +
-      "</td>" +
-      "<td>" +
-      requisition.requestedBy +
-      "</td>" +
-      "<td>" +
-      requisition.status +
-      "</td>" +
-      "<td>—</td>";
+    row.innerHTML = tds(
+      requisition.id,
+      "—",
+      requisition.dateSubmitted,
+      requisition.requestedBy,
+      requisition.status,
+      "—",
+    );
     tableBody.appendChild(row);
   });
 }

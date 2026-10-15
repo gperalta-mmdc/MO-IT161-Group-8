@@ -12,6 +12,7 @@ async function refreshInvoicePage() {
     loadInvoices(),
     loadVendors(),
     loadDeliveries(),
+    loadPurchaseOrders(),
   ]);
 
   if (results.some((result) => result.status === "rejected")) {
@@ -32,7 +33,9 @@ async function refreshInvoicePage() {
 function setupInvoicePage() {
   refreshInvoicePage();
 
-  const pendingTableBody = document.getElementById("invoice-pending-table-body");
+  const pendingTableBody = document.getElementById(
+    "invoice-pending-table-body",
+  );
   const invoiceForm = document.getElementById("invoice-record-form");
   const poSelect = document.getElementById("invoicePO");
   const vendorSelect = document.getElementById("invoiceVendor");
@@ -298,7 +301,9 @@ function populateInvoiceVendorOptions() {
 /* Purchase order dropdown: every PO that has not been cancelled */
 function populateInvoicePoOptions() {
   const select = document.getElementById("invoicePO");
-  const eligible = getPurchaseOrders().filter((po) => po.status !== "Cancelled");
+  const eligible = getPurchaseOrders().filter(
+    (po) => po.status !== "Cancelled",
+  );
 
   select.innerHTML = "";
   const placeholder = document.createElement("option");
@@ -329,8 +334,7 @@ function populateInvoiceDeliveryOptions(poId) {
     .forEach((delivery) => {
       const option = document.createElement("option");
       option.value = delivery.id;
-      option.textContent =
-        delivery.id + " — received " + delivery.dateReceived;
+      option.textContent = delivery.id + " — received " + delivery.dateReceived;
       select.appendChild(option);
     });
 }

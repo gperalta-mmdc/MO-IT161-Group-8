@@ -174,24 +174,14 @@ function renderRequisitionsTable() {
     const row = document.createElement("tr");
     row.setAttribute("data-id", requisition.id);
     row.innerHTML =
-      "<td>" +
-      requisition.id +
-      "</td>" +
-      "<td>" +
-      requisition.requestedBy +
-      "</td>" +
-      "<td>" +
-      requisition.department +
-      "</td>" +
-      "<td>" +
-      requisition.items.length +
-      "</td>" +
-      "<td>" +
-      requisition.dateSubmitted +
-      "</td>" +
-      "<td>" +
-      requisition.status +
-      "</td>" +
+      tds(
+        requisition.id,
+        requisition.requestedBy,
+        requisition.department,
+        requisition.items.length,
+        requisition.dateSubmitted,
+        requisition.status,
+      ) +
       '<td><div class="btn-action">' +
       '<button class="btn-content js-view" type="button">View Request</button>' +
       '<button class="btn-content js-print" type="button">Print</button>' +
