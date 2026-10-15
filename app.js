@@ -6,8 +6,6 @@ const Delivery = require("./models/Delivery");
 const Counter = require("./models/Counter");
 const Requisition = require("./models/Requisition");
 const PurchaseOrder = require("./models/PurchaseOrder");
-const Invoice = require("./models/Invoice");
-const Vendor = require("./models/Vendor");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,15 +13,9 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 app.use(express.json({ limit: "100kb" }));
 
-const PRIVATE_PATHS = [
-  "/app.js",
-  "/package.json",
-  "/package-lock.json",
-  "/node_modules",
-  "/models",
-  "/.env",
-  "/test-deliveries.js",
-];
+// Only these files and folders can be downloaded; everything else gets a 404
+const PUBLIC_PATH =
+  /^\/(?:[\w-]+\.(?:html|css)|rbac\.js|script\.js|js\/[\w-]+\.js|resources\/.+)?$/;
 app.use((req, res, next) => {
   let requested;
   try {
@@ -34,10 +26,8 @@ app.use((req, res, next) => {
   requested = path.posix
     .normalize("/" + requested.replace(/\\/g, "/"))
     .toLowerCase();
-  const blocked = PRIVATE_PATHS.some(
-    (p) => requested === p || requested.startsWith(p + "/"),
-  );
-  if (blocked) return res.status(404).send("Not found");
+  if (requested.startsWith("/api/")) return next(); // the API has its own rules
+  if (!PUBLIC_PATH.test(requested)) return res.status(404).send("Not found");
   next();
 });
 
@@ -150,240 +140,6 @@ app.post("/api/deliveries", async (req, res) => {
   }
 });
 
-/* ----- Invoices API ----- */
-const DECISION_REMARKS_FIELD = "remarks";
-
-app.get("/api/invoices", async (req, res) => {
-  try {
-    const invoices = await Invoice.find().sort({ createdAt: 1 });
-    res.set("Cache-Control", "no-store");
-    res.json(invoices);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Could not load invoices." });
-  }
-});
-
-app.post("/api/invoices", async (req, res) => {
-  try {
-    const {
-      vendor,
-      poId,
-      deliveryReceipt,
-      invoiceDate,
-      amount,
-      remarks,
-      invoiceFileName,
-    } = req.body || {};
-
-    const invoice = new Invoice({
-      vendor,
-      poId,
-      deliveryReceipt,
-      invoiceDate,
-      amount,
-      remarks,
-      invoiceFileName,
-    });
-
-    await invoice.validate([
-      "vendor",
-      "poId",
-      "deliveryReceipt",
-      "invoiceDate",
-      "amount",
-      "remarks",
-      "invoiceFileName",
-    ]);
-
-    // The invoice must point at a real purchase order that is not cancelled
-    const purchaseOrder = await PurchaseOrder.findOne({
-      poNumber: invoice.poId,
-    });
-    if (!purchaseOrder) {
-      return res.status(404).json({ error: "Purchase order not found." });
-    }
-    if (purchaseOrder.status === "Cancelled") {
-      return res
-        .status(409)
-        .json({ error: "A cancelled purchase order cannot be invoiced." });
-    }
-    if (purchaseOrder.vendor !== invoice.vendor) {
-      return res
-        .status(400)
-        .json({ error: "The vendor does not match the purchase order." });
-    }
-
-    // A delivery receipt, if given, must belong to that same purchase order
-    if (invoice.deliveryReceipt) {
-      const receiptMatches = await Delivery.exists({
-        drNumber: invoice.deliveryReceipt,
-        poId: invoice.poId,
-      });
-      if (!receiptMatches) {
-        return res.status(400).json({
-          error:
-            "That delivery receipt does not belong to this purchase order.",
-        });
-      }
-    }
-
-    invoice.invoiceNumber = await nextId("invoice", "INV");
-    await invoice.save();
-    res.status(201).json(invoice);
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      const message = Object.values(error.errors)
-        .map((e) => e.message)
-        .join(" ");
-      return res.status(400).json({ error: message });
-    }
-    console.error(error);
-    res.status(500).json({ error: "Could not save the invoice." });
-  }
-});
-
-// Approve or reject an invoice (only while it is still "Pending Review")
-app.put("/api/invoices/:id", async (req, res) => {
-  try {
-    const { status, remarks } = req.body || {};
-    if (status !== "Approved for Payment" && status !== "Rejected") {
-      return res.status(400).json({ error: "Status is not a valid decision." });
-    }
-
-    const note = typeof remarks === "string" ? remarks.trim() : "";
-    const changes = { status: status };
-    if (note) changes[DECISION_REMARKS_FIELD] = note;
-
-    // One atomic step: the status filter means a second decision can never get through
-    const invoice = await Invoice.findOneAndUpdate(
-      { invoiceNumber: req.params.id, status: "Pending Review" },
-      { $set: changes },
-      { returnDocument: "after", runValidators: true },
-    );
-
-    if (!invoice) {
-      const known = await Invoice.exists({ invoiceNumber: req.params.id });
-      return known
-        ? res
-            .status(409)
-            .json({ error: "This invoice has already been decided." })
-        : res.status(404).json({ error: "Invoice not found." });
-    }
-
-    res.json(invoice);
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      const message = Object.values(error.errors)
-        .map((e) => e.message)
-        .join(" ");
-      return res.status(400).json({ error: message });
-    }
-    console.error(error);
-    res.status(500).json({ error: "Could not update the invoice." });
-  }
-});
-
-/* ----- Vendors API ----- */
-
-app.get("/api/vendors", async (req, res) => {
-  try {
-    const vendors = await Vendor.find().sort({ createdAt: 1 });
-    res.set("Cache-Control", "no-store");
-    res.json(vendors);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Could not load vendors." });
-  }
-});
-
-app.post("/api/vendors", async (req, res) => {
-  try {
-    const {
-      name,
-      category,
-      contactPerson,
-      email,
-      phone,
-      address,
-      tin,
-      status,
-    } = req.body || {};
-
-    const vendor = new Vendor({
-      name,
-      category,
-      contactPerson,
-      email,
-      phone,
-      address,
-      tin,
-      status,
-    });
-
-    await vendor.validate([
-      "name",
-      "category",
-      "contactPerson",
-      "email",
-      "phone",
-      "address",
-      "tin",
-      "status",
-    ]);
-
-    vendor.vendorId = await nextId("vendor", "VEN");
-    await vendor.save();
-    res.status(201).json(vendor);
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      const message = Object.values(error.errors)
-        .map((e) => e.message)
-        .join(" ");
-      return res.status(400).json({ error: message });
-    }
-    console.error(error);
-    res.status(500).json({ error: "Could not save the vendor." });
-  }
-});
-
-// Edit an existing vendor
-app.put("/api/vendors/:id", async (req, res) => {
-  try {
-    const vendor = await Vendor.findOne({ vendorId: req.params.id });
-    if (!vendor) {
-      return res.status(404).json({ error: "Vendor not found." });
-    }
-
-    const fields = [
-      "name",
-      "category",
-      "contactPerson",
-      "email",
-      "phone",
-      "address",
-      "tin",
-      "status",
-    ];
-    fields.forEach((field) => {
-      if (req.body && req.body[field] !== undefined) {
-        vendor[field] = req.body[field];
-      }
-    });
-
-    await vendor.save();
-    res.json(vendor);
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      const message = Object.values(error.errors)
-        .map((e) => e.message)
-        .join(" ");
-      return res.status(400).json({ error: message });
-    }
-    console.error(error);
-    res.status(500).json({ error: "Could not update the vendor." });
-  }
-});
 /* ----- Requisitions API ----- */
 
 /* Today's date used as the decision date */
