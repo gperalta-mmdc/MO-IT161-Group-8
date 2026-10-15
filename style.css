@@ -991,6 +991,29 @@ body {
   margin-bottom: 4px;
 }
 
+/*Approvals Bootstrap refinement*/
+
+.approvals-page .navigation .nav-link {
+  border-radius: 6px;
+  transition: 
+  background-color 150ms ease,
+  color 150ms ease;
+}
+
+.approvals-page .navigation .nav-link:focus-visible,
+.approvals-page .btn:focus-visible {
+  outline: 3px solid #80b7e5;
+  outline-offset:2px;
+}
+
+.approvals-page .navigation .nav-link.active-link {
+  background: #d9e8f4;
+  color: #174e7d;
+  box-shadow: inset 3px 0 #337ab7;
+}
+
+
+
 /* ----- 4 Inventory (inventory.html) ----- */
 #inventory-filters input,
 #inventory-filters select,
