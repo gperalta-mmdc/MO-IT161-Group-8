@@ -1012,6 +1012,28 @@ body {
   box-shadow: inset 3px 0 #337ab7;
 }
 
+/*Requisitions Bootstrap refinement*/
+
+.requisition-page .navigation .nav-link {
+  border-radius: 6px;
+  transition:
+  background-color 150ms ease,
+  color 150ms ease;
+}
+
+.requisition-page .navigation .nav-link:focus-visible,
+.requisition-page .btn:focus-visible {
+  outline: 3px solid #80b7e5;
+  outline-offset: 2px;
+}
+
+.requisition-page .navigation .nav-link.active-link {
+  background: #d9e8f4;
+  color: #174e7d;
+  box-shadow: inset 3px 0 #337ab7;
+}
+
+
 
 
 /* ----- 4 Inventory (inventory.html) ----- */
