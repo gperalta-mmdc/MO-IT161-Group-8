@@ -8,8 +8,8 @@ Mark Anthony Goyon<br>
 Daniel Cotoner<br>
 <br>
 Documentation : <br>
-AI-Use Statement : https://docs.google.com/document/d/19z25TC36VcNYAJuEGOokYcKDwtZ2JF6s1mCVSkrNDMA/edit?usp=sharing <br>
-Development Worksheet : <br>https://docs.google.com/spreadsheets/d/12RqRDf8C7PoGM7Ky-QcVY0JuqXZ4AIcQhaRaPh_aJ_g/edit?usp=sharing<br><br>
+AI-Use Statement : <br>https://docs.google.com/document/d/1FEDGw5IG1r7O3eRKrWmEwAaLR87Xbddr/edit?usp=sharing&ouid=110694898123760881684&rtpof=true&sd=true<br>
+Development Worksheet : <br>https://docs.google.com/spreadsheets/d/1s5irJ8kUzLtCR2jZjpLytK53Gpbsq4I_/edit?usp=sharing&ouid=110694898123760881684&rtpof=true&sd=true<br><br>
 Project - ProcureIT<br>
 <br>
 Log-in Credentials : <br>
