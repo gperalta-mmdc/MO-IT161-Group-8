@@ -1,5 +1,7 @@
 Web Systems and Technology<br>
 MO-IT161 - Group 8<br>
+Milestone 2
+<br>
 <br>
 Members :<br> 
 Giannros Peralta<br>
@@ -25,12 +27,22 @@ returns. Gives staff, managers, and IT staff a system to request, approve, and t
 from procurement to return/disposal. It also helps meet 5S standards by clearing out paper-trails 
 and keeping hardware records organized in one place.<br>
 <br>
-Implemented Functions : <br>
-- Log-In credentials with different user roles: staff / supervisor / manager<br>
+Active html pages :<br>
+- Dashboard
+- Requisition
+- Approval
+- Purchase Order
+- Purchase Order Detail
+- Delivery
+<br><br>
+Implemented Functions : Milestone 2 <br>
+- Log-In credentials (demo accounts) with different user roles: staff / supervisor / manager<br>
 - Workflow Stepper shows in which process the user is currently working on<br>
 - Dashboard Counter reflects workflow process, shows accurate number of pending, approved and active processes<br>
 - Functional workflow from Dashboard to Delivery Receipt creation. (Invoice Processing, Vendor Management,<br>
   Inventory /Asset Management and Reports are currently not functional. )<br>
 - Requisition Ids, PO Numbers and DR Numbers are auto-generated for data continuity<br>
 - Purchase Order implements automatic calculation of prices together with VAT and input for other fees.<br>
-- View and Summary buttons currently show placeholders, will be implemented for the next milestone<br>
+- Back-end implementation via Node.js<br>
+- Used MongoDB as the web app's database<br>
+- Minor implementation of Bootstrap on active pages<br>
