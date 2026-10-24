@@ -204,6 +204,7 @@ function highlightActiveNavLink() {
 
 /* ----- Header button elements ----- */
 function setupHeaderButtons() {
+  ensureSharedHeaderDialogs();
   const notifBtn = document.getElementById("notifBtn");
   const editProfileBtn = document.getElementById("editProfileBtn");
   const settingsBtn = document.getElementById("settingsBtn");
@@ -251,6 +252,82 @@ function setupHeaderButtons() {
       showMessage("Printing purchase order...");
     });
   }
+}
+
+/* Dashboard owns the source dialogs; create matching dialogs on other app pages. */
+function ensureSharedHeaderDialogs() {
+  const page = window.location.pathname.split("/").pop();
+  const supportedPages = new Set([
+    "requisition.html", "approvals.html", "delivery.html", "invoices.html",
+    "vendors.html", "inventory.html", "reports.html",
+  ]);
+  if (!supportedPages.has(page) || document.getElementById("notifications-modal")) return;
+
+  document.body.classList.add("header-dialog-page");
+  const notificationButton = document.getElementById("notifBtn");
+  if (notificationButton) {
+    notificationButton.setAttribute("aria-haspopup", "dialog");
+    notificationButton.setAttribute("aria-controls", "notifications-modal");
+    notificationButton.replaceChildren();
+    const icon = document.createElement("span");
+    icon.className = "notification-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "🔔";
+    notificationButton.append(icon, document.createTextNode(" Notifications "));
+    const badge = document.createElement("span");
+    badge.className = "notification-badge";
+    badge.setAttribute("aria-label", "2 unread");
+    badge.textContent = "2";
+    notificationButton.appendChild(badge);
+  }
+  document.getElementById("editProfileBtn")?.setAttribute("aria-controls", "profile-modal");
+  document.getElementById("settingsBtn")?.setAttribute("aria-controls", "settings-modal");
+  ["notifBtn", "editProfileBtn", "settingsBtn"].forEach((id) => {
+    document.getElementById(id)?.setAttribute("aria-haspopup", "dialog");
+  });
+
+  const dialogs = document.createElement("div");
+  dialogs.innerHTML = `
+    <section class="workflow-summary-overlay notifications-overlay" id="notifications-modal" role="dialog" aria-modal="true" aria-labelledby="notifications-title" hidden>
+      <div class="workflow-summary-dialog notifications-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header notifications-header modal-header"><h2 id="notifications-title">System Notifications</h2><button type="button" class="workflow-summary-x notifications-close" aria-label="Close notifications">&times;</button></header>
+        <div class="notifications-body modal-body" aria-live="polite"><ul class="notifications-list">
+          <li class="notification-item is-unread" data-unread="true" data-notification-category="requisitions"><p>New requisition activity is awaiting review.</p><time>Recently</time></li>
+          <li class="notification-item is-unread" data-unread="true" data-notification-category="purchaseOrders"><p>Procurement workflow records were updated.</p><time>Recently</time></li>
+          <li class="notification-item" data-notification-category="system"><p>Use the navigation menu to review your permitted tasks.</p><time>System notice</time></li>
+        </ul><p class="notifications-empty" id="notifications-empty" hidden>You’re all caught up. No unread notifications.</p></div>
+        <footer class="notifications-footer modal-footer"><button type="button" class="btn btn-outline-primary" id="markAllReadBtn">Mark All Read</button><button type="button" class="btn btn-primary notifications-close">Close</button></footer>
+      </div>
+    </section>
+    <section class="workflow-summary-overlay profile-overlay" id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" hidden>
+      <div class="workflow-summary-dialog profile-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header"><h2 id="profile-modal-title">User Profile &amp; Role Verification</h2><button type="button" class="workflow-summary-x profile-close" aria-label="Close profile dialog">&times;</button></header>
+        <div class="profile-modal-body modal-body"><div class="profile-identity"><img src="./resources/icons/profile.png" alt=""/><h3 id="profile-display-name"></h3><p id="profile-position"></p><span class="profile-role-badge" id="profile-role"></span></div>
+          <section class="profile-account-details"><h3>Account Information</h3><dl><div><dt>Username</dt><dd id="profile-username"></dd></div><div><dt>Work email</dt><dd id="profile-work-email"></dd></div><div><dt>Department</dt><dd id="profile-department"></dd></div></dl></section>
+          <section class="profile-permissions"><h3 id="profile-permissions-heading">Role Permissions</h3><ul id="profile-permission-list"></ul></section>
+          <div class="profile-dialog-actions"><button type="button" class="btn btn-primary profile-close">Close</button></div>
+        </div>
+      </div>
+    </section>
+    <section class="workflow-summary-overlay settings-overlay" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+      <div class="workflow-summary-dialog settings-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header"><h2 id="settings-title">Settings</h2><button type="button" class="workflow-summary-x settings-close" aria-label="Close settings">&times;</button></header>
+        <form id="dashboard-settings-form"><div class="settings-body modal-body">
+          <fieldset class="settings-group"><legend>Display</legend><label class="settings-select-label" for="settings-theme">Color theme</label><select class="form-select" id="settings-theme" name="theme"><option value="light">Light</option><option value="dark">Dark</option></select></fieldset>
+          <fieldset class="settings-group"><legend>Dashboard content</legend><label class="form-check"><input class="form-check-input" type="checkbox" name="showStepper" id="settings-stepper"><span class="form-check-label">Show procurement workflow stepper</span></label>
+            <div class="settings-card-grid">${[
+              ["card-requisitions", "Purchase Requisitions"], ["card-approvals", "Approvals"], ["card-purchaseOrders", "Purchase Orders"], ["card-deliveryReceipts", "Delivery Receipts"], ["card-invoices", "Invoice Processing"], ["card-vendors", "Vendor Management"], ["card-inventory", "Inventory and Asset Tagging"], ["card-reports", "Reports"],
+            ].map(([name, label]) => `<label class="form-check"><input class="form-check-input" type="checkbox" name="${name}"><span class="form-check-label">${label}</span></label>`).join("")}</div>
+          </fieldset>
+          <fieldset class="settings-group"><legend>Notifications</legend><label class="form-check"><input class="form-check-input" type="checkbox" name="showNotificationBadge"><span class="form-check-label">Show unread notification count</span></label>${[
+            ["notification-requisitions", "Requisition updates"], ["notification-purchaseOrders", "Purchase order updates"], ["notification-system", "System notices"],
+          ].map(([name, label]) => `<label class="form-check"><input class="form-check-input" type="checkbox" name="${name}"><span class="form-check-label">${label}</span></label>`).join("")}</fieldset>
+          <p class="settings-save-status" id="settings-save-status" role="status" aria-live="polite"></p>
+        </div><footer class="modal-footer"><button type="button" class="btn btn-outline-secondary" id="resetSettingsBtn">Reset</button><button type="button" class="btn btn-outline-primary settings-close">Close</button><button type="submit" class="btn btn-primary">Save Settings</button></footer></form>
+      </div>
+    </section>`;
+  document.body.appendChild(dialogs);
+  applyDashboardSettings(loadDashboardSettings());
 }
 
 /* Shared report actions used by pages with Download Report / View Summary. */
