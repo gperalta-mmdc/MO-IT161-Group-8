@@ -2135,6 +2135,64 @@ textarea:disabled {
   --bs-table-hover-color: #ffffff;
 }
 
+.report-summary-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(80vh, 720px);
+  overflow-y: auto;
+}
+
+.report-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.report-summary-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #d6e1eb;
+  border-radius: 8px;
+  background: #f5f8fb;
+}
+
+.report-summary-card h3 {
+  margin: 0 0 8px;
+  color: #174e7d;
+  font-size: 0.95rem;
+}
+
+.report-summary-card strong {
+  display: block;
+  color: #2879b9;
+  font-size: 1.7rem;
+}
+
+.report-summary-card p {
+  margin: 6px 0 0;
+  color: #647482;
+  font-size: 0.9rem;
+}
+
+.report-summary-close {
+  display: block;
+  margin-left: auto;
+}
+
+.theme-dark .report-summary-card {
+  border-color: #465665;
+  background: #202c38;
+}
+
+.theme-dark .report-summary-card h3,
+.theme-dark .report-summary-card strong {
+  color: #9dccf4;
+}
+
+.theme-dark .report-summary-card p {
+  color: #c3ced8;
+}
+
 .theme-dark .content-table th,
 .theme-dark .content fieldset table th,
 .theme-dark .popup-box.history-popup th {

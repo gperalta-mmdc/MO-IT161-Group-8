@@ -207,8 +207,6 @@ function setupHeaderButtons() {
   const notifBtn = document.getElementById("notifBtn");
   const editProfileBtn = document.getElementById("editProfileBtn");
   const settingsBtn = document.getElementById("settingsBtn");
-  const downloadReportBtn = document.getElementById("downloadReportBtn");
-  const viewSummaryBtn = document.getElementById("viewSummaryBtn");
   const printPoBtn = document.getElementById("printPoBtn");
 
   if (notifBtn) {
@@ -246,23 +244,159 @@ function setupHeaderButtons() {
     }
   }
 
-  if (downloadReportBtn) {
-    downloadReportBtn.addEventListener("click", () => {
-      showMessage("Preparing report download...");
-    });
-  }
-
-  if (viewSummaryBtn) {
-    viewSummaryBtn.addEventListener("click", () => {
-      showPopup("Summary Overview", "Here is your quick summary details.");
-    });
-  }
+  setupPageReportActions();
 
   if (printPoBtn) {
     printPoBtn.addEventListener("click", () => {
       showMessage("Printing purchase order...");
     });
   }
+}
+
+/* Shared report actions used by pages with Download Report / View Summary. */
+function setupPageReportActions() {
+  const downloadButton = document.getElementById("downloadReportBtn");
+  const summaryButton =
+    document.getElementById("viewSummaryBtn") ||
+    document.getElementById("viewDeliverySummaryBtn");
+  if (downloadButton) {
+    downloadButton.addEventListener("click", downloadCurrentPageReport);
+  }
+  if (summaryButton) {
+    summaryButton.addEventListener("click", showCurrentPageSummary);
+  }
+}
+
+function getReportPageData() {
+  const page = window.location.pathname.split("/").pop() || "dashboard.html";
+  const requisitions = typeof getRequisitions === "function" ? getRequisitions() : [];
+  const purchaseOrders = typeof getPurchaseOrders === "function" ? getPurchaseOrders() : [];
+  const deliveries = typeof getDeliveries === "function" ? getDeliveries() : [];
+  const invoices = typeof getInvoices === "function" ? getInvoices() : [];
+  const vendors = typeof getVendors === "function" ? getVendors() : [];
+  const role = localStorage.getItem("procureit-role");
+  const signedInName = localStorage.getItem("procureit-name");
+  const restrictedGroups = role === "requisitioner"
+    ? new Set(["Requisitions"])
+    : role === "approver"
+      ? new Set(["Requisitions", "Vendors"])
+      : null;
+  const visibleRequisitions = role === "requisitioner"
+    ? requisitions.filter((record) => record.requestedBy === signedInName)
+    : requisitions;
+  const definitions = {
+    "dashboard.html": ["Procurement Dashboard", "Procurement Overview", [
+      ["Requisitions", visibleRequisitions], ["Purchase Orders", purchaseOrders],
+      ["Delivery Receipts", deliveries], ["Invoices", invoices], ["Vendors", vendors],
+    ]],
+    "requisition.html": ["Purchase Requisitions", "Requisition Summary", [["Requisitions", visibleRequisitions]]],
+    "approvals.html": ["Approvals", "Approval Summary", [["Requisitions", requisitions]]],
+    "purchase-order.html": ["Purchase Orders", "Purchase Order Summary", [["Purchase Orders", purchaseOrders]]],
+    "delivery.html": ["Delivery Receipts", "Delivery Summary", [["Delivery Receipts", deliveries], ["Purchase Orders", purchaseOrders]]],
+    "invoices.html": ["Invoice Processing", "Invoice Summary", [["Invoices", invoices]]],
+    "vendors.html": ["Vendor Management", "Vendor Summary", [["Vendors", vendors]]],
+    "reports.html": ["Procurement Reports", "Reports Summary", [
+      ["Requisitions", visibleRequisitions], ["Purchase Orders", purchaseOrders],
+      ["Delivery Receipts", deliveries], ["Invoices", invoices], ["Vendors", vendors],
+    ]],
+  };
+  const [title, summaryTitle, groups] = definitions[page] || ["Procurement Report", "Summary", []];
+  return {
+    title,
+    summaryTitle,
+    groups: restrictedGroups
+      ? groups.filter(([label]) => restrictedGroups.has(label))
+      : groups,
+  };
+}
+
+function downloadCurrentPageReport() {
+  const { title, groups } = getReportPageData();
+  const rows = [];
+  groups.forEach(([group, records]) => {
+    records.forEach((record) => rows.push({
+      Section: group,
+      ID: record.id || record._id || "",
+      Name: record.vendor || record.requestedBy || record.name || "",
+      Department: record.department || "",
+      Status: record.status || "",
+      Date: record.dateSubmitted || record.dateCreated || record.dateReceived || record.invoiceDate || "",
+      Amount: record.total ?? record.amount ?? "",
+    }));
+  });
+  if (!rows.length) {
+    showMessage("There are no records available to include in this report yet.");
+    return;
+  }
+  const headers = ["Section", "ID", "Name", "Department", "Status", "Date", "Amount"];
+  const escapeCsv = (value) => {
+    const text = String(value ?? "");
+    return /[",\r\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  };
+  const csv = [headers, ...rows.map((row) => headers.map((key) => row[key]))]
+    .map((row) => row.map(escapeCsv).join(","))
+    .join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function showCurrentPageSummary() {
+  const { summaryTitle, groups } = getReportPageData();
+  const overlay = document.createElement("div");
+  overlay.className = "popup-overlay report-summary-overlay";
+  overlay.id = "popup-overlay";
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box report-summary-dialog";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "report-summary-title");
+  const title = document.createElement("h2");
+  title.id = "report-summary-title";
+  title.textContent = summaryTitle;
+  dialog.appendChild(title);
+  const grid = document.createElement("div");
+  grid.className = "report-summary-grid";
+  groups.forEach(([label, records]) => {
+    const card = document.createElement("article");
+    card.className = "report-summary-card";
+    const heading = document.createElement("h3");
+    heading.textContent = label;
+    const count = document.createElement("strong");
+    count.textContent = String(records.length);
+    const note = document.createElement("p");
+    const counts = records.reduce((result, record) => {
+      const status = record.status || "Unspecified";
+      result[status] = (result[status] || 0) + 1;
+      return result;
+    }, {});
+    note.textContent = Object.entries(counts).map(([status, total]) => `${status}: ${total}`).join(" · ") || "No records yet";
+    card.append(heading, count, note);
+    grid.appendChild(card);
+  });
+  dialog.appendChild(grid);
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn btn-primary btn-content report-summary-close";
+  closeButton.textContent = "Close";
+  closeButton.addEventListener("click", closePopup);
+  dialog.appendChild(closeButton);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closePopup();
+  });
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closePopup();
+  });
+  overlay.appendChild(dialog);
+  closePopup();
+  document.body.appendChild(overlay);
+  closeButton.focus();
 }
 
 function setupEditProfileDialog(trigger, modal) {
@@ -1234,6 +1368,15 @@ function setupVendorDocumentsTable() {
 
 /* ----- Reports page (reports.html only) ----- */
 function setupReportsPage() {
+  if (typeof loadRequisitions === "function") {
+    Promise.allSettled([
+      loadRequisitions(),
+      loadPurchaseOrders(),
+      loadDeliveries(),
+      loadInvoices(),
+      loadVendors(),
+    ]);
+  }
   const generateBtn = document.getElementById("generateReportBtn");
   const reportType = document.getElementById("reportType");
   const dateFrom = document.getElementById("reportDateFrom");
