@@ -1,241 +1,171 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Purchase Orders - ProcureIT - Procurement and Inventory System
-    </title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="header-bar">
-      <div class="header-image">
-        <img src="./resources/pit-header.png" alt="ProcureIT" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProcureIT - Purchase Orders</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="dashboard.html">ProcureIT</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="requisition.html">Requisitions</a></li>
+          <li class="nav-item"><a class="nav-link active" href="purchase-order.html">Purchase Orders</a></li>
+          <li class="nav-item"><a class="nav-link" href="approvals.html">Approvals</a></li>
+          <li class="nav-item"><a class="nav-link" href="inventory.html">Inventory</a></li>
+          <li class="nav-item"><a class="nav-link" href="invoices.html">Invoices</a></li>
+        </ul>
+        <div class="d-flex align-items-center text-white">
+          <span id="userRoleBadge" class="badge bg-light text-dark me-3">User Role</span>
+          <button id="logoutBtn" class="btn btn-outline-light btn-sm">Logout</button>
+        </div>
       </div>
-      <div class="header-buttons">
-        <button type="button" id="notifBtn" class="btn-header">
-          Notifications
-        </button>
-        <button type="button" id="editProfileBtn" class="btn-header">
-          Edit Profile
-        </button>
-        <button type="button" id="settingsBtn" class="btn-header">
-          Settings
-        </button>
-        <form action="index.html" method="get">
-          <button type="submit" class="btn-header">Log Out</button>
+    </div>
+  </nav>
+
+  <div class="container my-4">
+    <!-- Page Header & Action Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2><i class="bi bi-file-earmark-text me-2"></i>Purchase Orders</h2>
+        <p class="text-muted mb-0">Manage and track all procurement purchase orders.</p>
+      </div>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPOModal">
+        <i class="bi bi-plus-lg me-1"></i> Create Purchase Order
+      </button>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4 shadow-sm border-0">
+      <div class="card-body">
+        <form id="filterForm" class="row g-3">
+          <div class="col-md-4">
+            <label for="searchPO" class="form-label small text-muted">Search</label>
+            <input type="text" id="searchPO" class="form-control" placeholder="PO Number or Vendor name...">
+          </div>
+          <div class="col-md-3">
+            <label for="statusFilter" class="form-label small text-muted">Status</label>
+            <select id="statusFilter" class="form-select">
+              <option value="">All Statuses</option>
+              <option value="Draft">Draft</option>
+              <option value="Pending Approval">Pending Approval</option>
+              <option value="Approved">Approved</option>
+              <option value="Issued">Issued</option>
+              <option value="Fulfilled">Fulfilled</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="dateFilter" class="form-label small text-muted">Date</label>
+            <input type="date" id="dateFilter" class="form-control">
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="button" id="resetFilterBtn" class="btn btn-outline-secondary w-100">Reset</button>
+          </div>
         </form>
       </div>
     </div>
 
-    <table class="layout-table">
-      <tr>
-        <td width="13%" valign="top" bgcolor="#f8f9fa">
-          <img
-            class="profilepicture"
-            src="./resources/icons/profile.png"
-            alt="Profile picture"
-          />
-          <h3 class="profile-name">Hello, Bruce</h3>
-          <h4 class="profile-department">IT Department - Head</h4>
-          <hr />
-          <br />
-          <nav class="navigation">
-            <ul>
-              <li>
-                <a href="dashboard.html"
-                  ><img
-                    src="./resources/icons/dashboard.png"
-                    alt=""
-                  />Dashboard</a
-                >
-              </li>
-              <li>
-                <a href="requisition.html"
-                  ><img
-                    src="./resources/icons/requisition.png"
-                    alt=""
-                  />Purchase Requisition</a
-                >
-              </li>
-              <li>
-                <a href="approvals.html"
-                  ><img
-                    src="./resources/icons/approvals.png"
-                    alt=""
-                  />Approvals</a
-                >
-              </li>
-              <li>
-                <a href="purchase-order.html"
-                  ><img
-                    src="./resources/icons/purchase-order.png"
-                    alt=""
-                  />Purchase Orders</a
-                >
-              </li>
-              <li>
-                <a href="delivery.html"
-                  ><img src="./resources/icons/delivery.png" alt="" />Delivery
-                  Receipts</a
-                >
-              </li>
-              <li>
-                <a href="invoices.html"
-                  ><img src="./resources/icons/invoices.png" alt="" />Invoice
-                  Processing</a
-                >
-              </li>
-              <li>
-                <a href="vendors.html"
-                  ><img src="./resources/icons/vendors.png" alt="" />Vendor
-                  Management</a
-                >
-              </li>
-              <li>
-                <a href="inventory.html"
-                  ><img src="./resources/icons/inventory.png" alt="" />Inventory
-                  and Asset Tagging</a
-                >
-              </li>
-              <li>
-                <a href="reports.html"
-                  ><img src="./resources/icons/reports.png" alt="" />Reports</a
-                >
-              </li>
-              <br />
-              <hr />
-              <br />
-              <li>
-                <a href="#"
-                  ><img src="./resources/icons/support.png" alt="" />Help and
-                  Support</a
-                >
-              </li>
-            </ul>
-          </nav>
-        </td>
+    <!-- Purchase Orders Data Table -->
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-3">PO Number</th>
+                <th>Vendor</th>
+                <th>Created Date</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th class="text-end pe-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="poTableBody">
+              <!-- Dynamically populated by js/purchase-orders.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
-          <br />
+  <!-- Create Purchase Order Modal -->
+  <div class="modal fade" id="createPOModal" tabindex="-1" aria-labelledby="createPOModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title" id="createPOModalLabel">Create New Purchase Order</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="createPOForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="vendorSelect" class="form-label">Vendor <span class="text-danger">*</span></label>
+                <select id="vendorSelect" class="form-select" required>
+                  <option value="">Select Vendor...</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="requisitionSelect" class="form-label">Linked Requisition (Optional)</label>
+                <select id="requisitionSelect" class="form-select">
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
 
-          <div class="btn-contentgroup">
-            <form action="purchase-order-detail.html" method="get">
-              <button type="submit" class="btn-content">
-                + New Purchase Order
+            <hr class="my-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="mb-0 fw-bold">Line Items</h6>
+              <button type="button" id="addItemBtn" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Add Line Item
               </button>
-              <button type="button" id="viewHistoryBtn" class="btn-content">
-                Purchase Order History
-              </button>
-            </form>
-          </div>
+            </div>
 
-          <h2>Purchase Orders</h2>
-          <div class="subtitle-row">
-            <p>
-              Track and manage all purchase orders created from approved
-              requisitions.
-            </p>
-            <p id="today-label"></p>
-          </div>
-          <hr />
+            <!-- Items Dynamic Container -->
+            <div id="itemsContainer">
+              <div class="row g-2 mb-2 item-row align-items-center">
+                <div class="col-md-5">
+                  <input type="text" class="form-control item-desc" placeholder="Item description / name" required>
+                </div>
+                <div class="col-md-2">
+                  <input type="number" class="form-control item-qty" placeholder="Qty" min="1" required>
+                </div>
+                <div class="col-md-3">
+                  <input type="number" class="form-control item-price" placeholder="Unit Price ($)" step="0.01" min="0" required>
+                </div>
+                <div class="col-md-2 text-end">
+                  <button type="button" class="btn btn-outline-danger btn-sm remove-item-btn" disabled><i class="bi bi-trash"></i></button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" form="createPOForm" class="btn btn-primary">Save Purchase Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <nav class="workflow-stepper" aria-label="Procurement workflow">
-            <ol>
-              <li class="is-complete">
-                <a href="requisition.html"
-                  ><span class="workflow-step-number">1</span
-                  ><span>Requisition</span></a
-                >
-              </li>
-              <li class="is-complete">
-                <a href="approvals.html"
-                  ><span class="workflow-step-number">2</span
-                  ><span>Approval</span></a
-                >
-              </li>
-              <li class="is-current" aria-current="step">
-                <a href="purchase-order.html"
-                  ><span class="workflow-step-number">3</span
-                  ><span>Purchase Order</span></a
-                >
-              </li>
-              <li>
-                <a href="delivery.html"
-                  ><span class="workflow-step-number">4</span
-                  ><span>Fulfillment</span></a
-                >
-              </li>
-            </ol>
-          </nav>
-
-          <fieldset class="content-field">
-            <legend class="content-legend">Approved Requisitions</legend>
-
-            <table class="content-table" border="1">
-              <thead>
-                <tr>
-                  <th>Requisition ID</th>
-                  <th>Department</th>
-                  <th>Decision</th>
-                  <th>Decided By</th>
-                  <th>Date</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="approved-requisitions-table-body"></tbody>
-            </table>
-          </fieldset>
-
-          <fieldset class="content-field">
-            <legend class="content-legend">
-              Pending Delivery from Vendor / Supplier
-            </legend>
-            <table class="content-table" border="1">
-              <thead>
-                <tr>
-                  <th>PO #</th>
-                  <th>Vendor</th>
-                  <th>Date</th>
-                  <th>Requisitioner</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="active-pos-table-body"></tbody>
-            </table>
-          </fieldset>
-
-          <fieldset class="content-field">
-            <legend class="content-legend">Cancelled Orders</legend>
-            <table class="content-table" border="1">
-              <thead>
-                <tr>
-                  <th>PO #</th>
-                  <th>Vendor</th>
-                  <th>Date</th>
-                  <th>Requisitioner</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody id="cancelled-pos-table-body"></tbody>
-            </table>
-          </fieldset>
-        </td>
-      </tr>
-    </table>
-
-    <footer class="footer">
-      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
-    </footer>
-    <script src="js/rbac.js"></script>
-    <script src="js/script.js" defer></script>
-    <script src="js/storage.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/shared-views.js"></script>
-    <script src="js/purchase-orders.js"></script>
-  </body>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/rbac.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/purchase-orders.js"></script>
+</body>
 </html>
