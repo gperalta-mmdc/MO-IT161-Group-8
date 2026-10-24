@@ -2125,6 +2125,16 @@ textarea:disabled {
   border-color: #465665;
 }
 
+.theme-dark .content-table.table {
+  --bs-table-color: #e6edf4;
+  --bs-table-bg: #17212b;
+  --bs-table-border-color: #465665;
+  --bs-table-striped-bg: #202c38;
+  --bs-table-striped-color: #e6edf4;
+  --bs-table-hover-bg: #293744;
+  --bs-table-hover-color: #ffffff;
+}
+
 .theme-dark .content-table th,
 .theme-dark .content fieldset table th,
 .theme-dark .popup-box.history-popup th {
@@ -2167,4 +2177,94 @@ textarea:disabled {
 
 .theme-dark .footer {
   border-top-color: #344352;
+}
+
+/* Delivery page Bootstrap refinements */
+.delivery-page .delivery-toolbar {
+  gap: 8px;
+}
+
+.delivery-page .content-field.card {
+  margin: 12px 10px 20px;
+  border: 1px solid #e1e8ef;
+  border-radius: 10px;
+}
+
+.delivery-page .content-legend {
+  padding: 0 8px;
+  font-weight: 600;
+}
+
+.delivery-page .delivery-form-grid {
+  margin-top: 0;
+}
+
+.delivery-page .delivery-form-grid .form-control,
+.delivery-page .delivery-form-grid .form-select {
+  width: 100%;
+  max-width: none;
+  min-height: 42px;
+}
+
+.delivery-page .delivery-form-grid textarea.form-control {
+  min-height: 110px;
+}
+
+.delivery-page .delivery-form-grid .content-label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.delivery-page .delivery-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.delivery-page .content-field > .table-responsive {
+  margin-top: 8px;
+}
+
+.delivery-page .content-field > .table-responsive .table th,
+.delivery-page .content-field > .table-responsive .table td {
+  min-width: 105px;
+  vertical-align: middle;
+}
+
+.delivery-page .content-field > .table-responsive .table th {
+  color: #174e7d;
+  font-weight: 700;
+}
+
+.delivery-page .delivery-status-select {
+  min-width: 145px;
+}
+
+.theme-dark.delivery-page .content-field.card {
+  border-color: #3a4a59;
+  background: #24313e;
+}
+
+.theme-dark.delivery-page .content-field > .table-responsive .table th {
+  color: #d7eaff;
+}
+
+.theme-dark.delivery-page .delivery-form-grid .form-control,
+.theme-dark.delivery-page .delivery-form-grid .form-select {
+  border-color: #526272;
+  background-color: #202c38;
+  color: #e6edf4;
+}
+
+@media (max-width: 575.98px) {
+  .delivery-page .content-field.card {
+    margin-right: 4px;
+    margin-left: 4px;
+    padding: 12px;
+  }
+
+  .delivery-page .delivery-toolbar {
+    justify-content: flex-start;
+  }
 }
