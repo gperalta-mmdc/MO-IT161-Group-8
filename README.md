@@ -35,6 +35,16 @@ Active html pages :<br>
 - Purchase Order Detail
 - Delivery
 <br><br>
+Instructions for testing Nodejs and MongoDB :
+1. Get the project. Import the project and open on VSCode<br>
+2. Install packages. Open terminal in VSCode and run "npm install"<br>
+3. Create .env file. Create a new file named ".env"<br>
+4. Setup env. In the .env file, it must contain : <br>
+	"PORT=3000<br>
+	 MONGODB_URI=mongodb://127.0.0.1:27017/procureit"<br>
+5. Run "npm start" in terminal<br>
+6. Open a browser and go to : http://localhost:3000
+<br>
 Implemented Functions : Milestone 2 <br>
 - Log-In credentials (demo accounts) with different user roles: staff / supervisor / manager<br>
 - Workflow Stepper shows in which process the user is currently working on<br>
