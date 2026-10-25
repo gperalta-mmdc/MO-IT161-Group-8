@@ -258,7 +258,7 @@ function setupHeaderButtons() {
 function ensureSharedHeaderDialogs() {
   const page = window.location.pathname.split("/").pop();
   const supportedPages = new Set([
-    "requisition.html", "approvals.html", "delivery.html", "invoices.html",
+    "requisition.html", "approvals.html", "purchase-order.html", "purchase-order-detail.html", "delivery.html", "invoices.html",
     "vendors.html", "inventory.html", "reports.html",
   ]);
   if (!supportedPages.has(page) || document.getElementById("notifications-modal")) return;
