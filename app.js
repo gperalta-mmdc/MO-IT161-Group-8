@@ -432,6 +432,7 @@ app.patch("/api/purchase-orders/:id", async (req, res) => {
     res.status(500).json({ error: "Could not cancel the purchase order." });
   }
 });
+
 /* ----- Invoices API ----- */
 
 app.get("/api/invoices", async (req, res) => {
@@ -621,6 +622,7 @@ app.put("/api/vendors/:id", async (req, res) => {
     res.status(500).json({ error: "Could not update the vendor." });
   }
 });
+
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "Not found." });
 });
