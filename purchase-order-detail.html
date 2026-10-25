@@ -1,120 +1,596 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ProcureIT - Purchase Order Detail</title>
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- Navigation Header -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="dashboard.html">ProcureIT</a>
-      <div class="navbar-nav me-auto">
-        <a class="nav-link text-white" href="purchase-order.html"><i class="bi bi-arrow-left me-1"></i> Back to Purchase Orders</a>
-      </div>
-    </div>
-  </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Create Purchase Order - ProcureIT - Procurement and Inventory System
+    </title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-  <div class="container my-4">
-    <!-- Top Header & Dynamic Action Buttons -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 id="poNumberHeading" class="mb-1">PO # Loading...</h2>
-        <div><span id="poStatusBadge" class="badge bg-secondary fs-6">Status: Loading</span></div>
-      </div>
-      <div id="actionButtons" class="d-flex gap-2">
-        <!-- Rendered dynamically by js/purchase-order-detail.js (e.g., Submit, Approve, Issue) -->
-      </div>
-    </div>
-
-    <!-- Info Cards Row -->
-    <div class="row g-4 mb-4">
-      <!-- Vendor Information Card -->
-      <div class="col-md-6">
-        <div class="card h-100 shadow-sm border-0">
-          <div class="card-header bg-light fw-bold">
-            <i class="bi bi-building me-2"></i>Vendor Information
-          </div>
-          <div class="card-body">
-            <h5 id="vendorName" class="card-title text-primary">--</h5>
-            <p class="mb-1 text-muted"><i class="bi bi-envelope me-2"></i><span id="vendorEmail">--</span></p>
-            <p class="mb-0 text-muted"><i class="bi bi-telephone me-2"></i><span id="vendorPhone">--</span></p>
-          </div>
-        </div>
+  <body class="purchase-order-detail-page">
+    <div class="header-bar">
+      <div class="header-image">
+        <img src="./resources/pit-header.png" alt="ProcureIT" />
       </div>
 
-      <!-- Metadata Card -->
-      <div class="col-md-6">
-        <div class="card h-100 shadow-sm border-0">
-          <div class="card-header bg-light fw-bold">
-            <i class="bi bi-info-circle me-2"></i>Order Information
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-6 mb-3">
-                <span class="text-muted d-block small">Created Date</span>
-                <strong id="createdDate">--</strong>
-              </div>
-              <div class="col-6 mb-3">
-                <span class="text-muted d-block small">Created By</span>
-                <strong id="createdBy">--</strong>
-              </div>
-              <div class="col-6">
-                <span class="text-muted d-block small">Requisition Reference</span>
-                <strong id="reqReference">None</strong>
-              </div>
-              <div class="col-6">
-                <span class="text-muted d-block small">Total Amount</span>
-                <strong id="poTotalAmount" class="text-success fs-5">$0.00</strong>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="header-buttons">
+        <button type="button" id="notifBtn" class="btn-header">
+          Notifications
+        </button>
+        <button type="button" id="editProfileBtn" class="btn-header">
+          Edit Profile
+        </button>
+        <button type="button" id="settingsBtn" class="btn-header">
+          Settings
+        </button>
+        <form action="index.html" method="get">
+          <button type="submit" class="btn-header">Log Out</button>
+        </form>
       </div>
     </div>
 
-    <!-- Line Items Table Card -->
-    <div class="card shadow-sm border-0 mb-4">
-      <div class="card-header bg-light fw-bold">
-        <i class="bi bi-list-check me-2"></i>Line Items Breakdown
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-striped align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th class="ps-3" style="width: 60px;">#</th>
-                <th>Description</th>
-                <th class="text-end">Quantity</th>
-                <th class="text-end">Unit Price</th>
-                <th class="text-end pe-3">Total Price</th>
-              </tr>
-            </thead>
-            <tbody id="lineItemsTableBody">
-              <!-- Dynamically populated by js/purchase-order-detail.js -->
-            </tbody>
-            <tfoot>
-              <tr class="table-light">
-                <td colspan="4" class="text-end fw-bold py-3">Grand Total:</td>
-                <td class="text-end fw-bold text-success pe-3 py-3 fs-5" id="footerGrandTotal">$0.00</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+    <table class="layout-table">
+      <tr>
+        <td width="13%" valign="top" bgcolor="#f8f9fa">
+          <img
+            class="profilepicture"
+            src="./resources/icons/profile.png"
+            alt="Profile picture"
+          />
+          <h3 class="profile-name">Hello, Bruce</h3>
+          <h4 class="profile-department">IT Department - Head</h4>
+          <hr />
+          <br />
+          <nav class="navigation" aria-label="Main navigation">
+            <ul class="nav flex-column">
+              <li>
+                <a class="nav-link" href="dashboard.html"
+                  ><img
+                    src="./resources/icons/dashboard.png"
+                    alt=""
+                  />Dashboard</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="requisition.html"
+                  ><img
+                    src="./resources/icons/requisition.png"
+                    alt=""
+                  />Purchase Requisition</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="approvals.html"
+                  ><img
+                    src="./resources/icons/approvals.png"
+                    alt=""
+                  />Approvals</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="purchase-order.html"
+                  ><img
+                    src="./resources/icons/purchase-order.png"
+                    alt=""
+                  />Purchase Orders</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="delivery.html"
+                  ><img src="./resources/icons/delivery.png" alt="" />Delivery
+                  Receipts</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="invoices.html"
+                  ><img src="./resources/icons/invoices.png" alt="" />Invoice
+                  Processing</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="vendors.html"
+                  ><img src="./resources/icons/vendors.png" alt="" />Vendor
+                  Management</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="inventory.html"
+                  ><img src="./resources/icons/inventory.png" alt="" />Inventory
+                  and Asset Tagging</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="reports.html"
+                  ><img src="./resources/icons/reports.png" alt="" />Reports</a
+                >
+              </li>
+              <br />
+              <hr />
+              <br />
+              <li>
+                <a class="nav-link" href="#"
+                  ><img src="./resources/icons/support.png" alt="" />Help and
+                  Support</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </td>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/rbac.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/purchase-order-detail.js"></script>
-</body>
+        <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
+          <br />
+          <div class="btn-contentgroup">
+             
+            <a href="purchase-order.html" class="btn btn-outline-primary me-2">&laquo; Back to Purchase Orders</a>
+           <button type="button" id="printPoBtn" class="btn btn-outline-primary">Print</button>
+          </div>
+          <h2>Create Purchase Order</h2>
+          <div class="subtitle-row">
+            <p>
+              Fill in the order details, list the items, and the totals will be
+              computed for you.
+            </p>
+            <p id="today-label"></p>
+          </div>
+          <hr />
+
+          <nav class="workflow-stepper" aria-label="Procurement workflow">
+            <ol>
+              <li class="is-complete">
+                <a href="requisition.html"
+                  ><span class="workflow-step-number">1</span
+                  ><span>Requisition</span></a
+                >
+              </li>
+              <li class="is-complete">
+                <a href="approvals.html"
+                  ><span class="workflow-step-number">2</span
+                  ><span>Approval</span></a
+                >
+              </li>
+              <li class="is-current" aria-current="step">
+                <a href="purchase-order.html"
+                  ><span class="workflow-step-number">3</span
+                  ><span>Purchase Order</span></a
+                >
+              </li>
+              <li>
+                <a href="delivery.html"
+                  ><span class="workflow-step-number">4</span
+                  ><span>Fulfillment</span></a
+                >
+              </li>
+            </ol>
+          </nav>
+
+          <form id="po-form">
+            <fieldset class="content-field" id="po-info-section">
+              <legend class="content-legend">Order Information</legend>
+              <label class="content-label" for="poNumber">PO Number</label>
+              <input
+                type="text"
+                id="poNumber"
+                placeholder="Auto-generated"
+                readonly
+              />
+              <br /><br />
+              <label class="content-label" for="poDate">Date</label>
+              <input type="date" id="poDate" />
+              <br /><br />
+              <label class="content-label" for="poRequisition"
+                >Requisition ID</label
+              >
+              <select id="poRequisition"></select>
+              <br /><br />
+              <label class="content-label" for="poRequisitioner"
+                >Requisitioner</label
+              >
+              <input
+                type="text"
+                id="poRequisitioner"
+                placeholder="Employee name"
+              />
+              <br /><br />
+              <label class="content-label" for="poDepartment">Department</label>
+              <select id="poDepartment">
+                <option>-- Select Department --</option>
+                <option>IT</option>
+                <option>Purchasing</option>
+                <option>Accounting</option>
+                <option>Administration</option>
+                <option>Sales / Marketing</option>
+                <option>Operations</option>
+                <option>Facilities</option>
+                <option>Engineering</option>
+                <option>Human Resources</option>
+                <option>Leadership</option>
+              </select>
+            </fieldset>
+
+            <fieldset class="content-field" id="po-vendor-section">
+              <legend class="content-legend">Vendor and Shipping</legend>
+              <label class="content-label" for="poVendor">Vendor</label>
+              <select id="poVendor">
+                <option>-- Select Vendor --</option>
+                <option>Hewlett Packard</option>
+                <option>Lenovo</option>
+                <option>Ugreen</option>
+                <option>Hexagon IT Hardware</option>
+              </select>
+              <br /><br />
+              <label class="content-label" for="shipToName"
+                >Ship To (Name)</label
+              >
+              <input
+                type="text"
+                id="shipToName"
+                placeholder="Recipient / company name"
+              />
+              <br /><br />
+              <label class="content-label" for="shipToAddress"
+                >Ship To (Address)</label
+              >
+              <textarea id="shipToAddress" rows="2" cols="50"></textarea>
+              <br /><br />
+              <label class="content-label" for="shipToPhone"
+                >Contact Phone</label
+              >
+              <input
+                type="tel"
+                id="shipToPhone"
+                placeholder="e.g. 0917 000 0000"
+              />
+              <br /><br />
+              <label class="content-label" for="shipVia">Ship Via</label>
+              <select id="shipVia">
+                <option>-- Select --</option>
+                <option>LBC</option>
+                <option>JRS Express</option>
+                <option>Vendor Delivery</option>
+                <option>Pick-up</option>
+              </select>
+              <br /><br />
+              <label class="content-label" for="fob">F.O.B.</label>
+              <select id="fob">
+                <option>-- Select --</option>
+                <option>Destination</option>
+                <option>Shipping Point</option>
+              </select>
+              <br /><br />
+              <label class="content-label" for="shippingTerms"
+                >Shipping Terms</label
+              >
+              <select id="shippingTerms">
+                <option>-- Select --</option>
+                <option>Net 30</option>
+                <option>Net 15</option>
+                <option>Cash on Delivery</option>
+              </select>
+              <br /><br />
+              <label class="content-label" for="expectedDelivery"
+                >Expected Delivery Date</label
+              >
+              <input type="date" id="expectedDelivery" />
+            </fieldset>
+
+            <fieldset class="content-field" id="po-items-section">
+              <legend class="content-legend">Items (up to 5)</legend>
+              <table class="content-table table table-bordered align-middle">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item #</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Line Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-no"
+                        placeholder="Item #"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-desc"
+                        placeholder="Description"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-line-total"
+                        value="0.00"
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-no"
+                        placeholder="Item #"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-desc"
+                        placeholder="Description"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-line-total"
+                        value="0.00"
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-no"
+                        placeholder="Item #"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-desc"
+                        placeholder="Description"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-line-total"
+                        value="0.00"
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-no"
+                        placeholder="Item #"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-desc"
+                        placeholder="Description"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-line-total"
+                        value="0.00"
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-no"
+                        placeholder="Item #"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-item-desc"
+                        placeholder="Description"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-qty"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        class="po-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        class="po-line-total"
+                        value="0.00"
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="content-table table table-bordered align-middle">
+                <tbody>
+                  <tr>
+                    <td>Subtotal</td>
+                    <td>
+                      <input
+                        type="text"
+                        id="poSubtotal"
+                        value="0.00"
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tax Rate (%)</td>
+                    <td>
+                      <input
+                        type="number"
+                        id="poTaxRate"
+                        min="0"
+                        step="0.01"
+                        value="12"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tax</td>
+                    <td>
+                      <input type="text" id="poTax" value="0.00" readonly />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Shipping / Other Charges</td>
+                    <td>
+                      <input
+                        type="number"
+                        id="poShipping"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Total</b></td>
+                    <td>
+                      <input type="text" id="poTotal" value="0.00" readonly />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <br />
+              <label class="content-label" for="poNotes"
+                >Notes / Special Instructions</label
+              >
+              <textarea id="poNotes" rows="3" cols="50"></textarea>
+              <br /><br />
+              <button type="button" id="calculatePoBtn" class="btn btn-outline-primary me-2">
+                Calculate Total
+              </button>
+              <button type="button" id="savePoBtn" class="btn btn-primary me-2">
+                Save Purchase Order
+              </button>
+              <button type="button" id="clearPoBtn" class="btn btn-outline-danger">
+                Clear Form
+              </button>
+            </fieldset>
+          </form>
+        </td>
+      </tr>
+    </table>
+        <footer class="footer">
+      <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
+    </footer>
+    <script src="js/rbac.js"></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/purchase-order-detail.js"></script>
+  </body>
 </html>
