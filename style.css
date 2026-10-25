@@ -2649,3 +2649,27 @@ textarea:disabled {
     justify-content: flex-start;
   }
 }
+/*Purchase Orders Bootstrap refinement*/
+
+.purchase-order-page .navigation .nav-link,
+.purchase-order-detail-page .navigation .nav-link {
+  border-radius: 6px;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.purchase-order-page .navigation .nav-link:focus-visible,
+.purchase-order-page .btn:focus-visible,
+.purchase-order-detail-page .navigation .nav-link:focus-visible,
+.purchase-order-detail-page .btn:focus-visible {
+  outline: 3px solid #80b7e5;
+  outline-offset: 2px;
+}
+
+.purchase-order-page .navigation .nav-link.active-link,
+.purchase-order-detail-page .navigation .nav-link.active-link {
+  background: #d9e8f4;
+  color: #174e7d;
+  box-shadow: inset 3px 0 #337ab7;
+}
