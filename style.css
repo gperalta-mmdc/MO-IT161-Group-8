@@ -1405,6 +1405,7 @@ textarea:disabled {
 
 .dashboard-page .navigation .nav-link:focus-visible,
 .dashboard-page .dashboard-actions .btn:focus-visible,
+.dashboard-page .btn-contentgroup .btn:focus-visible,
 .dashboard-page .card-menu-btn:focus-visible {
   outline: 3px solid #80b7e5;
   outline-offset: 2px;
