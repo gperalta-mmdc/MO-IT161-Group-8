@@ -6,10 +6,16 @@
     <title>
       Delivery Receipts - ProcureIT - Procurement and Inventory System
     </title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
+  <body class="delivery-page">
     <div class="header-bar">
       <div class="header-image">
         <img src="./resources/pit-header.png" alt="ProcureIT" />
@@ -121,14 +127,14 @@
 
         <td class="content" width="50%" bgcolor="#e1e2e4" valign="top">
           <br />
-          <div class="btn-contentgroup">
-            <button type="button" id="downloadReportBtn" class="btn-content">
+          <div class="btn-contentgroup delivery-toolbar">
+            <button type="button" id="downloadReportBtn" class="btn btn-outline-primary">
               Download Report
             </button>
             <button
               type="button"
               id="viewDeliverySummaryBtn"
-              class="btn-content"
+              class="btn btn-outline-primary"
             >
               View Summary
             </button>
@@ -144,124 +150,120 @@
           </div>
           <hr />
 
-          <fieldset class="content-field">
+          <fieldset class="content-field card shadow-sm">
             <legend class="content-legend">
               Purchase Orders Awaiting Delivery
             </legend>
-            <table class="content-table" border="1">
+            <div class="table-responsive">
+            <table class="content-table table table-striped table-hover align-middle mb-0">
               <thead>
                 <tr>
-                  <th>PO Number</th>
-                  <th>Vendor</th>
-                  <th>Expected Delivery</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th scope="col">PO Number</th>
+                  <th scope="col">Vendor</th>
+                  <th scope="col">Expected Delivery</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody id="pending-delivery-table-body"></tbody>
             </table>
+            </div>
           </fieldset>
 
-          <fieldset class="content-field">
+          <fieldset class="content-field card shadow-sm">
             <legend class="content-legend">Record Delivery Receipt</legend>
-            <form id="delivery-form">
-              <label class="content-label" for="deliveryPO"
-                >Purchase Order</label
-              >
-              <br />
-              <select id="deliveryPO"></select>
-              <br /><br />
-              <label class="content-label" for="drNumber"
-                >Delivery Receipt Number</label
-              >
-              <br />
-              <input type="text" id="drNumber" readonly />
-              <br /><br />
-              <label class="content-label">Date Received</label>
-              <br />
-              <input type="date" id="deliveryDateReceived" />
-              <br /><br />
-              <label class="content-label" for="receivedBy">Received By</label>
-              <br />
-              <input type="text" id="receivedBy" placeholder="Employee name" />
-              <br /><br />
-              <label class="content-label" for="deliveryCondition"
-                >Condition of Goods</label
-              >
-              <br />
-              <select id="deliveryCondition">
-                <option>-- Select --</option>
-                <option>Complete &amp; Good Condition</option>
-                <option>Partial Delivery</option>
-                <option>Damaged / Defective</option>
-              </select>
-              <br /><br />
-              <label class="content-label">Remarks</label>
-              <br />
-              <textarea rows="4" cols="50" id="deliveryRemarks"></textarea>
-              <br /><br />
-              <label class="content-label">
-                Attach Proof of Delivery (e.g. photo, waybill)
-              </label>
-              <br />
-              <input type="file" id="deliveryProof" />
-              <br /><br />
-              <button type="button" id="saveDeliveryBtn" class="btn-content">
-                Save Delivery Receipt
-              </button>
-              <button type="button" id="cancelDeliveryBtn" class="reject-btn">
-                Clear Form
-              </button>
+            <form id="delivery-form" class="delivery-form-grid row g-3">
+              <div class="col-12 col-md-6">
+                <label class="content-label" for="deliveryPO">Purchase Order</label>
+                <select id="deliveryPO" class="form-select"></select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="content-label" for="drNumber">Delivery Receipt Number</label>
+                <input type="text" id="drNumber" class="form-control" readonly />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="content-label" for="deliveryDateReceived">Date Received</label>
+                <input type="date" id="deliveryDateReceived" class="form-control" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="content-label" for="receivedBy">Received By</label>
+                <input type="text" id="receivedBy" class="form-control" placeholder="Employee name" />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="content-label" for="deliveryCondition">Condition of Goods</label>
+                <select id="deliveryCondition" class="form-select">
+                  <option>-- Select --</option>
+                  <option>Complete &amp; Good Condition</option>
+                  <option>Partial Delivery</option>
+                  <option>Damaged / Defective</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="content-label" for="deliveryRemarks">Remarks</label>
+                <textarea rows="4" id="deliveryRemarks" class="form-control"></textarea>
+              </div>
+              <div class="col-12">
+                <label class="content-label" for="deliveryProof">Attach Proof of Delivery (e.g. photo, waybill)</label>
+                <input type="file" id="deliveryProof" class="form-control" />
+              </div>
+              <div class="col-12 delivery-form-actions">
+                <button type="button" id="saveDeliveryBtn" class="btn btn-primary">Save Delivery Receipt</button>
+                <button type="button" id="cancelDeliveryBtn" class="btn btn-outline-secondary">Clear Form</button>
+              </div>
             </form>
           </fieldset>
 
-          <fieldset class="content-field">
+          <fieldset class="content-field card shadow-sm">
             <legend class="content-legend">Delivery Receipt Log</legend>
             <button
               type="button"
               id="viewDeliveryHistoryBtn"
-              class="btn-content"
+              class="btn btn-outline-primary"
             >
               View History
             </button>
-            <table class="content-table" border="1">
+            <div class="table-responsive">
+            <table class="content-table table table-striped table-hover align-middle mb-0">
               <thead>
                 <tr>
-                  <th>DR Number</th>
-                  <th>PO Number</th>
-                  <th>Vendor</th>
-                  <th>Date Received</th>
-                  <th>Condition</th>
-                  <th>Received By</th>
-                  <th>Documentation</th>
+                  <th scope="col">DR Number</th>
+                  <th scope="col">PO Number</th>
+                  <th scope="col">Vendor</th>
+                  <th scope="col">Date Received</th>
+                  <th scope="col">Condition</th>
+                  <th scope="col">Received By</th>
+                  <th scope="col">Documentation</th>
                 </tr>
               </thead>
               <tbody id="delivery-log-table-body"></tbody>
             </table>
+            </div>
           </fieldset>
 
-          <fieldset class="content-field">
+          <fieldset class="content-field card shadow-sm">
             <legend class="content-legend">Cancelled Orders</legend>
             <button
               type="button"
               id="viewCancelledOrdersBtn"
-              class="btn-content"
+              class="btn btn-outline-primary"
             >
               View History
             </button>
-            <table class="content-table" border="1">
+            <div class="table-responsive">
+            <table class="content-table table table-striped table-hover align-middle mb-0">
               <thead>
                 <tr>
-                  <th>PO #</th>
-                  <th>Vendor</th>
-                  <th>Date</th>
-                  <th>Requisitioner</th>
-                  <th>Status</th>
-                  <th>Total</th>
+                  <th scope="col">PO #</th>
+                  <th scope="col">Vendor</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Requisitioner</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Total</th>
                 </tr>
               </thead>
               <tbody id="cancelled-pos-table-body"></tbody>
             </table>
+            </div>
           </fieldset>
         </td>
       </tr>
@@ -270,8 +272,14 @@
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
-    <script src="rbac.js"></script>
-    <script src="script.js" defer></script>
+    <script src="js/rbac.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/script.js" defer></script>
     <script src="js/storage.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/shared-views.js"></script>

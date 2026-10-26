@@ -6,6 +6,8 @@ const Delivery = require("./models/Delivery");
 const Counter = require("./models/Counter");
 const Requisition = require("./models/Requisition");
 const PurchaseOrder = require("./models/PurchaseOrder");
+const Invoice = require("./models/Invoice");
+const Vendor = require("./models/Vendor");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -428,6 +430,196 @@ app.patch("/api/purchase-orders/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Could not cancel the purchase order." });
+  }
+});
+
+/* ----- Invoices API ----- */
+
+app.get("/api/invoices", async (req, res) => {
+  try {
+    const invoices = await Invoice.find().sort({ createdAt: 1 });
+    res.set("Cache-Control", "no-store");
+    res.json(invoices);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not load invoices." });
+  }
+});
+
+app.post("/api/invoices", async (req, res) => {
+  try {
+    const {
+      vendor,
+      poId,
+      deliveryReceipt,
+      invoiceDate,
+      amount,
+      remarks,
+      invoiceFileName,
+    } = req.body || {};
+
+    const invoice = new Invoice({
+      vendor,
+      poId,
+      deliveryReceipt,
+      invoiceDate,
+      amount,
+      remarks,
+      invoiceFileName,
+    });
+
+    await invoice.validate([
+      "vendor",
+      "poId",
+      "deliveryReceipt",
+      "invoiceDate",
+      "amount",
+      "remarks",
+      "invoiceFileName",
+    ]);
+
+    invoice.invoiceNumber = await nextId("invoice", "INV");
+    await invoice.save();
+    res.status(201).json(invoice);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors)
+        .map((e) => e.message)
+        .join(" ");
+      return res.status(400).json({ error: message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Could not save the invoice." });
+  }
+});
+
+// Approve or reject an invoice
+app.put("/api/invoices/:id", async (req, res) => {
+  try {
+    const { status, remarks } = req.body || {};
+    if (status !== "Approved for Payment" && status !== "Rejected") {
+      return res.status(400).json({ error: "Status is not a valid decision." });
+    }
+
+    const invoice = await Invoice.findOne({ invoiceNumber: req.params.id });
+    if (!invoice) {
+      return res.status(404).json({ error: "Invoice not found." });
+    }
+
+    invoice.status = status;
+    if (remarks) invoice.remarks = remarks;
+    await invoice.save();
+    res.json(invoice);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors)
+        .map((e) => e.message)
+        .join(" ");
+      return res.status(400).json({ error: message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Could not update the invoice." });
+  }
+});
+
+/* ----- Vendors API ----- */
+
+app.get("/api/vendors", async (req, res) => {
+  try {
+    const vendors = await Vendor.find().sort({ createdAt: 1 });
+    res.set("Cache-Control", "no-store");
+    res.json(vendors);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not load vendors." });
+  }
+});
+
+app.post("/api/vendors", async (req, res) => {
+  try {
+    const {
+      name,
+      category,
+      contactPerson,
+      email,
+      phone,
+      address,
+      tin,
+      status,
+    } = req.body || {};
+
+    const vendor = new Vendor({
+      name,
+      category,
+      contactPerson,
+      email,
+      phone,
+      address,
+      tin,
+      status,
+    });
+
+    await vendor.validate([
+      "name",
+      "category",
+      "contactPerson",
+      "email",
+      "phone",
+      "address",
+      "tin",
+      "status",
+    ]);
+
+    vendor.vendorId = await nextId("vendor", "VEN");
+    await vendor.save();
+    res.status(201).json(vendor);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors)
+        .map((e) => e.message)
+        .join(" ");
+      return res.status(400).json({ error: message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Could not save the vendor." });
+  }
+});
+
+// Edit an existing vendor
+app.put("/api/vendors/:id", async (req, res) => {
+  try {
+    const vendor = await Vendor.findOne({ vendorId: req.params.id });
+    if (!vendor) {
+      return res.status(404).json({ error: "Vendor not found." });
+    }
+
+    const fields = [
+      "name",
+      "category",
+      "contactPerson",
+      "email",
+      "phone",
+      "address",
+      "tin",
+      "status",
+    ];
+    fields.forEach((field) => {
+      if (req.body && req.body[field] !== undefined) {
+        vendor[field] = req.body[field];
+      }
+    });
+
+    await vendor.save();
+    res.json(vendor);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      const message = Object.values(error.errors)
+        .map((e) => e.message)
+        .join(" ");
+      return res.status(400).json({ error: message });
+    }
+    console.error(error);
+    res.status(500).json({ error: "Could not update the vendor." });
   }
 });
 

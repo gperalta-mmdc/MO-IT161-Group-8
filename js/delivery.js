@@ -191,15 +191,6 @@ function setupDeliveryPage() {
       showCancelledOrdersHistory();
     });
   }
-  // "View Summary" at the top: receipts and cancelled orders together
-  const viewDeliverySummaryBtn = document.getElementById(
-    "viewDeliverySummaryBtn",
-  );
-  if (viewDeliverySummaryBtn) {
-    viewDeliverySummaryBtn.addEventListener("click", () => {
-      showDeliverySummary();
-    });
-  }
 }
 
 /* Rebuilds the Purchase Orders Awaiting Delivery table: Active POs not yet delivered. */
@@ -218,13 +209,13 @@ function renderPendingDeliveryTable() {
         purchaseOrder.vendor,
         purchaseOrder.expectedDelivery || "—",
       ) +
-      '<td><select class="delivery-status-select">' +
+      '<td><select class="form-select form-select-sm delivery-status-select" aria-label="Delivery status">' +
       "<option>Open</option><option>Sent to Vendor</option>" +
       "<option>Acknowledged</option><option>In Transit</option>" +
       "</select></td>" +
-      '<td><div class="btn-action">' +
-      '<button type="button" class="btn-content js-record-delivery">Record Delivery</button>' +
-      '<button type="button" class="reject-btn js-cancel-delivery-po">Cancel Order</button>' +
+      '<td><div class="btn-action d-flex flex-wrap gap-2">' +
+      '<button type="button" class="btn btn-sm btn-primary js-record-delivery">Record Delivery</button>' +
+      '<button type="button" class="btn btn-sm btn-outline-danger js-cancel-delivery-po">Cancel Order</button>' +
       "</div></td>";
     tableBody.appendChild(row);
   });
@@ -273,7 +264,7 @@ function renderDeliveryLogTable() {
         delivery.receivedBy,
       ) +
       '<td><div class="btn-action">' +
-      '<button type="button" class="btn-content js-view-delivery-log">View</button>' +
+      '<button type="button" class="btn btn-sm btn-outline-primary js-view-delivery-log">View</button>' +
       "</div></td>";
     tableBody.appendChild(row);
   });

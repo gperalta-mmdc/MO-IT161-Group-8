@@ -6,7 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-function setupDashboardCounts() {
+async function setupDashboardCounts() {
+  await Promise.allSettled([
+    loadDeliveries(),
+    loadInvoices(),
+    loadVendors(),
+  ]);
   const requisitions = getRequisitions().filter(
     (r) => r.status !== "Withdrawn",
   );

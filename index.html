@@ -5,6 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProcureIT - Procurement and Inventory System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -21,58 +27,70 @@
       <tr>
         <td class="content login-panel" width="50%" valign="top">
           <section>
-            <br /><br /><br /><br /><br /><br />
-            <h2 style="padding-left: 40px">Log-In</h2>
-            <p style="padding-left: 30px">
+            <br /><br /><br />
+            <h2 class="ps-4">Log-In</h2>
+            <p class="ps-4">
               Please enter your credentials to access the system
             </p>
             <br />
-            <!-- Removed action and method attributes to allow rbac.js to handle login logic -->
-            <form id="login-form">
-              <fieldset style="padding-left: 30px">
-                <legend>Account Log-In</legend>
-                <br />
-                <label for="username">Username or E-Mail</label>
-                <br />
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  placeholder="Enter username or email"
-                  required
-                />
-                <br /><br />
-                <label for="password">Password</label>
-                <br />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Enter password"
-                  required
-                />
-                <br /><br />
 
-                <!-- Container for RBAC authentication error messages -->
+            <form id="login-form">
+              <fieldset class="ps-4 w-75">
+                <legend class="fs-5">Account Log-In</legend>
+
+                <div class="mb-3">
+                  <label for="username" class="form-label"
+                    >Username or E-Mail</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    placeholder="Enter username or email"
+                    autocomplete="username"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                  />
+                </div>
+
                 <p
                   id="login-error"
-                  style="color: red; display: none; font-weight: bold"
+                  class="alert alert-danger fw-bold"
+                  role="alert"
+                  style="display: none"
                 ></p>
 
-                <input type="checkbox" id="remember" />
-                <label for="remember">Remember Me</label>
-                <br /><br />
-                <button
-                  type="submit"
-                  class="btn-header"
-                  style="padding-left: 30px; padding-right: 30px"
-                >
+                <div class="form-check mb-3">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="remember"
+                  />
+                  <label class="form-check-label" for="remember"
+                    >Remember Me</label
+                  >
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">
                   Log-In
                 </button>
               </fieldset>
             </form>
             <br />
-            <p style="padding-left: 30px">
+            <p class="ps-4">
               <a href="#" id="forgotPasswordLink">Forgot your password?</a>
               <br /><br />
               Don't have an account?
@@ -107,7 +125,13 @@
     <footer class="footer">
       <p>&copy; 2026 ProcureIT. Workplace Zero Paper Initiative Project.</p>
     </footer>
-    <script src="rbac.js"></script>
-    <script src="script.js" defer></script>
+    <script src="js/rbac.js"></script>
+    <script src="js/script.js" defer></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

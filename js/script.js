@@ -204,11 +204,10 @@ function highlightActiveNavLink() {
 
 /* ----- Header button elements ----- */
 function setupHeaderButtons() {
+  ensureSharedHeaderDialogs();
   const notifBtn = document.getElementById("notifBtn");
   const editProfileBtn = document.getElementById("editProfileBtn");
   const settingsBtn = document.getElementById("settingsBtn");
-  const downloadReportBtn = document.getElementById("downloadReportBtn");
-  const viewSummaryBtn = document.getElementById("viewSummaryBtn");
   const printPoBtn = document.getElementById("printPoBtn");
 
   if (notifBtn) {
@@ -246,23 +245,235 @@ function setupHeaderButtons() {
     }
   }
 
-  if (downloadReportBtn) {
-    downloadReportBtn.addEventListener("click", () => {
-      showMessage("Preparing report download...");
-    });
-  }
-
-  if (viewSummaryBtn) {
-    viewSummaryBtn.addEventListener("click", () => {
-      showPopup("Summary Overview", "Here is your quick summary details.");
-    });
-  }
+  setupPageReportActions();
 
   if (printPoBtn) {
     printPoBtn.addEventListener("click", () => {
       showMessage("Printing purchase order...");
     });
   }
+}
+
+/* Dashboard owns the source dialogs; create matching dialogs on other app pages. */
+function ensureSharedHeaderDialogs() {
+  const page = window.location.pathname.split("/").pop();
+  const supportedPages = new Set([
+    "requisition.html", "approvals.html", "purchase-order.html", "purchase-order-detail.html", "delivery.html", "invoices.html",
+    "vendors.html", "inventory.html", "reports.html",
+  ]);
+  if (!supportedPages.has(page) || document.getElementById("notifications-modal")) return;
+
+  document.body.classList.add("header-dialog-page");
+  const notificationButton = document.getElementById("notifBtn");
+  if (notificationButton) {
+    notificationButton.setAttribute("aria-haspopup", "dialog");
+    notificationButton.setAttribute("aria-controls", "notifications-modal");
+    notificationButton.replaceChildren();
+    const icon = document.createElement("span");
+    icon.className = "notification-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "🔔";
+    notificationButton.append(icon, document.createTextNode(" Notifications "));
+    const badge = document.createElement("span");
+    badge.className = "notification-badge";
+    badge.setAttribute("aria-label", "2 unread");
+    badge.textContent = "2";
+    notificationButton.appendChild(badge);
+  }
+  document.getElementById("editProfileBtn")?.setAttribute("aria-controls", "profile-modal");
+  document.getElementById("settingsBtn")?.setAttribute("aria-controls", "settings-modal");
+  ["notifBtn", "editProfileBtn", "settingsBtn"].forEach((id) => {
+    document.getElementById(id)?.setAttribute("aria-haspopup", "dialog");
+  });
+
+  const dialogs = document.createElement("div");
+  dialogs.innerHTML = `
+    <section class="workflow-summary-overlay notifications-overlay" id="notifications-modal" role="dialog" aria-modal="true" aria-labelledby="notifications-title" hidden>
+      <div class="workflow-summary-dialog notifications-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header notifications-header modal-header"><h2 id="notifications-title">System Notifications</h2><button type="button" class="workflow-summary-x notifications-close" aria-label="Close notifications">&times;</button></header>
+        <div class="notifications-body modal-body" aria-live="polite"><ul class="notifications-list">
+          <li class="notification-item is-unread" data-unread="true" data-notification-category="requisitions"><p>New requisition activity is awaiting review.</p><time>Recently</time></li>
+          <li class="notification-item is-unread" data-unread="true" data-notification-category="purchaseOrders"><p>Procurement workflow records were updated.</p><time>Recently</time></li>
+          <li class="notification-item" data-notification-category="system"><p>Use the navigation menu to review your permitted tasks.</p><time>System notice</time></li>
+        </ul><p class="notifications-empty" id="notifications-empty" hidden>You’re all caught up. No unread notifications.</p></div>
+        <footer class="notifications-footer modal-footer"><button type="button" class="btn btn-outline-primary" id="markAllReadBtn">Mark All Read</button><button type="button" class="btn btn-primary notifications-close">Close</button></footer>
+      </div>
+    </section>
+    <section class="workflow-summary-overlay profile-overlay" id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" hidden>
+      <div class="workflow-summary-dialog profile-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header"><h2 id="profile-modal-title">User Profile &amp; Role Verification</h2><button type="button" class="workflow-summary-x profile-close" aria-label="Close profile dialog">&times;</button></header>
+        <div class="profile-modal-body modal-body"><div class="profile-identity"><img src="./resources/icons/profile.png" alt=""/><h3 id="profile-display-name"></h3><p id="profile-position"></p><span class="profile-role-badge" id="profile-role"></span></div>
+          <section class="profile-account-details"><h3>Account Information</h3><dl><div><dt>Username</dt><dd id="profile-username"></dd></div><div><dt>Work email</dt><dd id="profile-work-email"></dd></div><div><dt>Department</dt><dd id="profile-department"></dd></div></dl></section>
+          <section class="profile-permissions"><h3 id="profile-permissions-heading">Role Permissions</h3><ul id="profile-permission-list"></ul></section>
+          <div class="profile-dialog-actions"><button type="button" class="btn btn-primary profile-close">Close</button></div>
+        </div>
+      </div>
+    </section>
+    <section class="workflow-summary-overlay settings-overlay" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+      <div class="workflow-summary-dialog settings-dialog modal-content shadow-lg">
+        <header class="workflow-summary-header modal-header"><h2 id="settings-title">Settings</h2><button type="button" class="workflow-summary-x settings-close" aria-label="Close settings">&times;</button></header>
+        <form id="dashboard-settings-form"><div class="settings-body modal-body">
+          <fieldset class="settings-group"><legend>Display</legend><label class="settings-select-label" for="settings-theme">Color theme</label><select class="form-select" id="settings-theme" name="theme"><option value="light">Light</option><option value="dark">Dark</option></select></fieldset>
+          <fieldset class="settings-group"><legend>Dashboard content</legend><label class="form-check"><input class="form-check-input" type="checkbox" name="showStepper" id="settings-stepper"><span class="form-check-label">Show procurement workflow stepper</span></label>
+            <div class="settings-card-grid">${[
+              ["card-requisitions", "Purchase Requisitions"], ["card-approvals", "Approvals"], ["card-purchaseOrders", "Purchase Orders"], ["card-deliveryReceipts", "Delivery Receipts"], ["card-invoices", "Invoice Processing"], ["card-vendors", "Vendor Management"], ["card-inventory", "Inventory and Asset Tagging"], ["card-reports", "Reports"],
+            ].map(([name, label]) => `<label class="form-check"><input class="form-check-input" type="checkbox" name="${name}"><span class="form-check-label">${label}</span></label>`).join("")}</div>
+          </fieldset>
+          <fieldset class="settings-group"><legend>Notifications</legend><label class="form-check"><input class="form-check-input" type="checkbox" name="showNotificationBadge"><span class="form-check-label">Show unread notification count</span></label>${[
+            ["notification-requisitions", "Requisition updates"], ["notification-purchaseOrders", "Purchase order updates"], ["notification-system", "System notices"],
+          ].map(([name, label]) => `<label class="form-check"><input class="form-check-input" type="checkbox" name="${name}"><span class="form-check-label">${label}</span></label>`).join("")}</fieldset>
+          <p class="settings-save-status" id="settings-save-status" role="status" aria-live="polite"></p>
+        </div><footer class="modal-footer"><button type="button" class="btn btn-outline-secondary" id="resetSettingsBtn">Reset</button><button type="button" class="btn btn-outline-primary settings-close">Close</button><button type="submit" class="btn btn-primary">Save Settings</button></footer></form>
+      </div>
+    </section>`;
+  document.body.appendChild(dialogs);
+  applyDashboardSettings(loadDashboardSettings());
+}
+
+/* Shared report actions used by pages with Download Report / View Summary. */
+function setupPageReportActions() {
+  const downloadButton = document.getElementById("downloadReportBtn");
+  const summaryButton =
+    document.getElementById("viewSummaryBtn") ||
+    document.getElementById("viewDeliverySummaryBtn");
+  if (downloadButton) {
+    downloadButton.addEventListener("click", downloadCurrentPageReport);
+  }
+  if (summaryButton) {
+    summaryButton.addEventListener("click", showCurrentPageSummary);
+  }
+}
+
+function getReportPageData() {
+  const page = window.location.pathname.split("/").pop() || "dashboard.html";
+  const requisitions = typeof getRequisitions === "function" ? getRequisitions() : [];
+  const purchaseOrders = typeof getPurchaseOrders === "function" ? getPurchaseOrders() : [];
+  const deliveries = typeof getDeliveries === "function" ? getDeliveries() : [];
+  const invoices = typeof getInvoices === "function" ? getInvoices() : [];
+  const vendors = typeof getVendors === "function" ? getVendors() : [];
+  const role = localStorage.getItem("procureit-role");
+  const signedInName = localStorage.getItem("procureit-name");
+  const restrictedGroups = role === "requisitioner"
+    ? new Set(["Requisitions"])
+    : role === "approver"
+      ? new Set(["Requisitions", "Vendors"])
+      : null;
+  const visibleRequisitions = role === "requisitioner"
+    ? requisitions.filter((record) => record.requestedBy === signedInName)
+    : requisitions;
+  const definitions = {
+    "dashboard.html": ["Procurement Dashboard", "Procurement Overview", [
+      ["Requisitions", visibleRequisitions], ["Purchase Orders", purchaseOrders],
+      ["Delivery Receipts", deliveries], ["Invoices", invoices], ["Vendors", vendors],
+    ]],
+    "requisition.html": ["Purchase Requisitions", "Requisition Summary", [["Requisitions", visibleRequisitions]]],
+    "approvals.html": ["Approvals", "Approval Summary", [["Requisitions", requisitions]]],
+    "purchase-order.html": ["Purchase Orders", "Purchase Order Summary", [["Purchase Orders", purchaseOrders]]],
+    "delivery.html": ["Delivery Receipts", "Delivery Summary", [["Delivery Receipts", deliveries], ["Purchase Orders", purchaseOrders]]],
+    "invoices.html": ["Invoice Processing", "Invoice Summary", [["Invoices", invoices]]],
+    "vendors.html": ["Vendor Management", "Vendor Summary", [["Vendors", vendors]]],
+    "reports.html": ["Procurement Reports", "Reports Summary", [
+      ["Requisitions", visibleRequisitions], ["Purchase Orders", purchaseOrders],
+      ["Delivery Receipts", deliveries], ["Invoices", invoices], ["Vendors", vendors],
+    ]],
+  };
+  const [title, summaryTitle, groups] = definitions[page] || ["Procurement Report", "Summary", []];
+  return {
+    title,
+    summaryTitle,
+    groups: restrictedGroups
+      ? groups.filter(([label]) => restrictedGroups.has(label))
+      : groups,
+  };
+}
+
+function downloadCurrentPageReport() {
+  const { title, groups } = getReportPageData();
+  const rows = [];
+  groups.forEach(([group, records]) => {
+    records.forEach((record) => rows.push({
+      Section: group,
+      ID: record.id || record._id || "",
+      Name: record.vendor || record.requestedBy || record.name || "",
+      Department: record.department || "",
+      Status: record.status || "",
+      Date: record.dateSubmitted || record.dateCreated || record.dateReceived || record.invoiceDate || "",
+      Amount: record.total ?? record.amount ?? "",
+    }));
+  });
+  if (!rows.length) {
+    showMessage("There are no records available to include in this report yet.");
+    return;
+  }
+  const headers = ["Section", "ID", "Name", "Department", "Status", "Date", "Amount"];
+  const escapeCsv = (value) => {
+    const text = String(value ?? "");
+    return /[",\r\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  };
+  const csv = [headers, ...rows.map((row) => headers.map((key) => row[key]))]
+    .map((row) => row.map(escapeCsv).join(","))
+    .join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function showCurrentPageSummary() {
+  const { summaryTitle, groups } = getReportPageData();
+  const overlay = document.createElement("div");
+  overlay.className = "popup-overlay report-summary-overlay";
+  overlay.id = "popup-overlay";
+  const dialog = document.createElement("section");
+  dialog.className = "popup-box report-summary-dialog";
+  dialog.setAttribute("role", "dialog");
+  dialog.setAttribute("aria-modal", "true");
+  dialog.setAttribute("aria-labelledby", "report-summary-title");
+  const title = document.createElement("h2");
+  title.id = "report-summary-title";
+  title.textContent = summaryTitle;
+  dialog.appendChild(title);
+  const grid = document.createElement("div");
+  grid.className = "report-summary-grid";
+  groups.forEach(([label, records]) => {
+    const card = document.createElement("article");
+    card.className = "report-summary-card";
+    const heading = document.createElement("h3");
+    heading.textContent = label;
+    const count = document.createElement("strong");
+    count.textContent = String(records.length);
+    const note = document.createElement("p");
+    const counts = records.reduce((result, record) => {
+      const status = record.status || "Unspecified";
+      result[status] = (result[status] || 0) + 1;
+      return result;
+    }, {});
+    note.textContent = Object.entries(counts).map(([status, total]) => `${status}: ${total}`).join(" · ") || "No records yet";
+    card.append(heading, count, note);
+    grid.appendChild(card);
+  });
+  dialog.appendChild(grid);
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "btn btn-primary btn-content report-summary-close";
+  closeButton.textContent = "Close";
+  closeButton.addEventListener("click", closePopup);
+  dialog.appendChild(closeButton);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closePopup();
+  });
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closePopup();
+  });
+  overlay.appendChild(dialog);
+  closePopup();
+  document.body.appendChild(overlay);
+  closeButton.focus();
 }
 
 function setupEditProfileDialog(trigger, modal) {
@@ -1234,6 +1445,15 @@ function setupVendorDocumentsTable() {
 
 /* ----- Reports page (reports.html only) ----- */
 function setupReportsPage() {
+  if (typeof loadRequisitions === "function") {
+    Promise.allSettled([
+      loadRequisitions(),
+      loadPurchaseOrders(),
+      loadDeliveries(),
+      loadInvoices(),
+      loadVendors(),
+    ]);
+  }
   const generateBtn = document.getElementById("generateReportBtn");
   const reportType = document.getElementById("reportType");
   const dateFrom = document.getElementById("reportDateFrom");
